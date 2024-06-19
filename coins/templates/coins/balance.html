@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Balance{% endblock %}
+
+{% block content %}
+<h2>Your Balance: {{ balance }} Доскойн</h2>
+<h3>Transaction History</h3>
+<ul>
+    {% for transaction in transactions %}
+        <li>{{ transaction.timestamp }}: {{ transaction.sender.phone_number }} -> {{ transaction.recipient.phone_number }}: {{ transaction.amount }} Доскойн ({{ transaction.description }})</li>
+    {% endfor %}
+</ul>
+{% endblock %}
