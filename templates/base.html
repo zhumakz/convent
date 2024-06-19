@@ -1,50 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}My Site{% endblock %}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 0;
-            text-align: center;
-        }
-        nav {
-            background-color: #444;
-            color: #fff;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-        }
-        nav a {
-            color: #fff;
-            text-decoration: none;
-        }
-        .content {
-            padding: 20px;
-            background-color: #fff;
-            margin-top: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .balance {
-            float: right;
-            margin-right: 20px;
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
@@ -52,12 +14,14 @@
         <h1>My Site</h1>
     </header>
     <nav>
-        <a href="{% url 'balance' %}">Balance</a>
-        <a href="{% url 'add_coins' %}">Add Coins</a>
-        <a href="{% url 'remove_coins' %}">Remove Coins</a>
+        <a href="{% url 'home' %}">Home</a>
         {% if user.is_authenticated %}
+            <a href="{% url 'balance' %}">Balance</a>
+            <a href="{% url 'add_coins' %}">Add Coins</a>
+            <a href="{% url 'remove_coins' %}">Remove Coins</a>
             <a href="{% url 'profile' %}">Profile</a>
             <a href="{% url 'logout' %}">Logout</a>
+            <a href="{% url 'friends_list' %}">Friends</a>
             <span class="balance">Balance: {{ user_balance }} Доскойн</span>
         {% else %}
             <a href="{% url 'login' %}">Login</a>
@@ -72,3 +36,4 @@
     {% block extra_scripts %}{% endblock %}
 </body>
 </html>
+
