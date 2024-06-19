@@ -1,3 +1,53 @@
-<h1>Welcome, {{ user.name }} {{ user.surname }}!</h1>
-<p>Phone Number: {{ user.phone_number }}</p>
-<p>Age: {{ user.age }}</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile</title>
+    <style>
+        #editPopup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        #editPopup form {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+    <script>
+        function showEditPopup() {
+            document.getElementById('editPopup').style.display = 'block';
+        }
+
+        function hideEditPopup() {
+            document.getElementById('editPopup').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome, {{ user.name }} {{ user.surname }}!</h1>
+    <p>Phone Number: {{ user.phone_number }}</p>
+    <p>Age: {{ user.age }}</p>
+    <p>City: {{ user.city.name }}</p>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+    <button onclick="showEditPopup()">Edit Profile</button>
+
+    <!-- Попап для редактирования профиля -->
+    <div id="editPopup">
+        <h2>Edit Profile</h2>
+        <form method="post" action="{% url 'profile_edit' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save Changes</button>
+            <button type="button" onclick="hideEditPopup()">Cancel</button>
+        </form>
+    </div>
+</body>
+</html>

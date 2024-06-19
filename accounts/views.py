@@ -1,11 +1,12 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from .models import User
-from .forms import RegistrationForm, LoginForm, VerificationForm
+from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm
 import random
 
 def generate_sms_code():
-    return str(random.randint(100000, 999999))
+    return str(random.randint(1000, 9999))
 
 def registration_view(request):
     if request.method == 'POST':
@@ -29,7 +30,7 @@ def login_view(request):
                 request.session['phone_number'] = phone_number
                 request.session['sms_code'] = generate_sms_code()
                 print(f"SMS код: {request.session['sms_code']}")  # Убедитесь, что этот код выводится в консоль
-                return redirect('login')
+                return redirect('verify_login')
             else:
                 form.add_error('phone_number', 'Пользователь не найден')
     else:
@@ -57,7 +58,20 @@ def verify_login_view(request):
         form = VerificationForm()
     return render(request, 'accounts/verify_login.html', {'form': form})
 
+@login_required
 def profile_view(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    return render(request, 'accounts/profile.html', {'user': request.user})
+    form = ProfileEditForm(instance=request.user)
+    return render(request, 'accounts/profile.html', {'user': request.user, 'form': form})
+
+@login_required
+def profile_edit_view(request):
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    return redirect('profile')
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')

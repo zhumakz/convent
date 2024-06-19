@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, City
+from .models import User
 
 class RegistrationForm(forms.ModelForm):
     class Meta:
@@ -10,4 +10,9 @@ class LoginForm(forms.Form):
     phone_number = forms.CharField(max_length=15)
 
 class VerificationForm(forms.Form):
-    sms_code = forms.CharField(max_length=6)
+    sms_code = forms.CharField(max_length=4)
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['name', 'surname', 'age', 'city']

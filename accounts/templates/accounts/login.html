@@ -1,34 +1,53 @@
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <script>
+        function showVerificationPopup() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('verifyPopup').style.display = 'block';
+        }
 
-<!-- Попап для верификации SMS кода -->
-<div id="verifyPopup" style="display: none;">
-    <form method="post" action="{% url 'verify_login' %}">
-        {% csrf_token %}
-        {{ verification_form.as_p }}
-        <button type="submit">Verify</button>
-    </form>
-</div>
+        function handleLoginSubmit(event) {
+            event.preventDefault();
+            fetch("{% url 'login' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: new URLSearchParams(new FormData(event.target)).toString()
+            }).then(response => {
+                if (response.ok) {
+                    showVerificationPopup();
+                } else {
+                    // Обработка ошибок
+                    response.text().then(text => console.error(text));
+                }
+            });
+        }
 
-<script>
-    document.querySelector('form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        fetch("{% url 'login' %}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
-            },
-            body: new URLSearchParams(new FormData(event.target)).toString()
-        }).then(response => {
-            if (response.ok) {
-                document.getElementById('verifyPopup').style.display = 'block';
-            } else {
-                // Обработка ошибок
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('loginForm').addEventListener('submit', handleLoginSubmit);
         });
-    });
-</script>
+    </script>
+</head>
+<body>
+    <div id="loginForm">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <!-- Попап для верификации SMS кода -->
+    <div id="verifyPopup" style="display: none;">
+        <form method="post" action="{% url 'verify_login' %}">
+            {% csrf_token %}
+            {{ verification_form.as_p }}
+            <button type="submit">Verify</button>
+        </form>
+    </div>
+</body>
+</html>
