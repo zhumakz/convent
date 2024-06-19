@@ -7,13 +7,16 @@ from django.utils.dateparse import parse_datetime
 from django.utils.dateformat import format
 from django.views.decorators.csrf import csrf_exempt
 
+from convent import settings
 from .models import User
 from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm
 import random
 from utils.sms import send_sms
 
+
 def generate_sms_code():
     return str(random.randint(1000, 9999))
+
 
 def registration_view(request):
     if request.method == 'POST':
@@ -26,6 +29,7 @@ def registration_view(request):
     else:
         form = RegistrationForm()
     return render(request, 'accounts/registration.html', {'form': form})
+
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -41,7 +45,7 @@ def login_view(request):
                 request.session['sms_code'] = sms_code
                 request.session['sms_sent'] = True
                 request.session['last_sms_time'] = format(timezone.now(), 'Y-m-d H:i:s')
-                message = f"Your verification code is {sms_code}"
+                message = f"{settings.SMS_VERIFICATION_MESSAGE} {sms_code}"
                 if send_sms(phone_number, message):
                     return JsonResponse({'status': 'ok'})
             return JsonResponse({'status': 'error'}, status=400)
@@ -69,10 +73,12 @@ def login_view(request):
                 request.session['sms_code'] = sms_code
                 request.session['sms_sent'] = True
                 request.session['last_sms_time'] = format(timezone.now(), 'Y-m-d H:i:s')
-                message = f"Your verification code is {sms_code}"
+                message = f"{settings.SMS_VERIFICATION_MESSAGE}  {sms_code}"
                 if send_sms(phone_number, message):
                     print(f"SMS code sent: {sms_code}")
-                return render(request, 'accounts/login.html', {'form': form, 'verification_form': VerificationForm(), 'show_popup': True, 'remaining_time': 60})
+                return render(request, 'accounts/login.html',
+                              {'form': form, 'verification_form': VerificationForm(), 'show_popup': True,
+                               'remaining_time': 60})
         return render(request, 'accounts/login.html', {'form': form, 'show_popup': False})
     else:
         form = LoginForm()
@@ -86,7 +92,10 @@ def login_view(request):
                 show_popup = False
         else:
             remaining_time = None
-        return render(request, 'accounts/login.html', {'form': form, 'verification_form': VerificationForm(), 'show_popup': show_popup, 'remaining_time': remaining_time})
+        return render(request, 'accounts/login.html',
+                      {'form': form, 'verification_form': VerificationForm(), 'show_popup': show_popup,
+                       'remaining_time': remaining_time})
+
 
 @csrf_exempt
 def resend_sms_view(request):
@@ -112,6 +121,7 @@ def resend_sms_view(request):
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
+
 def verify_login_view(request):
     if request.method == 'POST':
         form = VerificationForm(request.POST)
@@ -133,10 +143,12 @@ def verify_login_view(request):
         form = VerificationForm()
     return render(request, 'accounts/verify_login.html', {'form': form})
 
+
 @login_required
 def profile_view(request):
     form = ProfileEditForm(instance=request.user)
     return render(request, 'accounts/profile.html', {'user': request.user, 'form': form})
+
 
 @login_required
 def profile_edit_view(request):
@@ -147,10 +159,12 @@ def profile_edit_view(request):
             return redirect('profile')
     return redirect('profile')
 
+
 @login_required
 def user_profile_view(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     return render(request, 'accounts/user_profile.html', {'user': user})
+
 
 def logout_view(request):
     logout(request)

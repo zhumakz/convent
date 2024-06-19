@@ -141,3 +141,5 @@ SMSC_PASSWORD = '{7B%DC~tH*7h'
 SMSC_TEST_MODE = True  # Установите False для боевого режима
 SMSC_URL = 'https://smsc.kz/sys/send.php'
 
+SMS_VERIFICATION_MESSAGE = "Your verification code is"
+
