@@ -20,6 +20,15 @@ class TransactionForm(forms.ModelForm):
         amount = cleaned_data.get('amount')
         if amount <= 0:
             raise forms.ValidationError("Amount must be positive")
-        if self.user.doscointbalance.balance < amount:
+
+        if self.user.groups.filter(name='AddModerators').exists() and amount > 10:
+            raise forms.ValidationError("AddModerators cannot send more than 10 coins per transaction")
+
+        if self.user.groups.filter(name='RemoveModerators').exists() and self.cleaned_data[
+            'recipient'].doscointbalance.balance - amount < 0:
+            raise forms.ValidationError("RemoveModerators cannot reduce balance below 0")
+
+        if self.user.doscointbalance.balance < amount and not self.user.groups.filter(name='AddModerators').exists():
             raise forms.ValidationError("Insufficient balance")
+
         return cleaned_data
