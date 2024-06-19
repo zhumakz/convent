@@ -1,1 +1,25 @@
-<!-- Здесь может быть пусто, если попап реализуется на странице логина -->
+{% extends 'base.html' %}
+
+{% block title %}Verify Login{% endblock %}
+
+{% block content %}
+<h2>Verify Login</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Verify</button>
+</form>
+
+{% if form.errors %}
+    <div class="error">
+        {% for field in form %}
+            {% for error in field.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

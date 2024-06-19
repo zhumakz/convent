@@ -20,7 +20,13 @@ class LoginForm(forms.Form):
         return phone_number
 
 class VerificationForm(forms.Form):
-    sms_code = forms.CharField(max_length=4)
+    sms_code = forms.CharField(max_length=4, min_length=4, required=True, label='SMS Code')
+
+    def clean_sms_code(self):
+        sms_code = self.cleaned_data.get('sms_code')
+        if not sms_code.isdigit():
+            raise forms.ValidationError("SMS код должен содержать только цифры.")
+        return sms_code
 
 class ProfileEditForm(forms.ModelForm):
     class Meta:

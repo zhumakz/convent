@@ -18,6 +18,12 @@
         {{ verification_form.as_p }}
         <button type="submit">Verify</button>
     </form>
+    <p id="sms-info">
+        {% if remaining_time %}
+            Вы можете отправить SMS снова через <span id="timer">{{ remaining_time }}</span> секунд.
+        {% endif %}
+    </p>
+    <button id="resendButton" onclick="resendSMS()" style="display: none;">Отправить еще раз</button>
 </div>
 
 <script>
@@ -26,9 +32,71 @@
         document.getElementById('verifyPopup').style.display = 'block';
     }
 
+    function startTimer(duration, display, resendButton) {
+        var timer = duration, minutes, seconds;
+        var interval = setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            if (display) {
+                display.textContent = seconds;
+            }
+
+            if (--timer < 0) {
+                clearInterval(interval);
+                if (resendButton) {
+                    resendButton.style.display = 'block';
+                }
+                if (display) {
+                    display.textContent = "0";
+                }
+            }
+        }, 1000);
+    }
+
+    function resendSMS() {
+        document.getElementById('resendButton').style.display = 'none';
+        document.getElementById('sms-info').innerText = 'Отправка SMS...';
+
+        const phone_number = '{{ request.session.phone_number }}';
+        fetch("{% url 'resend_sms' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: new URLSearchParams({
+                'phone_number': phone_number,
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                document.getElementById('sms-info').innerText = 'Вы можете отправить SMS снова через <span id="timer">60</span> секунд.';
+                var display = document.querySelector('#timer');
+                startTimer(60, display, document.getElementById('resendButton'));
+            } else {
+                document.getElementById('sms-info').innerText = data.message || 'Ошибка отправки SMS. Попробуйте еще раз позже.';
+                document.getElementById('resendButton').style.display = 'block';
+            }
+        })
+        .catch(error => {
+            document.getElementById('sms-info').innerText = 'Ошибка отправки SMS. Попробуйте еще раз позже.';
+            document.getElementById('resendButton').style.display = 'block';
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         {% if show_popup %}
             showVerificationPopup();
+            {% if remaining_time %}
+                var timeLeft = {{ remaining_time }};
+                var display = document.querySelector('#timer');
+                var resendButton = document.getElementById('resendButton');
+                startTimer(timeLeft, display, resendButton);
+            {% endif %}
         {% endif %}
     });
 </script>
