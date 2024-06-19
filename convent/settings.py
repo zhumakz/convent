@@ -76,8 +76,12 @@ WSGI_APPLICATION = 'convent.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'convent',
+        'USER': 'postgres',
+        'PASSWORD': '123456789',
+        'HOST': 'localhost',  # Или адрес вашего сервера PostgreSQL
+        'PORT': '5432',       # Или другой порт, если у вас нестандартный
     }
 }
 
