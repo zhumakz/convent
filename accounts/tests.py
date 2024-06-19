@@ -44,8 +44,8 @@ class AccountsTestCase(TestCase):
             'phone_number': self.user.phone_number,
         }
         response = self.client.post(reverse('login'), data)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('verify_login'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'id="verifyPopup"', html=True)
 
         # Test with non-existing user
         data = {
@@ -53,7 +53,15 @@ class AccountsTestCase(TestCase):
         }
         response = self.client.post(reverse('login'), data)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Пользователь не найден')
+        self.assertContains(response, 'Пользователь с таким номером телефона не найден.')
+
+        # Test with invalid phone number
+        data = {
+            'phone_number': 'invalid',
+        }
+        response = self.client.post(reverse('login'), data)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Введите правильный номер телефона.')
 
     def test_verify_login_view(self):
         self.client.post(reverse('login'), {'phone_number': self.user.phone_number})

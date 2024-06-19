@@ -26,27 +26,10 @@
         document.getElementById('verifyPopup').style.display = 'block';
     }
 
-    function handleLoginSubmit(event) {
-        event.preventDefault();
-        fetch("{% url 'login' %}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
-            },
-            body: new URLSearchParams(new FormData(event.target)).toString()
-        }).then(response => {
-            if (response.ok) {
-                showVerificationPopup();
-            } else {
-                // Обработка ошибок
-                response.text().then(text => console.error(text));
-            }
-        });
-    }
-
     document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('loginForm').addEventListener('submit', handleLoginSubmit);
+        {% if show_popup %}
+            showVerificationPopup();
+        {% endif %}
     });
 </script>
 {% endblock %}

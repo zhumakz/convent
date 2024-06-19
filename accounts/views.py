@@ -33,13 +33,11 @@ def login_view(request):
                 request.session['phone_number'] = phone_number
                 request.session['sms_code'] = generate_sms_code()
                 print(f"SMS код: {request.session['sms_code']}")  # Убедитесь, что этот код выводится в консоль
-                return redirect('verify_login')
-            else:
-                form.add_error('phone_number', 'Пользователь не найден')
+                return render(request, 'accounts/login.html', {'form': form, 'verification_form': VerificationForm(), 'show_popup': True})
+        return render(request, 'accounts/login.html', {'form': form, 'show_popup': False})
     else:
         form = LoginForm()
-    verification_form = VerificationForm()
-    return render(request, 'accounts/login.html', {'form': form, 'verification_form': verification_form})
+    return render(request, 'accounts/login.html', {'form': form, 'verification_form': VerificationForm(), 'show_popup': False})
 
 def verify_login_view(request):
     if request.method == 'POST':

@@ -1,5 +1,6 @@
 from django import forms
 from .models import User, City
+import re
 
 class RegistrationForm(forms.ModelForm):
     class Meta:
@@ -8,6 +9,15 @@ class RegistrationForm(forms.ModelForm):
 
 class LoginForm(forms.Form):
     phone_number = forms.CharField(max_length=15)
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        phone_regex = re.compile(r'^\+7\d{10}$')
+        if not phone_regex.match(phone_number):
+            raise forms.ValidationError('Введите правильный номер телефона в формате +77475000795.')
+        if not User.objects.filter(phone_number=phone_number).exists():
+            raise forms.ValidationError('Пользователь с таким номером телефона не найден.')
+        return phone_number
 
 class VerificationForm(forms.Form):
     sms_code = forms.CharField(max_length=4)
