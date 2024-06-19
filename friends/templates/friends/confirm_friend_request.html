@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Friend Request{% endblock %}
+
+{% block content %}
+<h2>Confirm Friend Request</h2>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirm</button>
+</form>
+{% endblock %}

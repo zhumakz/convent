@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import User
 from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm
 import random
@@ -72,6 +72,11 @@ def profile_edit_view(request):
             form.save()
             return redirect('profile')
     return redirect('profile')
+
+@login_required
+def user_profile_view(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    return render(request, 'accounts/user_profile.html', {'user': user})
 
 def logout_view(request):
     logout(request)

@@ -13,6 +13,9 @@
             <ul>
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li><a href="{% url 'friends_list' %}">Friends</a></li>
+                    <li><a href="{% url 'friend_requests' %}">Friend Requests</a></li>
+                    <li><a href="{% url 'send_friend_request' %}">Send Friend Request</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% else %}
                     <li><a href="{% url 'login' %}">Login</a></li>
