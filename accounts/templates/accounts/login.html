@@ -60,12 +60,13 @@
         document.getElementById('resendButton').style.display = 'none';
         document.getElementById('sms-info').innerText = 'Отправка SMS...';
 
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         const phone_number = '{{ request.session.phone_number }}';
         fetch("{% url 'resend_sms' %}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': '{{ csrf_token }}',
+                'X-CSRFToken': csrfToken,
             },
             body: new URLSearchParams({
                 'phone_number': phone_number,

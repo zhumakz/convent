@@ -73,7 +73,7 @@ def login_view(request):
                 request.session['sms_code'] = sms_code
                 request.session['sms_sent'] = True
                 request.session['last_sms_time'] = format(timezone.now(), 'Y-m-d H:i:s')
-                message = f"{settings.SMS_VERIFICATION_MESSAGE}  {sms_code}"
+                message = f"{settings.SMS_VERIFICATION_MESSAGE} {sms_code}"
                 if send_sms(phone_number, message):
                     print(f"SMS code sent: {sms_code}")
                 return render(request, 'accounts/login.html',
@@ -99,7 +99,7 @@ def login_view(request):
 
 @csrf_exempt
 def resend_sms_view(request):
-    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    if request.method == 'POST':
         phone_number = request.POST.get('phone_number')
         if not phone_number:
             return JsonResponse({'status': 'error', 'message': 'Phone number is required'}, status=400)
