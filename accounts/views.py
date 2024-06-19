@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import User
 from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm
 import random
+from utils.sms import send_sms
 
 def generate_sms_code():
     return str(random.randint(1000, 9999))
@@ -30,9 +31,12 @@ def login_view(request):
             phone_number = form.cleaned_data['phone_number']
             user = User.objects.filter(phone_number=phone_number).first()
             if user:
+                sms_code = generate_sms_code()
                 request.session['phone_number'] = phone_number
-                request.session['sms_code'] = generate_sms_code()
-                print(f"SMS код: {request.session['sms_code']}")  # Убедитесь, что этот код выводится в консоль
+                request.session['sms_code'] = sms_code
+                message = f"Код для авторизации в Жаңа Адамдар {sms_code}"
+                if send_sms(phone_number, message):
+                    print(f"SMS code sent: {sms_code}")
                 return render(request, 'accounts/login.html', {'form': form, 'verification_form': VerificationForm(), 'show_popup': True})
         return render(request, 'accounts/login.html', {'form': form, 'show_popup': False})
     else:
