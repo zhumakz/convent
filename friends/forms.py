@@ -25,3 +25,11 @@ class ConfirmFriendRequestForm(forms.ModelForm):
     class Meta:
         model = FriendRequest
         fields = []
+
+    def clean(self):
+        cleaned_data = super().clean()
+        from_user = self.instance.from_user
+        to_user = self.instance.to_user
+        if Friendship.objects.filter(user1=from_user, user2=to_user).exists() or Friendship.objects.filter(user1=to_user, user2=from_user).exists():
+            raise forms.ValidationError("Этот пользователь уже ваш друг.")
+        return cleaned_data

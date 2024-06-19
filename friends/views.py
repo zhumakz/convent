@@ -29,6 +29,8 @@ def confirm_friend_request(request, request_id):
             friend_request.delete()
             messages.success(request, 'Запрос в друзья подтвержден!')
             return redirect('friend_requests')
+        else:
+            return render(request, 'friends/confirm_friend_request.html', {'form': form})
     else:
         form = ConfirmFriendRequestForm(instance=friend_request)
     return render(request, 'friends/confirm_friend_request.html', {'form': form})
