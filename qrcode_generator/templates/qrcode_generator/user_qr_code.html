@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block title %}QR Code{% endblock %}
+
+{% block content %}
+<h2>{{ user.name }}'s QR Code</h2>
+<img src="{{ user.qr_code.url }}" alt="QR Code">
+{% endblock %}

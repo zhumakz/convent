@@ -9,6 +9,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('friends/', include('friends.urls')),
     path('coins/', include('coins.urls')),
+    path('qr/', include('qrcode_generator.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
