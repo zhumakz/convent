@@ -5,21 +5,13 @@ from friends.models import FriendRequest
 from django.conf import settings
 from cryptography.fernet import Fernet
 
-def user_qr_code_view(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
-    return render(request, 'qrcode_generator/user_qr_code.html', {'user': user})
 @login_required
 def process_qr_code(request, encrypted_id):
     method = settings.ENCRYPTION_METHOD
     try:
         if method == 'simple':
-            encrypted_part, original_id = encrypted_id.split('-')
-            original_id = int(original_id)
-            multiplier = settings.ID_MULTIPLIER
-            if int(encrypted_part) == original_id * multiplier:
-                user = get_object_or_404(User, id=original_id)
-            else:
-                raise ValueError("Invalid QR code.")
+            decrypted_id = User.decrypt_id(encrypted_id)
+            user = get_object_or_404(User, id=decrypted_id)
         elif method == 'cryptography':
             f = Fernet(settings.QR_CODE_KEY)
             user_id = f.decrypt(encrypted_id.encode()).decode()
@@ -39,3 +31,7 @@ def process_qr_code(request, encrypted_id):
     except Exception as e:
         message = "Invalid QR code."
     return render(request, 'qrcode_generator/qr_code_result.html', {'message': message})
+
+def user_qr_code_view(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    return render(request, 'qrcode_generator/user_qr_code.html', {'user': user})

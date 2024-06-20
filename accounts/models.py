@@ -52,36 +52,39 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.is_admin
 
     def encrypt_id(self):
-        method = settings.ENCRYPTION_METHOD
-        if method == 'simple':
-            multiplier = settings.ID_MULTIPLIER
-            encrypted_id = self.pk * multiplier
-            return f'{encrypted_id}-{self.pk}'
-        elif method == 'cryptography':
-            f = Fernet(settings.QR_CODE_KEY)
-            encrypted_id = f.encrypt(str(self.pk).encode())
-            return encrypted_id.decode()
-        else:
-            raise ValueError("Invalid encryption method")
+        multiplier = settings.ID_MULTIPLIER
+        encrypted_id = self.pk * multiplier
+        return str(encrypted_id)
+
+    @staticmethod
+    def decrypt_id(encrypted_id):
+        multiplier = settings.ID_MULTIPLIER
+        decrypted_id = int(encrypted_id) // multiplier
+        if int(encrypted_id) % multiplier != 0:  # Check if valid multiplication
+            raise ValueError("Invalid encrypted ID")
+        return decrypted_id
+
+    def generate_qr_code(self):
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr_data = self.encrypt_id()
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+
+        img = qr.make_image(fill='black', back_color='white')
+        buffer = io.BytesIO()
+        img.save(buffer, format="PNG")
+        file_name = f'{self.phone_number}_qr.png'
+        self.qr_code.save(file_name, File(buffer), save=False)
+        self.save()
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)  # Сначала сохраняем пользователя, чтобы получить его pk
         if not self.qr_code:
-            qr = qrcode.QRCode(
-                version=1,
-                error_correction=qrcode.constants.ERROR_CORRECT_L,
-                box_size=10,
-                border=4,
-            )
-            qr_data = self.encrypt_id()
-            qr.add_data(qr_data)
-            qr.make(fit=True)
-
-            img = qr.make_image(fill='black', back_color='white')
-            buffer = io.BytesIO()
-            img.save(buffer, format="PNG")
-            file_name = f'{self.phone_number}_qr.png'
-            self.qr_code.save(file_name, File(buffer), save=False)
+            self.generate_qr_code()
         super().save(*args, **kwargs)
 
 class City(models.Model):
