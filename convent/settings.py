@@ -151,5 +151,9 @@ COINS_DIFFERENT_CITY = 10
 
 QR_CODE_KEY = b'ozQ3uMsNRY4F_LcNioD4GE9g-IoZAjgVTRLVoVxBO98='
 
+ID_MULTIPLIER = 123
+
+ENCRYPTION_METHOD = 'simple'  # 'simple' или 'cryptography'
+
 
 

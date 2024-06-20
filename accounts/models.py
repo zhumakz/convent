@@ -6,9 +6,6 @@ import qrcode
 import io
 from cryptography.fernet import Fernet
 
-# Ключ для шифрования, добавленный в settings.py
-KEY = settings.QR_CODE_KEY
-
 class UserManager(BaseUserManager):
     def create_user(self, phone_number, name, surname, age, city=None, password=None):
         if not phone_number:
@@ -55,9 +52,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.is_admin
 
     def encrypt_id(self):
-        f = Fernet(KEY)
-        encrypted_id = f.encrypt(str(self.pk).encode())
-        return encrypted_id.decode()
+        method = settings.ENCRYPTION_METHOD
+        if method == 'simple':
+            multiplier = settings.ID_MULTIPLIER
+            encrypted_id = self.pk * multiplier
+            return f'{encrypted_id}-{self.pk}'
+        elif method == 'cryptography':
+            f = Fernet(settings.QR_CODE_KEY)
+            encrypted_id = f.encrypt(str(self.pk).encode())
+            return encrypted_id.decode()
+        else:
+            raise ValueError("Invalid encryption method")
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)  # Сначала сохраняем пользователя, чтобы получить его pk
