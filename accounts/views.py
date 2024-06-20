@@ -112,7 +112,7 @@ def resend_sms_view(request):
         request.session['sms_code'] = sms_code
         request.session['sms_sent'] = True
         request.session['last_sms_time'] = format(timezone.now(), 'Y-m-d H:i:s')
-        message = f"Your verification code is {sms_code}"
+        message = f"{settings.SMS_VERIFICATION_MESSAGE} {sms_code}"
 
         if send_sms(phone_number, message):
             return JsonResponse({'status': 'ok'})
