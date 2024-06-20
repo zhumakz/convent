@@ -10,6 +10,7 @@ class FriendRequestForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
         super(FriendRequestForm, self).__init__(*args, **kwargs)
+        self.fields['to_user'].queryset = User.objects.exclude(id=self.user.id)
 
     def clean_to_user(self):
         to_user = self.cleaned_data.get('to_user')

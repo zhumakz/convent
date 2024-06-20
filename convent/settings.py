@@ -146,5 +146,8 @@ SMSC_URL = 'https://smsc.kz/sys/send.php'
 
 SMS_VERIFICATION_MESSAGE = "Код для авторизации Жаңа адамдар:"
 
+COINS_SAME_CITY = 5
+COINS_DIFFERENT_CITY = 10
+
 
 
