@@ -4,6 +4,10 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.core.files import File
 import qrcode
 import io
+from cryptography.fernet import Fernet
+
+# Ключ для шифрования, добавленный в settings.py
+KEY = settings.QR_CODE_KEY
 
 class UserManager(BaseUserManager):
     def create_user(self, phone_number, name, surname, age, city=None, password=None):
@@ -50,7 +54,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_staff(self):
         return self.is_admin
 
+    def encrypt_id(self):
+        f = Fernet(KEY)
+        encrypted_id = f.encrypt(str(self.pk).encode())
+        return encrypted_id.decode()
+
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Сначала сохраняем пользователя, чтобы получить его pk
         if not self.qr_code:
             qr = qrcode.QRCode(
                 version=1,
@@ -58,7 +68,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                 box_size=10,
                 border=4,
             )
-            qr.add_data(f'https://yourdomain.com/user/{self.pk}/')
+            qr_data = self.encrypt_id()
+            qr.add_data(qr_data)
             qr.make(fit=True)
 
             img = qr.make_image(fill='black', back_color='white')

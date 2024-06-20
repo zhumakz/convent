@@ -14,12 +14,16 @@
     <p>Phone Number: {{ user.phone_number }}</p>
 <p>Age: {{ user.age }}</p>
 <p>City: {{ user.city.name }}</p>
+
+
 <h3>QR Code</h3>
 {% if user.qr_code %}
     <img src="{{ user.qr_code.url }}" alt="QR Code" style="max-width: 200px;">
 {% else %}
     <p>QR Code not available</p>
 {% endif %}
+
+
 <form method="post" action="{% url 'logout' %}">
     {% csrf_token %}
     <button type="submit">Logout</button>
