@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'qrcode_generator',
     'campaigns',
     'leaderboard',
+    'lectures',
 ]
 
 MIDDLEWARE = [

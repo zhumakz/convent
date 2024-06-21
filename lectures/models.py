@@ -51,11 +51,11 @@ class Lecture(models.Model):
         buffer.close()
 
     def save(self, *args, **kwargs):
-        if not self.qr_code_start:
-            self.generate_qr_code_start()
-        if not self.qr_code_end:
-            self.generate_qr_code_end()
         super().save(*args, **kwargs)
+        if not self.qr_code_start or not self.qr_code_end:
+            self.generate_qr_code_start()
+            self.generate_qr_code_end()
+            super().save(*args, **kwargs)
 
 class LectureAttendance(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
