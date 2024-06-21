@@ -1,17 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied
+from django.contrib.auth.decorators import login_required
 from .models import DoscointBalance, Transaction
 from .forms import TransactionForm
-
-User = get_user_model()
-
-def user_can_add_coins(user):
-    return user.is_authenticated and user.has_perm('coins.can_add_coins')
-
-def user_can_remove_coins(user):
-    return user.is_authenticated and user.has_perm('coins.can_remove_coins')
+from .decorators import add_coins_permission_required, remove_coins_permission_required
 
 @login_required
 def balance_view(request):
@@ -21,7 +12,7 @@ def balance_view(request):
     return render(request, 'coins/balance.html', {'balance': balance, 'transactions': transactions})
 
 @login_required
-@user_passes_test(user_can_add_coins, login_url='/login/')
+@add_coins_permission_required
 def add_coins_view(request):
     if request.method == 'POST':
         form = TransactionForm(request.POST, user=request.user)
@@ -35,7 +26,7 @@ def add_coins_view(request):
     return render(request, 'coins/add_coins.html', {'form': form})
 
 @login_required
-@user_passes_test(user_can_remove_coins, login_url='/login/')
+@remove_coins_permission_required
 def remove_coins_view(request):
     if request.method == 'POST':
         form = TransactionForm(request.POST, user=request.user)
