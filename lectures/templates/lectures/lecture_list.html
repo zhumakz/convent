@@ -1,0 +1,12 @@
+{% extends base_template %}
+
+{% block title %}Lectures{% endblock %}
+
+{% block content %}
+<h2>Lectures</h2>
+<ul>
+    {% for lecture in lectures %}
+    <li><a href="{% url 'lecture_detail' lecture.id %}">{{ lecture.title }}</a> - {{ lecture.date }} at {{ lecture.location }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
