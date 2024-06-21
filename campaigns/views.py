@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Campaign, Vote
 from accounts.models import User
-from coins.models import DoscointBalance, Transaction  # Импортируем модели DoscointBalance и Transaction
+from coins.models import DoscointBalance, Transaction
 from django.conf import settings
 
 @login_required
@@ -27,7 +27,6 @@ def vote_for_campaign(request, campaign_id):
 
     Vote.objects.create(campaign=campaign, user=user)
 
-    # Добавляем фиксированное количество доскойнов за голос
     reward_amount = settings.CAMPAIGN_VOTE_REWARD
     doscoint_balance, created = DoscointBalance.objects.get_or_create(user=user)
     doscoint_balance.balance += reward_amount
@@ -36,3 +35,10 @@ def vote_for_campaign(request, campaign_id):
 
     messages.success(request, f'You have voted for {campaign.name} and received {reward_amount} coins.')
     return redirect('campaign_list')
+
+@login_required
+def campaign_voters(request, campaign_id):
+    campaign = get_object_or_404(Campaign, id=campaign_id)
+    voters = Vote.objects.filter(campaign=campaign).select_related('user')
+    return render(request, 'campaigns/campaign_voters.html', {'campaign': campaign, 'voters': voters})
+

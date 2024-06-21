@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Voters for {{ campaign.name }}{% endblock %}
+
+{% block content %}
+<h2>Voters for {{ campaign.name }}</h2>
+<ul>
+    {% for vote in voters %}
+    <li>
+        {{ vote.user.name }} {{ vote.user.surname }} - {{ vote.user.city.name }} - {{ vote.user.phone_number }}
+    </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'campaign_detail' campaign.id %}">Back to Campaign</a>
+{% endblock %}
