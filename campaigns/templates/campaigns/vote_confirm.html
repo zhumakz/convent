@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirm Vote{% endblock %}
+
+{% block content %}
+<h2>Confirm Your Vote</h2>
+<p>Are you sure you want to vote for {{ campaign.name }}? You can vote only once.</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, I want to vote</button>
+    <a href="{% url 'campaign_detail' campaign.id %}">Cancel</a>
+</form>
+{% endblock %}

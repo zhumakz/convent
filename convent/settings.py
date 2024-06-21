@@ -144,7 +144,7 @@ AUTH_USER_MODEL = 'accounts.User'
 # Настройки для SMSC.kz
 SMSC_LOGIN = 'newpeople'
 SMSC_PASSWORD = '{7B%DC~tH*7h'
-SMSC_TEST_MODE = True  # Установите False для боевого режима
+SMSC_TEST_MODE = True  # Установи False для боевого режима
 SMSC_URL = 'https://smsc.kz/sys/send.php'
 SMS_VERIFICATION_MESSAGE = "Код для авторизации Жаңа адамдар:"
 
@@ -156,8 +156,13 @@ ENCRYPTION_METHOD = 'simple'  # 'simple' или 'cryptography'
 
 COINS_SAME_CITY = 5
 COINS_DIFFERENT_CITY = 10
-# Награда за голосование за кампанию
-CAMPAIGN_VOTE_REWARD = 10
+
+
+# Вознаграждение за добавление в друзья
+SAME_CITY_FRIEND_REWARD = 5
+DIFFERENT_CITY_FRIEND_REWARD = 10
+
+VOTE_REWARD_COINS = 10
 
 
 

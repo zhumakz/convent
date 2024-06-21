@@ -10,9 +10,13 @@
 <img src="{{ campaign.leader_photo.url }}" alt="{{ campaign.leader_name }} Photo" style="max-width: 100px;">
 <p>City: {{ campaign.city }}</p>
 <img src="{{ campaign.main_photo.url }}" alt="{{ campaign.name }} Main Photo" style="max-width: 100px;">
-<form method="post" action="{% url 'vote_for_campaign' campaign.id %}">
-    {% csrf_token %}
-    <button type="submit">Vote for this campaign</button>
-</form>
+{% if has_voted %}
+    <p>You have already voted for this campaign.</p>
+{% else %}
+    <form method="post" action="{% url 'vote_for_campaign' campaign.id %}">
+        {% csrf_token %}
+        <button type="submit">Vote for this campaign and earn {{ settings.VOTE_REWARD_COINS }} coins</button>
+    </form>
+{% endif %}
 <a href="{% url 'campaign_voters' campaign.id %}">View Voters</a>
 {% endblock %}

@@ -1,7 +1,6 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 from django.core.exceptions import ValidationError
-
 
 class DoscointBalance(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -14,28 +13,28 @@ class DoscointBalance(models.Model):
 
 class Transaction(models.Model):
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_transactions')
-    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                  related_name='received_transactions')
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_transactions')
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     timestamp = models.DateTimeField(auto_now_add=True)
     description = models.TextField(null=True, blank=True)
+    is_system_transaction = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if self.amount <= 0:
             raise ValidationError("Transaction amount must be positive")
 
-        if self.sender.doscointbalance.balance < self.amount:
+        if not self.is_system_transaction and self.sender.doscointbalance.balance < self.amount:
             raise ValidationError("Sender does not have enough balance")
 
         if self.sender.groups.filter(name='AddModerators').exists() and self.amount > 10:
             raise ValidationError("AddModerators cannot send more than 10 coins per transaction")
 
-        if self.sender.groups.filter(
-                name='RemoveModerators').exists() and self.recipient.doscointbalance.balance - self.amount < 0:
+        if self.sender.groups.filter(name='RemoveModerators').exists() and self.recipient.doscointbalance.balance - self.amount < 0:
             raise ValidationError("RemoveModerators cannot reduce balance below 0")
 
-        self.sender.doscointbalance.balance -= self.amount
-        self.sender.doscointbalance.save()
+        if not self.is_system_transaction:
+            self.sender.doscointbalance.balance -= self.amount
+            self.sender.doscointbalance.save()
 
         self.recipient.doscointbalance.balance += self.amount
         self.recipient.doscointbalance.total_earned += self.amount

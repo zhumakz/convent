@@ -4,11 +4,33 @@ from .models import DoscointBalance, Transaction
 from .forms import TransactionForm
 from .decorators import add_coins_permission_required, remove_coins_permission_required
 
+
 @login_required
 def balance_view(request):
     balance = request.user.doscointbalance.balance
     transactions = Transaction.objects.filter(sender=request.user) | Transaction.objects.filter(recipient=request.user)
     transactions = transactions.order_by('-timestamp')
+
+    for transaction in transactions:
+        if transaction.is_system_transaction:
+            transaction.sender_name = "System"
+            transaction.recipient_name = f"{transaction.recipient.name} {transaction.recipient.surname}"
+        else:
+            if transaction.sender == request.user:
+                transaction.sender_name = "You"
+            else:
+                if transaction.sender.is_superuser:
+                    transaction.sender_name = "System"
+                elif transaction.sender.groups.filter(name__in=['AddModerators', 'RemoveModerators']).exists():
+                    transaction.sender_name = f"{transaction.sender.name} {transaction.sender.surname}"
+                else:
+                    transaction.sender_name = transaction.sender.phone_number
+
+            if transaction.recipient == request.user:
+                transaction.recipient_name = "You"
+            else:
+                transaction.recipient_name = f"{transaction.recipient.name} {transaction.recipient.surname}"
+
     return render(request, 'coins/balance.html', {'balance': balance, 'transactions': transactions})
 
 @login_required

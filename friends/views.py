@@ -1,9 +1,8 @@
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import FriendRequest, Friendship
 from .forms import FriendRequestForm, ConfirmFriendRequestForm
-from accounts.models import User
 
 @login_required
 def send_friend_request(request):
@@ -26,7 +25,6 @@ def confirm_friend_request(request, request_id):
         form = ConfirmFriendRequestForm(request.POST, instance=friend_request)
         if form.is_valid():
             Friendship.objects.create(user1=friend_request.from_user, user2=friend_request.to_user)
-            friend_request.delete()
             messages.success(request, 'Запрос в друзья подтвержден!')
             return redirect('friend_requests')
         else:

@@ -3,7 +3,6 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from coins.models import DoscointBalance, Transaction
-from accounts.models import User  # Убедитесь, что импортировали модель User
 
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='sent_friend_requests', on_delete=models.CASCADE)
@@ -27,16 +26,26 @@ def add_coins_on_friendship(sender, instance, created, **kwargs):
         user1 = instance.user1
         user2 = instance.user2
         if user1.city == user2.city:
-            coins = settings.COINS_SAME_CITY
+            coins = settings.SAME_CITY_FRIEND_REWARD
         else:
-            coins = settings.COINS_DIFFERENT_CITY
+            coins = settings.DIFFERENT_CITY_FRIEND_REWARD
 
-        # Обновляем баланс пользователей
-        user1.doscointbalance.balance += coins
-        user2.doscointbalance.balance += coins
-        user1.doscointbalance.save()
-        user2.doscointbalance.save()
+        # Обновляем баланс пользователей и создаем транзакции
+        for user, friend in [(user1, user2), (user2, user1)]:
+            doscoint_balance, created = DoscointBalance.objects.get_or_create(user=user)
+            doscoint_balance.balance += coins
+            doscoint_balance.total_earned += coins
+            doscoint_balance.save()
 
-        # Создаем транзакции
-        Transaction.objects.create(sender=user1, recipient=user1, amount=coins, description='Friendship bonus')
-        Transaction.objects.create(sender=user2, recipient=user2, amount=coins, description='Friendship bonus')
+            # Создаем транзакции
+            Transaction.objects.create(
+                sender=user,
+                recipient=user,
+                amount=coins,
+                description=f'Reward for adding friend {friend.name} {friend.surname}',
+                is_system_transaction=True
+            )
+
+        # Удаляем все запросы на дружбу между этими пользователями
+        FriendRequest.objects.filter(from_user=user1, to_user=user2).delete()
+        FriendRequest.objects.filter(from_user=user2, to_user=user1).delete()
