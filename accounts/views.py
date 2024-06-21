@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from convent import settings
 from .models import User
-from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm
+from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm, ModeratorLoginForm
 import random
 from utils.sms import send_sms
 
@@ -169,3 +169,22 @@ def user_profile_view(request, user_id):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+def moderator_login_view(request):
+    if request.method == 'POST':
+        form = ModeratorLoginForm(request.POST)
+        if form.is_valid():
+            phone_number = form.cleaned_data.get('phone_number')
+            password = form.cleaned_data.get('password')
+            user = authenticate(phone_number=phone_number, password=password)
+            if user is not None:
+                login(request, user)
+                if user.groups.filter(name='AddModerators').exists():
+                    return redirect('add_coins')
+                elif user.groups.filter(name='RemoveModerators').exists():
+                    return redirect('remove_coins')
+                else:
+                    return redirect('profile')
+    else:
+        form = ModeratorLoginForm()
+    return render(request, 'accounts/moderator_login.html', {'form': form})

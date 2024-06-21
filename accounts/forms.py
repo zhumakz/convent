@@ -1,6 +1,8 @@
 from django import forms
+from django.contrib.auth import authenticate
 from .models import User, City
 import re
+
 
 class RegistrationForm(forms.ModelForm):
     class Meta:
@@ -44,3 +46,14 @@ class ProfileEditForm(forms.ModelForm):
                 raise forms.ValidationError('File size should not exceed 5MB.')
 
         return profile_picture
+class ModeratorLoginForm(forms.Form):
+    phone_number = forms.CharField(max_length=15, label='Phone Number')
+    password = forms.CharField(widget=forms.PasswordInput, label='Password')
+
+    def clean(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        password = self.cleaned_data.get('password')
+        user = authenticate(phone_number=phone_number, password=password)
+        if not user or not user.groups.filter(name__in=['AddModerators', 'RemoveModerators']).exists():
+            raise forms.ValidationError("Invalid login or not a moderator.")
+        return self.cleaned_data

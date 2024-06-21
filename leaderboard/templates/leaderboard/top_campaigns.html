@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Top 5 Campaigns{% endblock %}
+
+{% block content %}
+<h2>Top 5 Campaigns by Number of Votes</h2>
+<ol>
+    {% for campaign in top_campaigns %}
+    <li>
+        {{ campaign.name }} - {{ campaign.num_votes }} Votes
+    </li>
+    {% endfor %}
+</ol>
+{% endblock %}

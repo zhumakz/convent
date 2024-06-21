@@ -3,12 +3,12 @@
 {% block title %}Top 10 Users{% endblock %}
 
 {% block content %}
-<h2>Top 10 Users by Earned Coins</h2>
-<ul>
+<h2>Top 10 Users by Number of Friends</h2>
+<ol>
     {% for user in top_users %}
     <li>
-        {{ user.user.name }} {{ user.user.surname }} - {{ user.total_earned }} Coins
+        {{ user.name }} {{ user.surname }} - {{ user.num_friends }} Friends
     </li>
     {% endfor %}
-</ul>
+</ol>
 {% endblock %}
