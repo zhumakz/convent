@@ -11,6 +11,7 @@ urlpatterns = [
     path('coins/', include('coins.urls')),
     path('qr/', include('qrcode_generator.urls')),
     path('campaigns/', include('campaigns.urls')),
+    path('leaderboard/', include('leaderboard.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Top 10 Users{% endblock %}
+
+{% block content %}
+<h2>Top 10 Users by Earned Coins</h2>
+<ul>
+    {% for user in top_users %}
+    <li>
+        {{ user.user.name }} {{ user.user.surname }} - {{ user.total_earned }} Coins
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
