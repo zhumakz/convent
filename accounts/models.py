@@ -4,7 +4,6 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.core.files import File
 import qrcode
 import io
-from cryptography.fernet import Fernet
 
 class UserManager(BaseUserManager):
     def create_user(self, phone_number, name, surname, age, city=None, password=None):
@@ -80,12 +79,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         img.save(buffer, format="PNG")
         file_name = f'{self.phone_number}_qr.png'
         self.qr_code.save(file_name, File(buffer), save=False)
-        self.save()
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Сначала сохраняем пользователя, чтобы получить его pk
         if not self.qr_code:
             self.generate_qr_code()
-        super().save(*args, **kwargs)
+            super().save(*args, **kwargs)  # Сохраняем снова, чтобы сохранить QR-код
 
 class City(models.Model):
     name = models.CharField(max_length=100)

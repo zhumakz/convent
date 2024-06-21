@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ campaign.name }}{% endblock %}
+
+{% block content %}
+<h2>{{ campaign.name }}</h2>
+<img src="{{ campaign.logo.url }}" alt="{{ campaign.name }} Logo" style="max-width: 100px;">
+<p>{{ campaign.description }}</p>
+<p>Leader: {{ campaign.leader_name }}</p>
+<img src="{{ campaign.leader_photo.url }}" alt="{{ campaign.leader_name }} Photo" style="max-width: 100px;">
+<p>City: {{ campaign.city }}</p>
+<img src="{{ campaign.main_photo.url }}" alt="{{ campaign.name }} Main Photo" style="max-width: 100px;">
+<form method="post" action="{% url 'vote_for_campaign' campaign.id %}">
+    {% csrf_token %}
+    <button type="submit">Vote for this campaign</button>
+</form>
+{% endblock %}

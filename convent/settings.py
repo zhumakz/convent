@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'friends',
     'coins',
     'main',
+    'qrcode_generator',
+    'campaigns',
 ]
 
 MIDDLEWARE = [
@@ -143,17 +145,18 @@ SMSC_LOGIN = 'newpeople'
 SMSC_PASSWORD = '{7B%DC~tH*7h'
 SMSC_TEST_MODE = True  # Установите False для боевого режима
 SMSC_URL = 'https://smsc.kz/sys/send.php'
-
 SMS_VERIFICATION_MESSAGE = "Код для авторизации Жаңа адамдар:"
+
+
+QR_CODE_KEY = b'ozQ3uMsNRY4F_LcNioD4GE9g-IoZAjgVTRLVoVxBO98='
+ID_MULTIPLIER = 37
+ENCRYPTION_METHOD = 'simple'  # 'simple' или 'cryptography'
+
 
 COINS_SAME_CITY = 5
 COINS_DIFFERENT_CITY = 10
-
-QR_CODE_KEY = b'ozQ3uMsNRY4F_LcNioD4GE9g-IoZAjgVTRLVoVxBO98='
-
-ID_MULTIPLIER = 37
-
-ENCRYPTION_METHOD = 'simple'  # 'simple' или 'cryptography'
+# Награда за голосование за кампанию
+CAMPAIGN_VOTE_REWARD = 10
 
 
 
