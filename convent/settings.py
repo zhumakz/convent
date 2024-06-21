@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'convent.middleware.BaseTemplateMiddleware',
 ]
 
 ROOT_URLCONF = 'convent.urls'
@@ -68,6 +69,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'coins.context_processors.add_balance_to_context',
+                'convent.context_processors.base_template',
             ],
         },
     },
@@ -148,21 +150,15 @@ SMSC_TEST_MODE = True  # Установи False для боевого режим
 SMSC_URL = 'https://smsc.kz/sys/send.php'
 SMS_VERIFICATION_MESSAGE = "Код для авторизации Жаңа адамдар:"
 
-
 QR_CODE_KEY = b'ozQ3uMsNRY4F_LcNioD4GE9g-IoZAjgVTRLVoVxBO98='
 ID_MULTIPLIER = 37
 ENCRYPTION_METHOD = 'simple'  # 'simple' или 'cryptography'
 
-
 COINS_SAME_CITY = 5
 COINS_DIFFERENT_CITY = 10
-
 
 # Вознаграждение за добавление в друзья
 SAME_CITY_FRIEND_REWARD = 5
 DIFFERENT_CITY_FRIEND_REWARD = 10
 
 VOTE_REWARD_COINS = 10
-
-
-

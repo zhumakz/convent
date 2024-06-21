@@ -1,22 +1,29 @@
-{% extends 'base.html' %}
+{% extends base_template %}
 
-{% block title %}{{ campaign.name }}{% endblock %}
+{% block title %}Campaign Detail{% endblock %}
 
 {% block content %}
 <h2>{{ campaign.name }}</h2>
-<img src="{{ campaign.logo.url }}" alt="{{ campaign.name }} Logo" style="max-width: 100px;">
 <p>{{ campaign.description }}</p>
 <p>Leader: {{ campaign.leader_name }}</p>
-<img src="{{ campaign.leader_photo.url }}" alt="{{ campaign.leader_name }} Photo" style="max-width: 100px;">
 <p>City: {{ campaign.city }}</p>
-<img src="{{ campaign.main_photo.url }}" alt="{{ campaign.name }} Main Photo" style="max-width: 100px;">
+<img src="{{ campaign.logo.url }}" alt="{{ campaign.name }} logo">
+<img src="{{ campaign.main_photo.url }}" alt="{{ campaign.name }} main photo">
+<img src="{{ campaign.leader_photo.url }}" alt="{{ campaign.leader_name }} photo">
+
+{% if campaign.qr_code %}
+    <h3>Scan to Vote</h3>
+    <img src="{{ campaign.qr_code.url }}" alt="QR Code">
+{% endif %}
+
 {% if has_voted %}
     <p>You have already voted for this campaign.</p>
 {% else %}
     <form method="post" action="{% url 'vote_for_campaign' campaign.id %}">
         {% csrf_token %}
-        <button type="submit">Vote for this campaign and earn {{ settings.VOTE_REWARD_COINS }} coins</button>
+        <button type="submit">Vote for this Campaign</button>
     </form>
 {% endif %}
-<a href="{% url 'campaign_voters' campaign.id %}">View Voters</a>
+
+<a href="{% url 'campaign_voters' campaign.id %}">See who voted</a>
 {% endblock %}
