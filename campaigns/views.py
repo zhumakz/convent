@@ -22,32 +22,24 @@ def vote_for_campaign(request, campaign_id):
     campaign = get_object_or_404(Campaign, id=campaign_id)
     user = request.user
 
-    if Vote.objects.filter(user=user, campaign=campaign).exists():
+    if Vote.objects.filter(campaign=campaign, user=user).exists():
         messages.error(request, 'You have already voted for this campaign.')
         return redirect('campaign_detail', campaign_id=campaign_id)
 
-    if request.method == 'POST':
-        Vote.objects.create(campaign=campaign, user=user)
+    Vote.objects.create(campaign=campaign, user=user)
 
-        reward_amount = settings.VOTE_REWARD_COINS
-        doscoint_balance, created = DoscointBalance.objects.get_or_create(user=user)
-        doscoint_balance.balance += reward_amount
-        doscoint_balance.total_earned += reward_amount
-        doscoint_balance.save()
+    reward_amount = settings.VOTE_REWARD_COINS
 
-        # Запись системной транзакции
-        Transaction.objects.create(
-            sender=user,
-            recipient=user,
-            amount=reward_amount,
-            description=f'Reward for voting in campaign {campaign.name}',
-            is_system_transaction=True
-        )
+    Transaction.objects.create(
+        sender=user,
+        recipient=user,
+        amount=reward_amount,
+        description=f'Reward for voting for campaign {campaign.name}',
+        is_system_transaction=True
+    )
 
-        messages.success(request, f'You have voted for {campaign.name} and received {reward_amount} coins.')
-        return redirect('campaign_list')
-
-    return render(request, 'campaigns/vote_confirm.html', {'campaign': campaign})
+    messages.success(request, f'You have successfully voted for {campaign.name} and received {reward_amount} coins.')
+    return redirect('campaign_detail', campaign_id=campaign_id)
 
 @login_required
 def campaign_voters(request, campaign_id):

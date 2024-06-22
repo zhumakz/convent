@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Lecture, LectureAttendance
 from django.utils import timezone
-from coins.models import DoscointBalance, Transaction
+from coins.models import Transaction
 from django.conf import settings
 
 @login_required
@@ -54,10 +54,6 @@ def scan_lecture_qr_end(request, lecture_id):
     attendance.save()
 
     reward_amount = settings.LECTURE_REWARD_COINS
-    doscoint_balance, created = DoscointBalance.objects.get_or_create(user=user)
-    doscoint_balance.balance += reward_amount
-    doscoint_balance.total_earned += reward_amount
-    doscoint_balance.save()
 
     Transaction.objects.create(
         sender=user,

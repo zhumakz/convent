@@ -5,6 +5,10 @@ from django.core.files import File
 import qrcode
 import io
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from coins.models import DoscointBalance, Transaction
+
 
 class UserManager(BaseUserManager):
     def create_user(self, phone_number, name, surname, age, city=None, password=None):
@@ -94,3 +98,15 @@ class City(models.Model):
 
     def __str__(self):
         return self.name
+
+@receiver(post_save, sender=User)
+def create_user_balance(sender, instance, created, **kwargs):
+    if created:
+        balance, _ = DoscointBalance.objects.get_or_create(user=instance)
+        Transaction.objects.create(
+            sender=instance,
+            recipient=instance,
+            amount=0,
+            description="Initial balance creation",
+            is_system_transaction=True
+        )

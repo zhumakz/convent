@@ -163,3 +163,25 @@ SAME_CITY_FRIEND_REWARD = 1
 DIFFERENT_CITY_FRIEND_REWARD = 2
 LECTURE_REWARD_COINS = 5
 VOTE_REWARD_COINS = 5
+
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

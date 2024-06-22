@@ -4,14 +4,19 @@ from .models import DoscointBalance, Transaction
 from .forms import TransactionForm
 from .decorators import add_coins_permission_required, remove_coins_permission_required
 
+import logging
+
+logger = logging.getLogger('coins')
 
 @login_required
 def balance_view(request):
+    logger.debug(f'Balance view accessed by: {request.user}')
     balance = request.user.doscointbalance.balance
     transactions = Transaction.objects.filter(sender=request.user) | Transaction.objects.filter(recipient=request.user)
     transactions = transactions.order_by('-timestamp')
 
     for transaction in transactions:
+        logger.debug(f'Processing transaction: {transaction}')
         if transaction.is_system_transaction:
             transaction.sender_name = "System"
             transaction.recipient_name = f"{transaction.recipient.name} {transaction.recipient.surname}"
@@ -36,12 +41,14 @@ def balance_view(request):
 @login_required
 @add_coins_permission_required
 def add_coins_view(request):
+    logger.debug(f'Add coins view accessed by: {request.user}')
     if request.method == 'POST':
         form = TransactionForm(request.POST, user=request.user)
         if form.is_valid():
             transaction = form.save(commit=False)
             transaction.sender = request.user
             transaction.save()
+            logger.debug(f'Coins added: {transaction.amount} to {transaction.recipient}')
             return redirect('balance')
     else:
         form = TransactionForm(user=request.user)
@@ -50,6 +57,7 @@ def add_coins_view(request):
 @login_required
 @remove_coins_permission_required
 def remove_coins_view(request):
+    logger.debug(f'Remove coins view accessed by: {request.user}')
     if request.method == 'POST':
         form = TransactionForm(request.POST, user=request.user)
         if form.is_valid():
@@ -57,6 +65,7 @@ def remove_coins_view(request):
             transaction.sender = request.user
             transaction.amount = -transaction.amount  # Отрицательное значение для удаления
             transaction.save()
+            logger.debug(f'Coins removed: {transaction.amount} from {transaction.recipient}')
             return redirect('balance')
     else:
         form = TransactionForm(user=request.user)
@@ -64,6 +73,7 @@ def remove_coins_view(request):
 
 @login_required
 def profile_view(request):
+    logger.debug(f'Profile view accessed by: {request.user}')
     if request.user.groups.filter(name='AddModerators').exists():
         return redirect('add_coins')
     elif request.user.groups.filter(name='RemoveModerators').exists():
@@ -72,3 +82,4 @@ def profile_view(request):
         balance = request.user.doscointbalance.balance
         total_earned = request.user.doscointbalance.total_earned
         return render(request, 'accounts/profile.html', {'balance': balance, 'total_earned': total_earned})
+

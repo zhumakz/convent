@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from coins.models import DoscointBalance, Transaction
+from coins.models import Transaction
 
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='sent_friend_requests', on_delete=models.CASCADE)
@@ -25,26 +25,29 @@ def add_coins_on_friendship(sender, instance, created, **kwargs):
     if created:
         user1 = instance.user1
         user2 = instance.user2
+
+        # Определяем количество койнов в зависимости от городов
         if user1.city == user2.city:
             coins = settings.SAME_CITY_FRIEND_REWARD
         else:
             coins = settings.DIFFERENT_CITY_FRIEND_REWARD
 
-        # Обновляем баланс пользователей и создаем транзакции
-        for user, friend in [(user1, user2), (user2, user1)]:
-            doscoint_balance, created = DoscointBalance.objects.get_or_create(user=user)
-            doscoint_balance.balance += coins
-            doscoint_balance.total_earned += coins
-            doscoint_balance.save()
+        # Создаем транзакции для обновления балансов пользователей
+        Transaction.objects.create(
+            sender=user1,
+            recipient=user1,
+            amount=coins,
+            description=f'Reward for adding friend {user2.phone_number}',
+            is_system_transaction=True
+        )
 
-            # Создаем транзакции
-            Transaction.objects.create(
-                sender=user,
-                recipient=user,
-                amount=coins,
-                description=f'Reward for adding friend {friend.name} {friend.surname}',
-                is_system_transaction=True
-            )
+        Transaction.objects.create(
+            sender=user2,
+            recipient=user2,
+            amount=coins,
+            description=f'Reward for adding friend {user1.phone_number}',
+            is_system_transaction=True
+        )
 
         # Удаляем все запросы на дружбу между этими пользователями
         FriendRequest.objects.filter(from_user=user1, to_user=user2).delete()

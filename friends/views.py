@@ -24,7 +24,12 @@ def confirm_friend_request(request, request_id):
     if request.method == 'POST':
         form = ConfirmFriendRequestForm(request.POST, instance=friend_request)
         if form.is_valid():
-            Friendship.objects.create(user1=friend_request.from_user, user2=friend_request.to_user)
+            # Проверяем, существует ли уже дружба, прежде чем создавать новую
+            if not Friendship.objects.filter(user1=friend_request.from_user, user2=friend_request.to_user).exists():
+                Friendship.objects.create(user1=friend_request.from_user, user2=friend_request.to_user)
+
+            # Удаляем запрос дружбы после подтверждения
+            friend_request.delete()
             messages.success(request, 'Запрос в друзья подтвержден!')
             return redirect('friend_requests')
         else:
