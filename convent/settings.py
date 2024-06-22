@@ -80,15 +80,15 @@ WSGI_APPLICATION = 'convent.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+#*
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'convent',
+        'NAME': 'conventDev',
         'USER': 'postgres',
         'PASSWORD': '123456789',
-        'HOST': 'localhost',  # Или адрес вашего сервера PostgreSQL
-        'PORT': '5432',  # Или другой порт, если у вас нестандартный
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 

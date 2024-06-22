@@ -14,3 +14,8 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'convent.settings')
 
 application = get_wsgi_application()
+
+# Регистрация сигналов после полной загрузки приложения
+from coins.signals_register import register_signals
+
+register_signals()

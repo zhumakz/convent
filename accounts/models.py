@@ -5,6 +5,7 @@ from django.core.files import File
 import qrcode
 import io
 
+
 class UserManager(BaseUserManager):
     def create_user(self, phone_number, name, surname, age, city=None, password=None):
         if not phone_number:
@@ -20,6 +21,7 @@ class UserManager(BaseUserManager):
         user.is_superuser = True
         user.save(using=self._db)
         return user
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=15, unique=True)
@@ -85,6 +87,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if not self.qr_code:
             self.generate_qr_code()
             super().save(*args, **kwargs)  # Сохраняем снова, чтобы сохранить QR-код
+
 
 class City(models.Model):
     name = models.CharField(max_length=100)
