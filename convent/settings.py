@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'campaigns',
     'leaderboard',
     'lectures',
+    'shop',
 ]
 
 MIDDLEWARE = [

@@ -13,7 +13,7 @@ generate_qr_codes.short_description = "Generate QR code for selected users"
 
 
 class UserAdmin(BaseUserAdmin):
-    list_display = ('phone_number', 'name', 'surname', 'age', 'city', 'is_admin', 'is_superuser')
+    list_display = ('phone_number', 'name', 'surname', 'age', 'city', 'is_admin', 'is_superuser', 'is_moderator')
     search_fields = ('phone_number', 'name', 'surname')
     readonly_fields = ('last_login',)
     actions = [generate_qr_codes]
@@ -24,13 +24,13 @@ class UserAdmin(BaseUserAdmin):
         (None, {'fields': ('phone_number', 'password')}),
         ('Personal info', {'fields': ('name', 'surname', 'age', 'city')}),
         ('Important dates', {'fields': ('last_login',)}),
-        ('Permissions', {'fields': ('is_admin', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Permissions', {'fields': ('is_admin', 'is_superuser', 'groups', 'user_permissions', 'is_moderator')}),
     )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('phone_number', 'name', 'surname', 'age', 'city', 'password1', 'password2'),
+            'fields': ('phone_number', 'name', 'surname', 'age', 'city', 'password1', 'password2', 'is_moderator'),
         }),
     )
     ordering = ('phone_number',)

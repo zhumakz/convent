@@ -23,6 +23,7 @@ class UserManager(BaseUserManager):
         user = self.create_user(phone_number, name, surname, age, city, password)
         user.is_admin = True
         user.is_superuser = True
+        user.is_moderator = True
         user.save(using=self._db)
         return user
 
@@ -37,6 +38,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     qr_code = models.ImageField(upload_to='qr_codes/', null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    is_moderator = models.BooleanField(default=False)
 
     objects = UserManager()
 

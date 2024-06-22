@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Products in {{ shop.name }}</h1>
+  <ul>
+    {% for product in products %}
+      <li>{{ product.name }} - {{ product.price }} coins</li>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'add_product' shop.id %}">Add Product</a>
+  <a href="{% url 'generate_purchase_qr' %}">Generate Purchase QR</a>  <!-- Исправлено -->
+{% endblock %}
