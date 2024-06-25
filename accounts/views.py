@@ -10,12 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from convent import settings
 from .models import User
 from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm, ModeratorLoginForm
-import random
-from utils.sms import send_sms
-
-
-def generate_sms_code():
-    return str(random.randint(1000, 9999))
+from sms.utils import handle_sms_verification
 
 
 def registration_view(request):
@@ -40,14 +35,8 @@ def login_view(request):
             phone_number = request.POST.get('phone_number')
             user = User.objects.filter(phone_number=phone_number).first()
             if user:
-                sms_code = generate_sms_code()
-                request.session['phone_number'] = phone_number
-                request.session['sms_code'] = sms_code
-                request.session['sms_sent'] = True
-                request.session['last_sms_time'] = format(timezone.now(), 'Y-m-d H:i:s')
-                message = f"{settings.SMS_VERIFICATION_MESSAGE} {sms_code}"
-                if send_sms(phone_number, message):
-                    return JsonResponse({'status': 'ok'})
+                handle_sms_verification(request, phone_number)
+                return JsonResponse({'status': 'ok'})
             return JsonResponse({'status': 'error'}, status=400)
 
         form = LoginForm(request.POST)
@@ -68,14 +57,7 @@ def login_view(request):
                             'remaining_time': remaining_time
                         })
 
-                sms_code = generate_sms_code()
-                request.session['phone_number'] = phone_number
-                request.session['sms_code'] = sms_code
-                request.session['sms_sent'] = True
-                request.session['last_sms_time'] = format(timezone.now(), 'Y-m-d H:i:s')
-                message = f"{settings.SMS_VERIFICATION_MESSAGE} {sms_code}"
-                if send_sms(phone_number, message):
-                    print(f"SMS code sent: {sms_code}")
+                handle_sms_verification(request, phone_number)
                 return render(request, 'accounts/login.html',
                               {'form': form, 'verification_form': VerificationForm(), 'show_popup': True,
                                'remaining_time': 60})
@@ -108,16 +90,8 @@ def resend_sms_view(request):
         if not user:
             return JsonResponse({'status': 'error', 'message': 'User not found'}, status=400)
 
-        sms_code = generate_sms_code()
-        request.session['sms_code'] = sms_code
-        request.session['sms_sent'] = True
-        request.session['last_sms_time'] = format(timezone.now(), 'Y-m-d H:i:s')
-        message = f"{settings.SMS_VERIFICATION_MESSAGE} {sms_code}"
-
-        if send_sms(phone_number, message):
-            return JsonResponse({'status': 'ok'})
-        else:
-            return JsonResponse({'status': 'error', 'message': 'Failed to send SMS'}, status=500)
+        handle_sms_verification(request, phone_number)
+        return JsonResponse({'status': 'ok'})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
@@ -169,6 +143,7 @@ def user_profile_view(request, user_id):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
 
 def moderator_login_view(request):
     if request.method == 'POST':

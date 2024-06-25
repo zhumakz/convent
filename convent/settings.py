@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'leaderboard',
     'lectures',
     'shop',
+    'sms',
 ]
 
 MIDDLEWARE = [
