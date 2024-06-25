@@ -1,9 +1,7 @@
 from django.db import models
 from django.conf import settings
-import qrcode
-from io import BytesIO
-from django.core.files import File
-import json
+from qrcode_generator.utils import generate_qr_code
+
 
 class Campaign(models.Model):
     name = models.CharField(max_length=100)
@@ -19,26 +17,16 @@ class Campaign(models.Model):
         return self.name
 
     def generate_qr_code(self):
-        qr_data = json.dumps({"campaign": self.id})
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(qr_data)
-        qr.make(fit=True)
-        img = qr.make_image(fill='black', back_color='white')
-
-        buffer = BytesIO()
-        img.save(buffer, format="PNG")
-        self.qr_code.save(f"campaign_{self.id}_qr.png", File(buffer), save=False)
-        buffer.close()
+        qr_data = {"campaign_vote": self.id}
+        filebuffer = generate_qr_code(qr_data, f"campaign_{self.id}_vote")
+        self.qr_code.save(f"campaign_{self.id}_vote_qr.png", filebuffer, save=False)
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
         if not self.qr_code:
             self.generate_qr_code()
-        super().save(*args, **kwargs)
+            super().save(*args, **kwargs)
+
 
 class Vote(models.Model):
     campaign = models.ForeignKey(Campaign, related_name='votes', on_delete=models.CASCADE)
