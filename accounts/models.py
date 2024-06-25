@@ -17,6 +17,7 @@ class UserManager(BaseUserManager):
         user = self.model(phone_number=phone_number, name=name, surname=surname, age=age, city=city)
         user.set_password(password)
         user.save(using=self._db)
+        DoscointBalance.objects.create(user=user, balance=0, total_earned=0)
         return user
 
     def create_superuser(self, phone_number, name, surname, age, city=None, password=None):
@@ -101,14 +102,4 @@ class City(models.Model):
     def __str__(self):
         return self.name
 
-@receiver(post_save, sender=User)
-def create_user_balance(sender, instance, created, **kwargs):
-    if created:
-        balance, _ = DoscointBalance.objects.get_or_create(user=instance)
-        Transaction.objects.create(
-            sender=instance,
-            recipient=instance,
-            amount=0,
-            description="Initial balance creation",
-            is_system_transaction=True
-        )
+
