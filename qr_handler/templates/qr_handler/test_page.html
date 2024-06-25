@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QR Handler Test Page</title>
+</head>
+<body>
+    <h1>QR Handler Test Page</h1>
+    <form method="post" action="{% url 'handle_qr_data' %}">
+        {% csrf_token %}
+        <label for="qr_data">QR Data:</label>
+        <input type="text" id="qr_data" name="qr_data">
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

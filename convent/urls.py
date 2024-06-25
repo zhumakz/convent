@@ -15,6 +15,7 @@ urlpatterns = [
     path('lectures/', include('lectures.urls')),
     path('shop/', include('shop.urls')),
     path('sms/', include('sms.urls')),
+    path('qr_handler/', include('qr_handler.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
