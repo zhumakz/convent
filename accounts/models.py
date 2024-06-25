@@ -37,7 +37,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     age = models.IntegerField()
     city = models.ForeignKey('City', on_delete=models.SET_NULL, null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
-    qr_code = models.ImageField(upload_to='qr_codes/', null=True, blank=True)
+    qr_code = models.ImageField(upload_to='profile_pictures/qr_codes/', null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_moderator = models.BooleanField(default=False)
@@ -74,9 +74,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         return decrypted_id
 
     def generate_qr_code(self):
-        data = {'user_id': self.id}
-        filebuffer, filename = generate_qr_code(data, f"user_{self.id}")
-        self.qr_code.save(filename, filebuffer)
+        qr_data = {"user_id": self.id}
+        filebuffer = generate_qr_code(qr_data, f"user_{self.id}_qr")
+        self.qr_code.save(f"user_{self.id}_qr.png", filebuffer, save=False)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)  # Сначала сохраняем пользователя, чтобы получить его pk

@@ -1,16 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.models import Group
 from .models import User, City
 
-
+@admin.action(description='Generate QR codes for selected users')
 def generate_qr_codes(modeladmin, request, queryset):
     for user in queryset:
         user.generate_qr_code()
-
-
-generate_qr_codes.short_description = "Generate QR code for selected users"
-
+        user.save()
 
 class UserAdmin(BaseUserAdmin):
     list_display = ('phone_number', 'name', 'surname', 'age', 'city', 'is_admin', 'is_superuser', 'is_moderator')
@@ -38,9 +34,7 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(User, UserAdmin)
 
-
 class CityAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
-
 
 admin.site.register(City, CityAdmin)
