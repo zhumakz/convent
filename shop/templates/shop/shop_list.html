@@ -1,9 +1,11 @@
+<!-- shop/templates/shop/shop_list.html -->
 {% extends "base.html" %}
+
 {% block content %}
-  <h1>Shop List</h1>
-  <ul>
+<h1>Shops</h1>
+<ul>
     {% for shop in shops %}
-      <li><a href="{% url 'product_list' shop.id %}">{{ shop.name }}</a></li>
+    <li><a href="{% url 'product_list' shop.id %}">{{ shop.name }}</a></li>
     {% endfor %}
-  </ul>
+</ul>
 {% endblock %}

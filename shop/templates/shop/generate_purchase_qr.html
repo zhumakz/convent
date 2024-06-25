@@ -1,14 +1,11 @@
+<!-- shop/templates/shop/generate_purchase_qr.html -->
 {% extends "base.html" %}
+
 {% block content %}
-  <h1>Generate Purchase QR Code</h1>
-  {% if form %}
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Generate QR Code</button>
-    </form>
-  {% elif purchase %}
-    <h2>QR Code for Purchase</h2>
-    <img src="{{ purchase.qr_code.url }}" alt="Purchase QR Code">
-  {% endif %}
+<h1>Generate Purchase QR</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Generate QR</button>
+</form>
 {% endblock %}
