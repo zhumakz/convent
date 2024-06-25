@@ -4,8 +4,10 @@ from django.utils import timezone
 from django.utils.dateformat import format
 import random
 
+
 def generate_sms_code():
     return str(random.randint(1000, 9999))
+
 
 def send_sms(phone_number, message):
     if settings.SMSC_TEST_MODE:
@@ -31,6 +33,7 @@ def send_sms(phone_number, message):
     else:
         print(f"Failed to send SMS, status code: {response.status_code}")
         return False
+
 
 def handle_sms_verification(request, phone_number):
     sms_code = generate_sms_code()
