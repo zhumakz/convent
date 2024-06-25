@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'shop',
     'sms',
     'qr_handler',
+    'doscam',
 ]
 
 MIDDLEWARE = [
@@ -183,3 +184,5 @@ LOGGING = {
         },
     },
 }
+
+EVENT_REWARD_COINS = 10

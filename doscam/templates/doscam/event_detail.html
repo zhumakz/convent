@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Event Details</h2>
+<p>Participants: {{ event.participant1 }} and {{ event.participant2 }}</p>
+<p>Location: {{ event.location }}</p>
+<p>Start Time: {{ event.start_time }}</p>
+<p>End Time: {{ event.end_time }}</p>
+{% if event.is_completed %}
+    <p>Status: Completed</p>
+{% else %}
+    <p>Status: Ongoing</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Event Completed</h2>
+<p>The event between {{ event.participant1 }} and {{ event.participant2 }} has been successfully completed.</p>
+<p>Location: {{ event.location }}</p>
+<p>Start Time: {{ event.start_time }}</p>
+<p>End Time: {{ event.end_time }}</p>
+{% endblock %}

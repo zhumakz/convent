@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Operator View</h2>
+{% if event %}
+    <p>Participants: {{ event.participant1 }} and {{ event.participant2 }}</p>
+    <p>Location: {{ event.location }}</p>
+    <p>Start Time: {{ event.start_time }}</p>
+    <p>End Time: {{ event.end_time }}</p>
+    <p>Please scan the QR codes of both participants to complete the event.</p>
+{% else %}
+    <p>No ongoing events.</p>
+{% endif %}
+{% endblock %}

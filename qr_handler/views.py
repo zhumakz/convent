@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.utils import timezone
-from .models import QRScanHistory
 import json
 from friends.models import Friendship
 from lectures.models import Lecture, LectureAttendance
@@ -17,25 +16,28 @@ def handle_qr_data(request):
         qr_data = request.POST.get('qr_data')
         try:
             data = json.loads(qr_data)
-            QRScanHistory.objects.create(user=request.user, qr_data=qr_data)
-
+            # Здесь добавьте логику обработки QR-кода
             if 'user_id' in data:
+                # Обработка запроса на добавление в друзья
                 return handle_friend_request(request, data['user_id'])
             elif 'lecture_start' in data:
+                # Обработка начала лекции
                 return handle_lecture_start(request, data['lecture_start'])
             elif 'lecture_end' in data:
+                # Обработка окончания лекции
                 return handle_lecture_end(request, data['lecture_end'])
             elif 'purchase_id' in data:
+                # Обработка покупки
                 return handle_purchase(request, data['purchase_id'])
-            elif 'campaign_vote' in data:
-                return handle_campaign_vote(request, data['campaign_vote'])
+            elif 'event_id' in data:
+                # Обработка подтверждения участия в событии
+                return handle_doscam_request(request, data['id'])
             else:
                 return JsonResponse({'status': 'error', 'message': 'Unknown QR data'}, status=400)
         except json.JSONDecodeError:
             return JsonResponse({'status': 'error', 'message': 'Invalid QR data'}, status=400)
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
-
 
 def handle_friend_request(request, user_id):
     # Логика обработки запроса на добавление в друзья
@@ -147,6 +149,9 @@ def handle_campaign_vote(request, campaign_id):
     return JsonResponse(
         {'status': 'ok', 'message': f'You voted for {campaign.name} and received {reward_amount} coins.'})
 
+def handle_doscam_request(request, user_id):
+
+        return JsonResponse({'status': 'error', 'message': 'handle_doscam_request'}, status=400)
 
 @login_required
 def test_page(request):
