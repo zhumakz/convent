@@ -1,15 +1,14 @@
-{% extends 'base.html' %}
-
+{% extends "base.html" %}
 {% block content %}
   <h1>Generate Purchase QR Code</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Generate QR</button>
-  </form>
-
-  {% if qr_code_url %}
-    <h2>Generated QR Code</h2>
-    <img src="{{ qr_code_url }}" alt="QR Code">
+  {% if form %}
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Generate QR Code</button>
+    </form>
+  {% elif purchase %}
+    <h2>QR Code for Purchase</h2>
+    <img src="{{ purchase.qr_code.url }}" alt="Purchase QR Code">
   {% endif %}
 {% endblock %}

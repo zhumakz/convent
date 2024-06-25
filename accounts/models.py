@@ -8,6 +8,7 @@ import io
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from coins.models import DoscointBalance, Transaction
+from qrcode_generator.utils import generate_qr_code
 
 
 class UserManager(BaseUserManager):
@@ -73,21 +74,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         return decrypted_id
 
     def generate_qr_code(self):
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr_data = self.encrypt_id()
-        qr.add_data(qr_data)
-        qr.make(fit=True)
-
-        img = qr.make_image(fill='black', back_color='white')
-        buffer = io.BytesIO()
-        img.save(buffer, format="PNG")
-        file_name = f'{self.phone_number}_qr.png'
-        self.qr_code.save(file_name, File(buffer), save=False)
+        data = {'user_id': self.id}
+        filebuffer, filename = generate_qr_code(data, f"user_{self.id}")
+        self.qr_code.save(filename, filebuffer)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)  # Сначала сохраняем пользователя, чтобы получить его pk

@@ -6,5 +6,5 @@ urlpatterns = [
     path('<int:shop_id>/products/', product_list, name='product_list'),
     path('<int:shop_id>/products/add/', add_product, name='add_product'),
     path('generate_qr/', generate_purchase_qr, name='generate_purchase_qr'),
-    path('scan_qr/<str:qr_data>/', scan_qr, name='scan_qr'),
+    path('scan_qr/', scan_qr, name='scan_qr'),
 ]

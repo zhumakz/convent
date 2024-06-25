@@ -1,9 +1,6 @@
 from django.db import models
 from django.conf import settings
-import qrcode
-from io import BytesIO
-from django.core.files import File
-import json
+from qrcode_generator.utils import generate_qr_code
 
 class Lecture(models.Model):
     title = models.CharField(max_length=255)
@@ -16,45 +13,20 @@ class Lecture(models.Model):
     def __str__(self):
         return self.title
 
-    def generate_qr_code_start(self):
-        qr_data = json.dumps({"lecture_start": self.id})
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(qr_data)
-        qr.make(fit=True)
-        img = qr.make_image(fill='black', back_color='white')
+    def generate_qr_codes(self):
+        start_qr_data = {"lecture_start": self.id}
+        end_qr_data = {"lecture_end": self.id}
 
-        buffer = BytesIO()
-        img.save(buffer, format="PNG")
-        self.qr_code_start.save(f"lecture_{self.id}_start_qr.png", File(buffer), save=False)
-        buffer.close()
+        start_qr_file, start_qr_filename = generate_qr_code(start_qr_data, f"lecture_{self.id}_start")
+        end_qr_file, end_qr_filename = generate_qr_code(end_qr_data, f"lecture_{self.id}_end")
 
-    def generate_qr_code_end(self):
-        qr_data = json.dumps({"lecture_end": self.id})
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(qr_data)
-        qr.make(fit=True)
-        img = qr.make_image(fill='black', back_color='white')
-
-        buffer = BytesIO()
-        img.save(buffer, format="PNG")
-        self.qr_code_end.save(f"lecture_{self.id}_end_qr.png", File(buffer), save=False)
-        buffer.close()
+        self.qr_code_start.save(start_qr_filename, start_qr_file, save=False)
+        self.qr_code_end.save(end_qr_filename, end_qr_file, save=False)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if not self.qr_code_start or not self.qr_code_end:
-            self.generate_qr_code_start()
-            self.generate_qr_code_end()
+            self.generate_qr_codes()
             super().save(*args, **kwargs)
 
 class LectureAttendance(models.Model):
