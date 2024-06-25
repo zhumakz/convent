@@ -4,11 +4,24 @@ from django.contrib import messages
 from .models import FriendRequest, Friendship
 from .forms import FriendRequestForm, ConfirmFriendRequestForm
 
+
 @login_required
 def send_friend_request(request):
     if request.method == 'POST':
         form = FriendRequestForm(request.POST, user=request.user)
         if form.is_valid():
+            to_user = form.cleaned_data['to_user']
+
+            # Проверяем, есть ли уже существующий запрос от to_user к request.user
+            existing_request = FriendRequest.objects.filter(from_user=to_user, to_user=request.user).first()
+            if existing_request:
+                # Создаем дружбу и удаляем запросы
+                Friendship.objects.create(user1=request.user, user2=to_user)
+                existing_request.delete()
+                messages.success(request, f'Вы и {to_user} теперь друзья!')
+                return redirect('friends_list')
+
+            # Если запроса нет, создаем новый запрос
             friend_request = form.save(commit=False)
             friend_request.from_user = request.user
             friend_request.save()
@@ -18,17 +31,14 @@ def send_friend_request(request):
         form = FriendRequestForm(user=request.user)
     return render(request, 'friends/send_friend_request.html', {'form': form})
 
+
 @login_required
 def confirm_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id, to_user=request.user)
     if request.method == 'POST':
         form = ConfirmFriendRequestForm(request.POST, instance=friend_request)
         if form.is_valid():
-            # Проверяем, существует ли уже дружба, прежде чем создавать новую
-            if not Friendship.objects.filter(user1=friend_request.from_user, user2=friend_request.to_user).exists():
-                Friendship.objects.create(user1=friend_request.from_user, user2=friend_request.to_user)
-
-            # Удаляем запрос дружбы после подтверждения
+            Friendship.objects.create(user1=friend_request.from_user, user2=friend_request.to_user)
             friend_request.delete()
             messages.success(request, 'Запрос в друзья подтвержден!')
             return redirect('friend_requests')
@@ -38,11 +48,14 @@ def confirm_friend_request(request, request_id):
         form = ConfirmFriendRequestForm(instance=friend_request)
     return render(request, 'friends/confirm_friend_request.html', {'form': form})
 
+
 @login_required
 def friend_requests(request):
     received_requests = FriendRequest.objects.filter(to_user=request.user)
     sent_requests = FriendRequest.objects.filter(from_user=request.user)
-    return render(request, 'friends/friend_requests.html', {'received_requests': received_requests, 'sent_requests': sent_requests})
+    return render(request, 'friends/friend_requests.html',
+                  {'received_requests': received_requests, 'sent_requests': sent_requests})
+
 
 @login_required
 def friends_list(request):
