@@ -1,3 +1,4 @@
+import json
 from django.conf import settings
 from django.db import models
 from qrcode_generator.utils import generate_qr_code
@@ -23,8 +24,7 @@ class Product(models.Model):
 
 
 class Purchase(models.Model):
-    buyer = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='purchases', on_delete=models.CASCADE, null=True,
-                              blank=True)
+    buyer = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='purchases', on_delete=models.CASCADE, null=True, blank=True)
     seller = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='sales', on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -35,12 +35,9 @@ class Purchase(models.Model):
         return f"Purchase {self.id} by {self.buyer} from {self.seller}"
 
     def generate_qr_code(self):
-        qr_data = {
-            "purchase_id": self.id,
-            "total_amount": float(self.amount),
-        }
-        filebuffer, filename = generate_qr_code(qr_data, f"purchase_{self.id}")
-        self.qr_code.save(filename, filebuffer, save=False)
+        qr_data = {"purchase_id": self.id}
+        filebuffer = generate_qr_code(qr_data, f"purchase_{self.id}_qr.png")
+        self.qr_code.save(f"purchase_{self.id}_qr.png", filebuffer, save=False)
 
     def save(self, *args, **kwargs):
         if not self.qr_code:
