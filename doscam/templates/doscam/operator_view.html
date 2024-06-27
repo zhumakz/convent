@@ -6,7 +6,24 @@
     <p>Location: {{ event.location }}</p>
     <p>Start Time: {{ event.start_time }}</p>
     <p>End Time: {{ event.end_time }}</p>
-    <p>Please scan the QR codes of both participants to complete the event.</p>
+
+    {% if event.participant1_confirmed %}
+        <p>Participant {{ event.participant1 }} confirmed</p>
+    {% else %}
+        <form method="post" action="{% url 'confirm_participation' user_id=event.participant1.id %}">
+            {% csrf_token %}
+            <button type="submit">Confirm {{ event.participant1 }}</button>
+        </form>
+    {% endif %}
+
+    {% if event.participant2_confirmed %}
+        <p>Participant {{ event.participant2 }} confirmed</p>
+    {% else %}
+        <form method="post" action="{% url 'confirm_participation' user_id=event.participant2.id %}">
+            {% csrf_token %}
+            <button type="submit">Confirm {{ event.participant2 }}</button>
+        </form>
+    {% endif %}
 {% else %}
     <p>No ongoing events.</p>
 {% endif %}

@@ -1,9 +1,9 @@
 from django.urls import path
-from . import views
+from .views import create_event, event_detail, operator_view, confirm_participation
 
 urlpatterns = [
-    path('operator/', views.operator_view, name='operator_view'),
-    path('scan_qr/<str:qr_data>/', views.scan_qr_code_view, name='scan_qr_code_view'),
-    path('create_event/', views.create_event_view, name='create_event_view'),
-    path('event/<int:event_id>/', views.event_detail_view, name='event_detail_view'),
+    path('create/', create_event, name='create_event'),
+    path('event/<int:event_id>/', event_detail, name='event_detail'),
+    path('operator/', operator_view, name='operator_view'),
+    path('confirm/<int:user_id>/', confirm_participation, name='confirm_participation'),
 ]
