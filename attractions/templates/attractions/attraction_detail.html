@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ attraction.title }}</h2>
+<p>{{ attraction.description }}</p>
+<img src="{{ attraction.photo.url }}" alt="{{ attraction.title }}">
+<p>Location: {{ attraction.location }}</p>
+<p>Start Time: {{ attraction.start_time }}</p>
+<p>End Time: {{ attraction.end_time }}</p>
+<a href="{% url 'edit_attraction' attraction.id %}">Edit</a>
+{% endblock %}

@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'sms',
     'qr_handler',
     'doscam',
+    'attractions',
+
 ]
 
 MIDDLEWARE = [
