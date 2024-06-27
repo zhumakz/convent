@@ -9,6 +9,7 @@ class RegistrationForm(forms.ModelForm):
         model = User
         fields = ['phone_number', 'name', 'surname', 'age', 'city']
 
+
 class LoginForm(forms.Form):
     phone_number = forms.CharField(max_length=15)
 
@@ -21,6 +22,7 @@ class LoginForm(forms.Form):
             raise forms.ValidationError('Пользователь с таким номером телефона не найден.')
         return phone_number
 
+
 class VerificationForm(forms.Form):
     sms_code = forms.CharField(max_length=4, min_length=4, required=True, label='SMS Code')
 
@@ -29,6 +31,7 @@ class VerificationForm(forms.Form):
         if not sms_code.isdigit():
             raise forms.ValidationError("SMS код должен содержать только цифры.")
         return sms_code
+
 
 class ProfileEditForm(forms.ModelForm):
     class Meta:
@@ -46,6 +49,8 @@ class ProfileEditForm(forms.ModelForm):
                 raise forms.ValidationError('File size should not exceed 5MB.')
 
         return profile_picture
+
+
 class ModeratorLoginForm(forms.Form):
     phone_number = forms.CharField(max_length=15, label='Phone Number')
     password = forms.CharField(widget=forms.PasswordInput, label='Password')

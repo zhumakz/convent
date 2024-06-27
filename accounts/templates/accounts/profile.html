@@ -11,10 +11,9 @@
 {% else %}
     <p>No profile picture uploaded.</p>
 {% endif %}
-    <p>Phone Number: {{ user.phone_number }}</p>
+<p>Phone Number: {{ user.phone_number }}</p>
 <p>Age: {{ user.age }}</p>
 <p>City: {{ user.city.name }}</p>
-
 
 <h3>QR Code</h3>
 {% if user.qr_code %}
@@ -23,14 +22,12 @@
     <p>QR Code not available</p>
 {% endif %}
 
-
 <form method="post" action="{% url 'logout' %}">
     {% csrf_token %}
     <button type="submit">Logout</button>
 </form>
 <button onclick="showEditPopup()">Edit Profile</button>
 
-<!-- Попап для редактирования профиля -->
 <div id="editPopup" style="display: none;">
     <h2>Edit Profile</h2>
     <form method="post" action="{% url 'profile_edit' %}" enctype="multipart/form-data">

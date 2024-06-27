@@ -11,7 +11,6 @@
     </form>
 </div>
 
-<!-- Попап для верификации SMS кода -->
 <div id="verifyPopup" style="display: none;">
     <form method="post" action="{% url 'verify_login' %}">
         {% csrf_token %}
@@ -20,10 +19,10 @@
     </form>
     <p id="sms-info">
         {% if remaining_time %}
-            Вы можете отправить SMS снова через <span id="timer">{{ remaining_time }}</span> секунд.
+            You can resend the SMS in <span id="timer">{{ remaining_time }}</span> seconds.
         {% endif %}
     </p>
-    <button id="resendButton" onclick="resendSMS()" style="display: none;">Отправить еще раз</button>
+    <button id="resendButton" onclick="resendSMS()" style="display: none;">Resend</button>
 </div>
 
 <script>
@@ -37,29 +36,19 @@
         var interval = setInterval(function () {
             minutes = parseInt(timer / 60, 10);
             seconds = parseInt(timer % 60, 10);
-
             seconds = seconds < 10 ? "0" + seconds : seconds;
-
-            if (display) {
-                display.textContent = seconds;
-            }
-
+            display.textContent = seconds;
             if (--timer < 0) {
                 clearInterval(interval);
-                if (resendButton) {
-                    resendButton.style.display = 'block';
-                }
-                if (display) {
-                    display.textContent = "0";
-                }
+                resendButton.style.display = 'block';
+                display.textContent = "0";
             }
         }, 1000);
     }
 
     function resendSMS() {
         document.getElementById('resendButton').style.display = 'none';
-        document.getElementById('sms-info').innerText = 'Отправка SMS...';
-
+        document.getElementById('sms-info').innerText = 'Sending SMS...';
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
         const phone_number = '{{ request.session.phone_number }}';
         fetch("{% url 'resend_sms' %}", {
@@ -68,23 +57,20 @@
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'X-CSRFToken': csrfToken,
             },
-            body: new URLSearchParams({
-                'phone_number': phone_number,
-            })
+            body: new URLSearchParams({'phone_number': phone_number})
         })
         .then(response => response.json())
         .then(data => {
             if (data.status === 'ok') {
-                document.getElementById('sms-info').innerText = 'Вы можете отправить SMS снова через <span id="timer">60</span> секунд.';
-                var display = document.querySelector('#timer');
-                startTimer(60, display, document.getElementById('resendButton'));
+                document.getElementById('sms-info').innerHTML = 'You can resend the SMS in <span id="timer">60</span> seconds.';
+                startTimer(60, document.querySelector('#timer'), document.getElementById('resendButton'));
             } else {
-                document.getElementById('sms-info').innerText = data.message || 'Ошибка отправки SMS. Попробуйте еще раз позже.';
+                document.getElementById('sms-info').innerText = data.message || 'Error sending SMS. Please try again later.';
                 document.getElementById('resendButton').style.display = 'block';
             }
         })
-        .catch(error => {
-            document.getElementById('sms-info').innerText = 'Ошибка отправки SMS. Попробуйте еще раз позже.';
+        .catch(() => {
+            document.getElementById('sms-info').innerText = 'Error sending SMS. Please try again later.';
             document.getElementById('resendButton').style.display = 'block';
         });
     }
@@ -93,10 +79,7 @@
         {% if show_popup %}
             showVerificationPopup();
             {% if remaining_time %}
-                var timeLeft = {{ remaining_time }};
-                var display = document.querySelector('#timer');
-                var resendButton = document.getElementById('resendButton');
-                startTimer(timeLeft, display, resendButton);
+                startTimer({{ remaining_time }}, document.querySelector('#timer'), document.getElementById('resendButton'));
             {% endif %}
         {% endif %}
     });

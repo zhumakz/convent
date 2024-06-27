@@ -1,12 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.core.files import File
-import qrcode
-import io
 
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from coins.models import DoscointBalance, Transaction
 from qrcode_generator.utils import generate_qr_code
 
@@ -90,5 +85,3 @@ class City(models.Model):
 
     def __str__(self):
         return self.name
-
-

@@ -2,15 +2,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
-from django.utils.dateformat import format
-from django.views.decorators.csrf import csrf_exempt
 
-from convent import settings
-from .models import User
 from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm, ModeratorLoginForm
-from sms.utils import handle_sms_verification
+from .models import User
+from .services import UserService
 
 
 def registration_view(request):
@@ -33,31 +31,27 @@ def login_view(request):
     if request.method == 'POST':
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             phone_number = request.POST.get('phone_number')
-            user = User.objects.filter(phone_number=phone_number).first()
+            user = UserService.get_user_by_phone_number(phone_number)
             if user:
-                handle_sms_verification(request, phone_number)
+                UserService.handle_sms_verification(request, phone_number)
                 return JsonResponse({'status': 'ok'})
             return JsonResponse({'status': 'error'}, status=400)
 
         form = LoginForm(request.POST)
         if form.is_valid():
             phone_number = form.cleaned_data['phone_number']
-            user = User.objects.filter(phone_number=phone_number).first()
+            user = UserService.get_user_by_phone_number(phone_number)
             if user:
-                last_sms_time_str = request.session.get('last_sms_time')
-                if last_sms_time_str:
-                    last_sms_time = timezone.make_aware(parse_datetime(last_sms_time_str))
-                    time_diff = timezone.now() - last_sms_time
-                    if time_diff.total_seconds() < 60:
-                        remaining_time = 60 - int(time_diff.total_seconds())
-                        return render(request, 'accounts/login.html', {
-                            'form': form,
-                            'verification_form': VerificationForm(),
-                            'show_popup': True,
-                            'remaining_time': remaining_time
-                        })
+                allowed, remaining_time = UserService.is_sms_verification_allowed(request)
+                if not allowed:
+                    return render(request, 'accounts/login.html', {
+                        'form': form,
+                        'verification_form': VerificationForm(),
+                        'show_popup': True,
+                        'remaining_time': remaining_time
+                    })
 
-                handle_sms_verification(request, phone_number)
+                UserService.handle_sms_verification(request, phone_number)
                 return render(request, 'accounts/login.html',
                               {'form': form, 'verification_form': VerificationForm(), 'show_popup': True,
                                'remaining_time': 60})
@@ -86,11 +80,11 @@ def resend_sms_view(request):
         if not phone_number:
             return JsonResponse({'status': 'error', 'message': 'Phone number is required'}, status=400)
 
-        user = User.objects.filter(phone_number=phone_number).first()
+        user = UserService.get_user_by_phone_number(phone_number)
         if not user:
             return JsonResponse({'status': 'error', 'message': 'User not found'}, status=400)
 
-        handle_sms_verification(request, phone_number)
+        UserService.handle_sms_verification(request, phone_number)
         return JsonResponse({'status': 'ok'})
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
@@ -103,7 +97,7 @@ def verify_login_view(request):
             sms_code = form.cleaned_data['sms_code']
             if sms_code == request.session.get('sms_code'):
                 phone_number = request.session.get('phone_number')
-                user = User.objects.get(phone_number=phone_number)
+                user = UserService.get_user_by_phone_number(phone_number)
                 user = authenticate(phone_number=phone_number)
                 if user is not None:
                     login(request, user)
