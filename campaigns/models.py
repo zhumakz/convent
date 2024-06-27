@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 from qrcode_generator.utils import generate_qr_code
 
-
 class Campaign(models.Model):
     name = models.CharField(max_length=100)
     logo = models.ImageField(upload_to='campaigns/logos/')
