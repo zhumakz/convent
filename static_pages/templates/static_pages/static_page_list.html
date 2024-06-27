@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h2>{% trans "Static Pages" %}</h2>
+<ul>
+    {% for page in pages %}
+        <li>
+            <a href="{% url 'static_page_detail' page.id %}">{{ page.title }}</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

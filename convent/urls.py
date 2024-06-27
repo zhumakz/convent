@@ -22,6 +22,7 @@ urlpatterns += i18n_patterns(
     path('qr_handler/', include('qr_handler.urls')),
     path('doscam/', include('doscam.urls')),
     path('attractions/', include('attractions.urls')),
+    path('static_pages/', include('static_pages.urls')),
 )
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

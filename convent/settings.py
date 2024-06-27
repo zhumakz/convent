@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'qr_handler',
     'doscam',
     'attractions',
+    'static_pages',
 
 ]
 

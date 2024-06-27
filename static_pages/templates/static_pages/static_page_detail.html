@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h2>{{ page.title }}</h2>
+{% if page.photo %}
+    <img src="{{ page.photo.url }}" alt="{{ page.title }}">
+{% endif %}
+<p>{{ page.description }}</p>
+<a href="{% url 'static_page_list' %}">{% trans "Back to Static Pages" %}</a>
+{% endblock %}
