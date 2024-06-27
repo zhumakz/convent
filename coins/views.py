@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import DoscointBalance, Transaction
+from django.core.exceptions import ValidationError
 from .forms import TransactionForm
 from .decorators import add_coins_permission_required, remove_coins_permission_required
-
+from .services import CoinService
 import logging
 
 logger = logging.getLogger('coins')
@@ -11,32 +11,12 @@ logger = logging.getLogger('coins')
 @login_required
 def balance_view(request):
     logger.debug(f'Balance view accessed by: {request.user}')
-    balance = request.user.doscointbalance.balance
-    transactions = Transaction.objects.filter(sender=request.user) | Transaction.objects.filter(recipient=request.user)
-    transactions = transactions.order_by('-timestamp')
+    balance = CoinService.get_balance(request.user)
+    transactions = CoinService.get_transactions(request.user).order_by('-timestamp')
 
-    for transaction in transactions:
-        logger.debug(f'Processing transaction: {transaction}')
-        if transaction.is_system_transaction:
-            transaction.sender_name = "System"
-            transaction.recipient_name = f"{transaction.recipient.name} {transaction.recipient.surname}"
-        else:
-            if transaction.sender == request.user:
-                transaction.sender_name = "You"
-            else:
-                if transaction.sender.is_superuser:
-                    transaction.sender_name = "System"
-                elif transaction.sender.groups.filter(name__in=['AddModerators', 'RemoveModerators']).exists():
-                    transaction.sender_name = f"{transaction.sender.name} {transaction.sender.surname}"
-                else:
-                    transaction.sender_name = transaction.sender.phone_number
+    processed_transactions = [CoinService.process_transaction(tx, request.user) for tx in transactions]
 
-            if transaction.recipient == request.user:
-                transaction.recipient_name = "You"
-            else:
-                transaction.recipient_name = f"{transaction.recipient.name} {transaction.recipient.surname}"
-
-    return render(request, 'coins/balance.html', {'balance': balance, 'transactions': transactions})
+    return render(request, 'coins/balance.html', {'balance': balance, 'transactions': processed_transactions})
 
 @login_required
 @add_coins_permission_required
@@ -46,10 +26,17 @@ def add_coins_view(request):
         form = TransactionForm(request.POST, user=request.user)
         if form.is_valid():
             transaction = form.save(commit=False)
-            transaction.sender = request.user
-            transaction.save()
-            logger.debug(f'Coins added: {transaction.amount} to {transaction.recipient}')
-            return redirect('balance')
+            try:
+                CoinService.create_transaction(
+                    sender=request.user,
+                    recipient=transaction.recipient,
+                    amount=transaction.amount,
+                    description=transaction.description
+                )
+                logger.debug(f'Coins added: {transaction.amount} to {transaction.recipient}')
+                return redirect('balance')
+            except ValidationError as e:
+                form.add_error(None, e.message)
     else:
         form = TransactionForm(user=request.user)
     return render(request, 'coins/add_coins.html', {'form': form})
@@ -62,11 +49,17 @@ def remove_coins_view(request):
         form = TransactionForm(request.POST, user=request.user)
         if form.is_valid():
             transaction = form.save(commit=False)
-            transaction.sender = request.user
-            transaction.amount = -transaction.amount  # Отрицательное значение для удаления
-            transaction.save()
-            logger.debug(f'Coins removed: {transaction.amount} from {transaction.recipient}')
-            return redirect('balance')
+            try:
+                CoinService.create_transaction(
+                    sender=request.user,
+                    recipient=transaction.recipient,
+                    amount=-transaction.amount,  # Отрицательное значение для удаления
+                    description=transaction.description
+                )
+                logger.debug(f'Coins removed: {transaction.amount} from {transaction.recipient}')
+                return redirect('balance')
+            except ValidationError as e:
+                form.add_error(None, e.message)
     else:
         form = TransactionForm(user=request.user)
     return render(request, 'coins/remove_coins.html', {'form': form})
@@ -79,7 +72,6 @@ def profile_view(request):
     elif request.user.groups.filter(name='RemoveModerators').exists():
         return redirect('remove_coins')
     else:
-        balance = request.user.doscointbalance.balance
+        balance = CoinService.get_balance(request.user)
         total_earned = request.user.doscointbalance.total_earned
         return render(request, 'accounts/profile.html', {'balance': balance, 'total_earned': total_earned})
-

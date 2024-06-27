@@ -5,19 +5,15 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import post_migrate
 from django.apps import apps
 
-
 class DoscointBalanceAdmin(admin.ModelAdmin):
     list_display = ('user', 'balance')
-
 
 class TransactionAdmin(admin.ModelAdmin):
     list_display = ('sender', 'recipient', 'amount', 'timestamp', 'description')
     readonly_fields = ('sender', 'recipient', 'amount', 'timestamp', 'description')
 
-
 admin.site.register(DoscointBalance, DoscointBalanceAdmin)
 admin.site.register(Transaction, TransactionAdmin)
-
 
 def create_permissions_and_groups(sender, **kwargs):
     # Создаем группы и разрешения после миграции
@@ -34,7 +30,6 @@ def create_permissions_and_groups(sender, **kwargs):
     # Группа модераторов, которые могут убавлять коины
     remove_coins_group, created = Group.objects.get_or_create(name='RemoveCoinsModerators')
     remove_coins_group.permissions.add(permissions[1])
-
 
 # Подключаем функцию к сигналу post_migrate
 post_migrate.connect(create_permissions_and_groups, sender=apps.get_app_config('coins'))
