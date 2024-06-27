@@ -12,6 +12,10 @@
 <body>
     <header>
         <h1>My Site</h1>
+        {% load i18n %}
+<a href="{% url 'switch_language' 'ru' %}">{% trans "Russian" %}</a> |
+<a href="{% url 'switch_language' 'kk' %}">{% trans "Kazakh" %}</a>
+
     </header>
     <nav>
         <a href="{% url 'home' %}">Главная</a>

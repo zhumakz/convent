@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
+{% load i18n %}
+<a href="{% url 'switch_language' 'ru' %}">{% trans "Russian" %}</a> |
+<a href="{% url 'switch_language' 'kk' %}">{% trans "Kazakh" %}</a>
+
     <header>
         <nav>
             <ul>
