@@ -1,8 +1,12 @@
-{% extends base_template %}
-
-{% block title %}QR Code{% endblock %}
-
-{% block content %}
-<h2>{{ user.name }}'s QR Code</h2>
-<img src="{{ user.qr_code.url }}" alt="QR Code">
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User QR Code</title>
+</head>
+<body>
+    <h1>User QR Code</h1>
+    <p>User: {{ user.name }} {{ user.surname }}</p>
+    <img src="{% url 'generate_qr_code' user.id %}" alt="QR Code">
+</body>
+</html>

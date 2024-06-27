@@ -4,9 +4,18 @@ from accounts.models import User
 from friends.models import FriendRequest
 from django.conf import settings
 from cryptography.fernet import Fernet
+from .utils import generate_qr_code
+
 
 @login_required
 def process_qr_code(request, encrypted_id):
+    """
+    Обрабатывает QR-код, дешифрует ID пользователя и отправляет запрос на добавление в друзья.
+
+    :param request: HTTP запрос.
+    :param encrypted_id: Зашифрованный ID пользователя.
+    :return: HTTP ответ с результатом обработки QR-кода.
+    """
     method = settings.ENCRYPTION_METHOD
     try:
         if method == 'simple':
@@ -32,6 +41,15 @@ def process_qr_code(request, encrypted_id):
         message = "Invalid QR code."
     return render(request, 'qrcode_generator/qr_code_result.html', {'message': message})
 
+
+@login_required
 def user_qr_code_view(request, user_id):
+    """
+    Отображает страницу с QR-кодом пользователя.
+
+    :param request: HTTP запрос.
+    :param user_id: ID пользователя.
+    :return: HTTP ответ с отображением страницы QR-кода.
+    """
     user = get_object_or_404(User, pk=user_id)
     return render(request, 'qrcode_generator/user_qr_code.html', {'user': user})

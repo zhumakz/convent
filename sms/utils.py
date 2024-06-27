@@ -6,10 +6,12 @@ import random
 
 
 def generate_sms_code():
+    """Генерирует случайный SMS-код."""
     return str(random.randint(1000, 9999))
 
 
 def send_sms(phone_number, message):
+    """Отправляет SMS-сообщение на указанный номер телефона."""
     if settings.SMSC_TEST_MODE:
         # Вывод в консоль в тестовом режиме
         print(f"Sending SMS to {phone_number}: {message}")
@@ -36,6 +38,7 @@ def send_sms(phone_number, message):
 
 
 def handle_sms_verification(request, phone_number):
+    """Обрабатывает верификацию через SMS."""
     sms_code = generate_sms_code()
     request.session['phone_number'] = phone_number
     request.session['sms_code'] = sms_code

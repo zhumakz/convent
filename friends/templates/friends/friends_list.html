@@ -26,8 +26,14 @@
     {% for friend_request in received_requests %}
         <li>
             {{ friend_request.from_user.name }} {{ friend_request.from_user.surname }}
-            <a href="{% url 'confirm_friend_request' friend_request.id %}">Accept</a>
-            <a href="{% url 'reject_friend_request' friend_request.id %}">Reject</a>
+            <form method="post" action="{% url 'confirm_friend_request' friend_request.id %}">
+                {% csrf_token %}
+                <button type="submit">Accept</button>
+            </form>
+            <form method="post" action="{% url 'reject_friend_request' friend_request.id %}">
+                {% csrf_token %}
+                <button type="submit">Reject</button>
+            </form>
         </li>
     {% endfor %}
 </ul>

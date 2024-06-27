@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import FriendRequest, Friendship
+from .models import FriendRequest
 from .forms import FriendRequestForm, ConfirmFriendRequestForm
-
+from .services import FriendService
+from accounts.models import User
 
 @login_required
 def send_friend_request(request):
@@ -11,26 +12,12 @@ def send_friend_request(request):
         form = FriendRequestForm(request.POST, user=request.user)
         if form.is_valid():
             to_user = form.cleaned_data['to_user']
-
-            # Проверяем, есть ли уже существующий запрос от to_user к request.user
-            existing_request = FriendRequest.objects.filter(from_user=to_user, to_user=request.user).first()
-            if existing_request:
-                # Создаем дружбу и удаляем запросы
-                Friendship.objects.create(user1=request.user, user2=to_user)
-                existing_request.delete()
-                messages.success(request, f'Вы и {to_user} теперь друзья!')
-                return redirect('friends_list')
-
-            # Если запроса нет, создаем новый запрос
-            friend_request = form.save(commit=False)
-            friend_request.from_user = request.user
-            friend_request.save()
-            messages.success(request, 'Запрос на добавление в друзья отправлен!')
-            return redirect('friend_requests')
+            success, message = FriendService.send_friend_request(request.user, to_user)
+            messages.success(request, message)
+            return redirect('friends_list' if success else 'friend_requests')
     else:
         form = FriendRequestForm(user=request.user)
     return render(request, 'friends/send_friend_request.html', {'form': form})
-
 
 @login_required
 def confirm_friend_request(request, request_id):
@@ -38,9 +25,8 @@ def confirm_friend_request(request, request_id):
     if request.method == 'POST':
         form = ConfirmFriendRequestForm(request.POST, instance=friend_request)
         if form.is_valid():
-            Friendship.objects.create(user1=friend_request.from_user, user2=friend_request.to_user)
-            friend_request.delete()
-            messages.success(request, 'Запрос в друзья подтвержден!')
+            message = FriendService.confirm_friend_request(friend_request)
+            messages.success(request, message)
             return redirect('friend_requests')
         else:
             return render(request, 'friends/confirm_friend_request.html', {'form': form})
@@ -48,18 +34,23 @@ def confirm_friend_request(request, request_id):
         form = ConfirmFriendRequestForm(instance=friend_request)
     return render(request, 'friends/confirm_friend_request.html', {'form': form})
 
+@login_required
+def reject_friend_request(request, request_id):
+    friend_request = get_object_or_404(FriendRequest, id=request_id, to_user=request.user)
+    if request.method == 'POST':
+        friend_request.delete()
+        messages.success(request, 'Friend request rejected.')
+        return redirect('friend_requests')
 
 @login_required
 def friend_requests(request):
     received_requests = FriendRequest.objects.filter(to_user=request.user)
     sent_requests = FriendRequest.objects.filter(from_user=request.user)
-    return render(request, 'friends/friend_requests.html',
-                  {'received_requests': received_requests, 'sent_requests': sent_requests})
-
+    return render(request, 'friends/friend_requests.html', {'received_requests': received_requests, 'sent_requests': sent_requests})
 
 @login_required
 def friends_list(request):
-    friendships1 = request.user.friendships1.all()
-    friendships2 = request.user.friendships2.all()
-    friends = [f.user2 for f in friendships1] + [f.user1 for f in friendships2]
-    return render(request, 'friends/friends_list.html', {'friends': friends})
+    friends = FriendService.get_friends(request.user)
+    users = User.objects.exclude(id=request.user.id)
+    received_requests = FriendRequest.objects.filter(to_user=request.user)
+    return render(request, 'friends/friends_list.html', {'friends': friends, 'users': users, 'received_requests': received_requests})

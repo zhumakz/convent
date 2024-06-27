@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 from qrcode_generator.utils import generate_qr_code
-import json
 
 class Lecture(models.Model):
     title = models.CharField(max_length=255)
