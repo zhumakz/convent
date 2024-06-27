@@ -3,7 +3,6 @@ from django.conf import settings
 from django.db import models
 from qrcode_generator.utils import generate_qr_code
 
-
 class Shop(models.Model):
     name = models.CharField(max_length=100)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -11,7 +10,6 @@ class Shop(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class Product(models.Model):
     shop = models.ForeignKey(Shop, related_name='products', on_delete=models.CASCADE)
@@ -21,7 +19,6 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class Purchase(models.Model):
     buyer = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='purchases', on_delete=models.CASCADE, null=True, blank=True)
