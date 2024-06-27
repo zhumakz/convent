@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import transaction as db_transaction
 from coins.services import CoinService
 from django.conf import settings
-
+from django.utils.translation import gettext_lazy as _, gettext as __
 
 class FriendService:
 
@@ -15,12 +15,12 @@ class FriendService:
             # Создаем дружбу и удаляем запросы
             FriendService.create_friendship(from_user, to_user)
             existing_request.delete()
-            return True, 'Вы теперь друзья!'
+            return True, __('You are now friends!')
         else:
             # Создаем новый запрос
             friend_request = FriendRequest(from_user=from_user, to_user=to_user)
             friend_request.save()
-            return False, 'Запрос на добавление в друзья отправлен!'
+            return False, __('Friend request sent!')
 
     @staticmethod
     def confirm_friend_request(friend_request):
@@ -28,7 +28,7 @@ class FriendService:
             # Создаем дружбу и удаляем запрос
             FriendService.create_friendship(friend_request.from_user, friend_request.to_user)
             friend_request.delete()
-            return 'Запрос в друзья подтвержден!'
+            return __('Friend request confirmed!')
 
     @staticmethod
     def create_friendship(user1, user2):
@@ -46,7 +46,7 @@ class FriendService:
                 sender=user1,
                 recipient=user1,
                 amount=coins,
-                description=f'Reward for adding friend {user2.phone_number}',
+                description=__('Reward for adding friend {phone_number}').format(phone_number=user2.phone_number),
                 is_system_transaction=True
             )
 
@@ -54,7 +54,7 @@ class FriendService:
                 sender=user2,
                 recipient=user2,
                 amount=coins,
-                description=f'Reward for adding friend {user1.phone_number}',
+                description=__('Reward for adding friend {phone_number}').format(phone_number=user1.phone_number),
                 is_system_transaction=True
             )
 

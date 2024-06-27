@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _, gettext as __
 from .models import Event, Location
 from .forms import EventForm
 from accounts.models import User
@@ -26,7 +27,7 @@ def create_event(request):
             participant1, participant2 = Event.get_random_participants(filters)
 
             if not participant1 or not participant2:
-                messages.error(request, "Not enough participants meet the criteria.")
+                messages.error(request, __("Not enough participants meet the criteria."))
                 return redirect('create_event')
 
             event = Event.objects.create(
@@ -59,7 +60,7 @@ def confirm_participation(request, user_id):
     ).first()
 
     if not event:
-        messages.error(request, "No ongoing event for this user.")
+        messages.error(request, __("No ongoing event for this user."))
         return redirect('operator_view')
 
     if event.participant1 == user:
@@ -71,8 +72,8 @@ def confirm_participation(request, user_id):
 
     if event.participant1_confirmed and event.participant2_confirmed:
         event.complete_event()
-        messages.success(request, "Event completed successfully!")
+        messages.success(request, __("Event completed successfully!"))
     else:
-        messages.info(request, "Waiting for the other participant to confirm.")
+        messages.info(request, __("Waiting for the other participant to confirm."))
 
     return redirect('operator_view')

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _, gettext as __
 from .models import Campaign, Vote
 
 
@@ -10,9 +11,9 @@ class CampaignAdmin(admin.ModelAdmin):
         for campaign in queryset:
             campaign.generate_qr_code()
             campaign.save()
-        self.message_user(request, "QR codes generated successfully.")
+        self.message_user(request, __("QR codes generated successfully."))
 
-    generate_qr_codes.short_description = "Generate QR codes for selected campaigns"
+    generate_qr_codes.short_description = __("Generate QR codes for selected campaigns")
 
 
 admin.site.register(Campaign, CampaignAdmin)

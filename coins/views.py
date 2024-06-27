@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _, gettext as __
 from .forms import TransactionForm
 from .decorators import add_coins_permission_required, remove_coins_permission_required
 from .services import CoinService

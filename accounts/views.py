@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
+from django.utils.translation import gettext_lazy as _, gettext as __
 
 from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm, ModeratorLoginForm
 from .models import User
@@ -35,7 +36,7 @@ def login_view(request):
             if user:
                 UserService.handle_sms_verification(request, phone_number)
                 return JsonResponse({'status': 'ok'})
-            return JsonResponse({'status': 'error'}, status=400)
+            return JsonResponse({'status': 'error', 'message': __('User not found')}, status=400)
 
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -78,16 +79,16 @@ def resend_sms_view(request):
     if request.method == 'POST':
         phone_number = request.POST.get('phone_number')
         if not phone_number:
-            return JsonResponse({'status': 'error', 'message': 'Phone number is required'}, status=400)
+            return JsonResponse({'status': 'error', 'message': __('Phone number is required')}, status=400)
 
         user = UserService.get_user_by_phone_number(phone_number)
         if not user:
-            return JsonResponse({'status': 'error', 'message': 'User not found'}, status=400)
+            return JsonResponse({'status': 'error', 'message': __('User not found')}, status=400)
 
         UserService.handle_sms_verification(request, phone_number)
         return JsonResponse({'status': 'ok'})
 
-    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+    return JsonResponse({'status': 'error', 'message': __('Invalid request')}, status=400)
 
 
 def verify_login_view(request):
@@ -104,9 +105,9 @@ def verify_login_view(request):
                     request.session['sms_sent'] = False  # Сброс состояния отправки SMS
                     return redirect('profile')
                 else:
-                    form.add_error(None, 'Пользователь не найден')
+                    form.add_error(None, __('User not found'))
             else:
-                form.add_error('sms_code', 'Неправильный SMS код')
+                form.add_error('sms_code', __('Incorrect SMS code'))
     else:
         form = VerificationForm()
     return render(request, 'accounts/verify_login.html', {'form': form})

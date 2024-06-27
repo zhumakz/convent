@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-
+from django.utils.translation import gettext_lazy as _, gettext as __
 from coins.models import DoscointBalance, Transaction
 from qrcode_generator.utils import generate_qr_code
 
@@ -9,7 +9,7 @@ from qrcode_generator.utils import generate_qr_code
 class UserManager(BaseUserManager):
     def create_user(self, phone_number, name, surname, age, city=None, password=None):
         if not phone_number:
-            raise ValueError("The Phone Number field is required")
+            raise ValueError(__("The Phone Number field is required"))
         user = self.model(phone_number=phone_number, name=name, surname=surname, age=age, city=city)
         user.set_password(password)
         user.save(using=self._db)
@@ -65,7 +65,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         multiplier = settings.ID_MULTIPLIER
         decrypted_id = int(encrypted_id) // multiplier
         if int(encrypted_id) % multiplier != 0:  # Check if valid multiplication
-            raise ValueError("Invalid encrypted ID")
+            raise ValueError(__("Invalid encrypted ID"))
         return decrypted_id
 
     def generate_qr_code(self):

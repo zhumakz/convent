@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 from qrcode_generator.utils import generate_qr_code
 
 class Lecture(models.Model):
@@ -39,4 +40,4 @@ class LectureAttendance(models.Model):
     end_time = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f'{self.user} attended {self.lecture}'
+        return _('{user} attended {lecture}').format(user=self.user, lecture=self.lecture)

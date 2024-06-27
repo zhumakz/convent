@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='sent_friend_requests', on_delete=models.CASCADE)
@@ -11,7 +12,7 @@ class FriendRequest(models.Model):
         self.delete()
 
     def __str__(self):
-        return f"Friend request from {self.from_user} to {self.to_user}"
+        return _("Friend request from {from_user} to {to_user}").format(from_user=self.from_user, to_user=self.to_user)
 
 
 class Friendship(models.Model):
@@ -20,4 +21,4 @@ class Friendship(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user1} is friends with {self.user2}"
+        return _("{user1} is friends with {user2}").format(user1=self.user1, user2=self.user2)

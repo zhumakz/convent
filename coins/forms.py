@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _, gettext as __
 from .models import Transaction
 from django.contrib.auth import get_user_model
 
@@ -18,15 +19,15 @@ class TransactionForm(forms.ModelForm):
         cleaned_data = super().clean()
         amount = cleaned_data.get('amount')
         if amount <= 0:
-            raise forms.ValidationError("Amount must be positive")
+            raise forms.ValidationError(_("Amount must be positive"))
 
         if self.user.groups.filter(name='AddModerators').exists() and amount > 10:
-            raise forms.ValidationError("AddModerators cannot send more than 10 coins per transaction")
+            raise forms.ValidationError(_("AddModerators cannot send more than 10 coins per transaction"))
 
         if self.user.groups.filter(name='RemoveModerators').exists() and self.cleaned_data['recipient'].doscointbalance.balance - amount < 0:
-            raise forms.ValidationError("RemoveModerators cannot reduce balance below 0")
+            raise forms.ValidationError(_("RemoveModerators cannot reduce balance below 0"))
 
         if self.user.doscointbalance.balance < amount and not self.user.groups.filter(name='AddModerators').exists():
-            raise forms.ValidationError("Insufficient balance")
+            raise forms.ValidationError(_("Insufficient balance"))
 
         return cleaned_data

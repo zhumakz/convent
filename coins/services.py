@@ -1,5 +1,6 @@
 from django.db import transaction as db_transaction
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _, gettext as __
 from .models import DoscointBalance, Transaction
 import logging
 
@@ -12,19 +13,19 @@ class CoinService:
         with db_transaction.atomic():
             if amount <= 0:
                 logger.error(f'Transaction amount must be positive: {amount}')
-                raise ValidationError("Transaction amount must be positive")
+                raise ValidationError(__("Transaction amount must be positive"))
 
             if not is_system_transaction and sender.doscointbalance.balance < amount:
                 logger.error(f'Sender does not have enough balance: {sender.doscointbalance.balance}')
-                raise ValidationError("Sender does not have enough balance")
+                raise ValidationError(__("Sender does not have enough balance"))
 
             if sender.groups.filter(name='AddModerators').exists() and amount > 10:
                 logger.error(f'AddModerators cannot send more than 10 coins per transaction: {amount}')
-                raise ValidationError("AddModerators cannot send more than 10 coins per transaction")
+                raise ValidationError(__("AddModerators cannot send more than 10 coins per transaction"))
 
             if sender.groups.filter(name='RemoveModerators').exists() and recipient.doscointbalance.balance - amount < 0:
                 logger.error(f'RemoveModerators cannot reduce balance below 0: {recipient.doscointbalance.balance}')
-                raise ValidationError("RemoveModerators cannot reduce balance below 0")
+                raise ValidationError(__("RemoveModerators cannot reduce balance below 0"))
 
             # Update sender balance if not system transaction
             if not is_system_transaction:
@@ -62,21 +63,21 @@ class CoinService:
     @staticmethod
     def process_transaction(transaction, user):
         if transaction.is_system_transaction:
-            transaction.sender_name = "System"
+            transaction.sender_name = __("System")
             transaction.recipient_name = f"{transaction.recipient.name} {transaction.recipient.surname}"
         else:
             if transaction.sender == user:
-                transaction.sender_name = "You"
+                transaction.sender_name = __("You")
             else:
                 if transaction.sender.is_superuser:
-                    transaction.sender_name = "System"
+                    transaction.sender_name = __("System")
                 elif transaction.sender.groups.filter(name__in=['AddModerators', 'RemoveModerators']).exists():
                     transaction.sender_name = f"{transaction.sender.name} {transaction.sender.surname}"
                 else:
                     transaction.sender_name = transaction.sender.phone_number
 
             if transaction.recipient == user:
-                transaction.recipient_name = "You"
+                transaction.recipient_name = __("You")
             else:
                 transaction.recipient_name = f"{transaction.recipient.name} {transaction.recipient.surname}"
         return transaction

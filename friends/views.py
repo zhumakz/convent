@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils.translation import gettext_lazy as _, gettext as __
 from .models import FriendRequest
 from .forms import FriendRequestForm, ConfirmFriendRequestForm
 from .services import FriendService
@@ -13,8 +14,12 @@ def send_friend_request(request):
         if form.is_valid():
             to_user = form.cleaned_data['to_user']
             success, message = FriendService.send_friend_request(request.user, to_user)
-            messages.success(request, message)
-            return redirect('friends_list' if success else 'friend_requests')
+            if success:
+                messages.success(request, message)
+                return redirect('friends_list')
+            else:
+                messages.error(request, message)
+                return redirect('friend_requests')
     else:
         form = FriendRequestForm(user=request.user)
     return render(request, 'friends/send_friend_request.html', {'form': form})
@@ -39,7 +44,7 @@ def reject_friend_request(request, request_id):
     friend_request = get_object_or_404(FriendRequest, id=request_id, to_user=request.user)
     if request.method == 'POST':
         friend_request.delete()
-        messages.success(request, 'Friend request rejected.')
+        messages.success(request, __('Friend request rejected.'))
         return redirect('friend_requests')
 
 @login_required

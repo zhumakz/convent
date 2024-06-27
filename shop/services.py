@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _, gettext as __
 from .models import Shop, Product, Purchase
 from coins.services import CoinService
 from django.core.exceptions import ValidationError
@@ -28,15 +29,15 @@ class ShopService:
     @staticmethod
     def complete_purchase(purchase, buyer):
         if buyer.doscointbalance.balance < purchase.amount:
-            raise ValidationError('Insufficient balance to complete the purchase.')
+            raise ValidationError(__('Insufficient balance to complete the purchase.'))
 
         CoinService.create_transaction(
             sender=buyer,
             recipient=purchase.seller,
             amount=purchase.amount,
-            description=f'Purchase in {purchase.seller.shop_set.first().name}'
+            description=__('Purchase in {shop_name}').format(shop_name=purchase.seller.shop_set.first().name)
         )
         purchase.is_completed = True
         purchase.buyer = buyer
         purchase.save()
-        return 'Purchase completed successfully!'
+        return __('Purchase completed successfully!')
