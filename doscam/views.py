@@ -2,13 +2,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _, gettext as __
-from .models import Event, Location
 from .forms import EventForm
+from .services import EventService
 from accounts.models import User
-from coins.models import Transaction
-from friends.models import FriendRequest, Friendship
+from .models import Event
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 @login_required
 def create_event(request):
@@ -20,36 +22,37 @@ def create_event(request):
             min_friends = form.cleaned_data.get('min_friends')
             has_profile_picture = form.cleaned_data.get('has_profile_picture')
 
-            filters = {
-                'min_friends': min_friends,
-                'has_profile_picture': has_profile_picture
-            }
-            participant1, participant2 = Event.get_random_participants(filters)
+            event, error_message = EventService.create_event(location, duration_minutes, min_friends,
+                                                             has_profile_picture)
 
-            if not participant1 or not participant2:
-                messages.error(request, __("Not enough participants meet the criteria."))
+            if error_message:
+                messages.error(request, error_message)
                 return redirect('create_event')
 
-            event = Event.objects.create(
-                participant1=participant1,
-                participant2=participant2,
-                location=location,
-                duration_minutes=duration_minutes
-            )
-            return redirect('event_detail', event_id=event.id)
+            return redirect('event_detail')
     else:
         form = EventForm()
     return render(request, 'doscam/create_event.html', {'form': form})
 
+
 @login_required
-def event_detail(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
+def event_detail(request):
+    event = Event.objects.filter(
+        (Q(participant1=request.user) | Q(participant2=request.user)) & Q(is_completed=False)
+    ).select_related('participant1', 'participant2', 'location').first()
+
+    if not event:
+        messages.error(request, __("No ongoing event found for the current user."))
+        return redirect('create_event')
+
     return render(request, 'doscam/event_detail.html', {'event': event})
+
 
 @login_required
 def operator_view(request):
-    event = Event.objects.filter(is_completed=False).order_by('-start_time').first()
+    event = Event.objects.filter(is_completed=False).order_by('-start_time').select_related('location').first()
     return render(request, 'doscam/operator_view.html', {'event': event})
+
 
 @login_required
 def confirm_participation(request, user_id):
@@ -57,23 +60,16 @@ def confirm_participation(request, user_id):
     event = Event.objects.filter(
         Q(participant1=user) | Q(participant2=user),
         is_completed=False
-    ).first()
+    ).select_related('participant1', 'participant2').first()
 
     if not event:
         messages.error(request, __("No ongoing event for this user."))
         return redirect('operator_view')
 
-    if event.participant1 == user:
-        event.participant1_confirmed = True
-    elif event.participant2 == user:
-        event.participant2_confirmed = True
-
-    event.save()  # Save the confirmation status
-
-    if event.participant1_confirmed and event.participant2_confirmed:
-        event.complete_event()
-        messages.success(request, __("Event completed successfully!"))
+    success, message = EventService.confirm_participation(user, event)
+    if success:
+        messages.success(request, message)
     else:
-        messages.info(request, __("Waiting for the other participant to confirm."))
+        messages.info(request, message)
 
     return redirect('operator_view')

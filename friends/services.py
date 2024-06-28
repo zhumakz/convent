@@ -5,6 +5,7 @@ from coins.services import CoinService
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _, gettext as __
 
+
 class FriendService:
 
     @staticmethod
@@ -68,3 +69,8 @@ class FriendService:
         friendships2 = user.friendships2.all()
         friends = [f.user2 for f in friendships1] + [f.user1 for f in friendships2]
         return friends
+
+    @staticmethod
+    def are_friends(user1, user2):
+        return Friendship.objects.filter(user1=user1, user2=user2).exists() or Friendship.objects.filter(user1=user2,
+                                                                                                         user2=user1).exists()
