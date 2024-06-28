@@ -76,8 +76,4 @@ class EventService:
 
         # Добавляем пользователей в друзья через приложение friends
         if not FriendService.are_friends(event.participant1, event.participant2):
-            success, _ = FriendService.send_friend_request(event.participant1, event.participant2)
-            if success:
-                FriendService.confirm_friend_request(event.participant1, event.participant2)
-            else:
-                FriendService.confirm_friend_request(event.participant2, event.participant1)
+            FriendService.create_friendship(event.participant1, event.participant2)

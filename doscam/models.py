@@ -44,7 +44,7 @@ class Event(models.Model):
 
     @staticmethod
     def get_random_participants(filters):
-        users = User.objects.filter(is_active=True, is_staff=False, is_superuser=False)
+        users = User.objects.filter(is_active=True, is_moderator=False, is_superuser=False)
         if filters.get('min_friends'):
             users = users.annotate(friends_count=models.Count('friends')).filter(
                 friends_count__gte=filters['min_friends'])
