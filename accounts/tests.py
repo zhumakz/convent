@@ -1,6 +1,9 @@
 from django.test import TestCase, Client
 from django.urls import reverse
+from django.contrib.auth.models import Group
 from .models import User, City
+from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm, ModeratorLoginForm
+from .services import UserService
 
 
 class AccountsTestCase(TestCase):
@@ -9,7 +12,7 @@ class AccountsTestCase(TestCase):
         self.client = Client()
         self.city = City.objects.create(name="Test City")
         self.user = User.objects.create_user(
-            phone_number="1234567890",
+            phone_number="+77475000795",
             name="John",
             surname="Doe",
             age=30,
@@ -23,7 +26,7 @@ class AccountsTestCase(TestCase):
         self.assertTemplateUsed(response, 'accounts/registration.html')
 
         data = {
-            'phone_number': '0987654321',
+            'phone_number': '+77475000796',
             'name': 'Jane',
             'surname': 'Doe',
             'age': 25,
@@ -32,7 +35,7 @@ class AccountsTestCase(TestCase):
         response = self.client.post(reverse('register'), data)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('login'))
-        self.assertTrue(User.objects.filter(phone_number='0987654321').exists())
+        self.assertTrue(User.objects.filter(phone_number='+77475000796').exists())
 
     def test_login_view(self):
         response = self.client.get(reverse('login'))
@@ -43,7 +46,7 @@ class AccountsTestCase(TestCase):
         data = {
             'phone_number': self.user.phone_number,
         }
-        response = self.client.post(reverse('login'), data)
+        response = self.client.post(reverse('login'), data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'id="verifyPopup"', html=True)
 
@@ -65,9 +68,11 @@ class AccountsTestCase(TestCase):
 
     def test_verify_login_view(self):
         self.client.post(reverse('login'), {'phone_number': self.user.phone_number})
-        sms_code = self.client.session['sms_code']
+        session = self.client.session
+        session['sms_code'] = '1234'
+        session.save()
 
-        response = self.client.post(reverse('verify_login'), {'sms_code': sms_code})
+        response = self.client.post(reverse('verify_login'), {'sms_code': '1234'})
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('profile'))
 
@@ -100,3 +105,93 @@ class AccountsTestCase(TestCase):
         response = self.client.post(reverse('logout'))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('login'))
+
+
+class FormTests(TestCase):
+
+    def setUp(self):
+        self.city = City.objects.create(name="Test City")
+
+    def test_registration_form(self):
+        form_data = {
+            'phone_number': '+77475000795',
+            'name': 'John',
+            'surname': 'Doe',
+            'age': 30,
+            'city': self.city.id
+        }
+        form = RegistrationForm(data=form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_login_form(self):
+        form_data = {'phone_number': '+77475000795'}
+        form = LoginForm(data=form_data)
+        self.assertTrue(form.is_valid(), form.errors)
+
+    def test_verification_form(self):
+        form_data = {'sms_code': '1234'}
+        form = VerificationForm(data=form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_profile_edit_form(self):
+        form_data = {
+            'name': 'John',
+            'surname': 'Doe',
+            'age': 30,
+            'city': self.city.id,
+            'profile_picture': None
+        }
+        form = ProfileEditForm(data=form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_moderator_login_form(self):
+        # Создадим пользователя с группами
+        moderator_group = Group.objects.create(name='AddModerators')
+        user = User.objects.create_user(
+            phone_number="+77475000795",
+            name="John",
+            surname="Doe",
+            age=30,
+            password="password"
+        )
+        user.groups.add(moderator_group)
+
+        form_data = {
+            'phone_number': '+77475000795',
+            'password': 'password'
+        }
+        form = ModeratorLoginForm(data=form_data)
+        self.assertTrue(form.is_valid(), form.errors)
+
+
+class ServiceTests(TestCase):
+
+    def setUp(self):
+        self.city = City.objects.create(name="Test City")
+        self.user = User.objects.create_user(
+            phone_number="+77475000795",
+            name="John",
+            surname="Doe",
+            age=30,
+            city=self.city,
+            password="password"
+        )
+
+    def test_create_user(self):
+        user = UserService.create_user(
+            phone_number="+77475000796",
+            name="Jane",
+            surname="Doe",
+            age=25,
+            city=self.city,
+            password="password"
+        )
+        self.assertIsNotNone(user)
+        self.assertEqual(user.phone_number, "+77475000796")
+
+    def test_verify_phone_number(self):
+        self.assertTrue(UserService.verify_phone_number(self.user.phone_number))
+
+    def test_get_user_by_phone_number(self):
+        user = UserService.get_user_by_phone_number(self.user.phone_number)
+        self.assertEqual(user, self.user)

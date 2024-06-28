@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'doscam',
     'attractions',
     'static_pages',
+    'debug_toolbar',
 
 ]
 
@@ -60,6 +61,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'convent.middleware.BaseTemplateMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'convent.urls'
@@ -190,3 +192,10 @@ LOGGING = {
 }
 
 DOSCAM_EVENT_REWARD = 50
+
+DEBUG_TOOLBAR_CONFIG = {}
+DEBUG_TOOLBAR_CONFIG['IS_RUNNING_TESTS'] = False
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

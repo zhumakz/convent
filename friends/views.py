@@ -55,7 +55,11 @@ def friend_requests(request):
 
 @login_required
 def friends_list(request):
+    # Оптимизация запроса на получение списка друзей пользователя
     friends = FriendService.get_friends(request.user)
-    users = User.objects.exclude(id=request.user.id)
-    received_requests = FriendRequest.objects.filter(to_user=request.user)
+
+    # Заранее загружаем города пользователей
+    users = User.objects.exclude(id=request.user.id).select_related('city')
+    received_requests = FriendRequest.objects.filter(to_user=request.user).select_related('from_user', 'to_user')
+
     return render(request, 'friends/friends_list.html', {'friends': friends, 'users': users, 'received_requests': received_requests})

@@ -11,14 +11,10 @@ logger = logging.getLogger('coins')
 
 @login_required
 def balance_view(request):
-    logger.debug(f'Balance view accessed by: {request.user}')
     balance = CoinService.get_balance(request.user)
-    transactions = CoinService.get_transactions(request.user).order_by('-timestamp')
-
+    transactions = CoinService.get_transactions(request.user).select_related('sender', 'recipient').order_by('-timestamp')
     processed_transactions = [CoinService.process_transaction(tx, request.user) for tx in transactions]
-
     return render(request, 'coins/balance.html', {'balance': balance, 'transactions': processed_transactions})
-
 @login_required
 @add_coins_permission_required
 def add_coins_view(request):
