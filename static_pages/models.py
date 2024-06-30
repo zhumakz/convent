@@ -13,3 +13,14 @@ class StaticPage(models.Model):
     class Meta:
         verbose_name = _('Static Page')
         verbose_name_plural = _('Static Pages')
+
+    @staticmethod
+    def create_static_pages():
+        StaticPage.objects.get_or_create(title='about-coins', defaults={
+            'description': 'This is the about coins page.',
+            'photo': None
+        })
+        StaticPage.objects.get_or_create(title='map', defaults={
+            'description': 'This is the map page.',
+            'photo': None
+        })

@@ -1,0 +1,12 @@
+.header {
+    background: linear-gradient(180.00deg, rgb(251, 161, 56), rgb(247, 62, 162) 100%), rgb(71, 192, 173);
+}
+
+.coins__texts {
+    display: flex;
+    flex-direction: column;
+    gap: 40px 0;
+    font-size: 26px;
+    font-weight: 900;
+}
+

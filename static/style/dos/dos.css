@@ -1,0 +1,153 @@
+.header-last {
+    background: rgb(222, 88, 155);
+
+    position: relative;
+
+    &::before {
+        content: "";
+        width: 114px;
+        background-color: #6CB54B;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 214px;
+        border-radius: 0px 0px 57px 0px;
+
+        box-shadow: 0px 4px 50px 0px rgba(39, 25, 70, 0.9);
+        background: rgb(222, 88, 155);
+    }
+
+    &::after {
+        content: "";
+        width: 114px;
+        background-color: #6CB54B;
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 214px;
+        border-radius: 0 0 0 57px;
+        box-shadow: 0px 4px 50px 0px rgba(39, 25, 70, 0.9);
+        background: rgb(222, 88, 155);
+    }
+}
+
+.header-second__inner {
+    border-radius: 0px 0px 51px 51px;
+    box-shadow: 0px 4px 50px 0px rgba(39, 25, 70, 0.9);
+    background: rgb(222, 88, 155);
+}
+
+.dos {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.dos__inner {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px 0;
+}
+
+.dos__title {
+    font-size: 25px;
+    text-align: center;
+    align-self: center;
+    margin-top: 62px;
+max-width: 260px;
+}
+
+.dos__person-img {
+    width: 100px;
+    height: 100px;
+}
+
+.dos__line {
+
+    &::before {
+        border-color: #DE589B;
+    }
+
+    &::after {
+        border-color: rgb(222, 88, 155, .5);
+    }
+}
+
+.dos__wrapper {
+    margin-top: 42px;
+    text-align: center;
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.dos__location {
+    display: block;
+}
+
+.dos__vectors {
+    display: flex;
+    padding-top: 86px;
+}
+
+.dos__items {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0 10px;
+}
+
+.dos__button {
+    margin-top: auto;
+}
+
+.dos__button-start {
+    background-color: #40C3AF;
+    width: calc(100% - 44px);
+
+    margin: 0 auto ;
+}
+
+.dos__button-stop {
+    margin: 0 auto ;
+}
+
+.qr__dos-image {
+    margin:auto 0;
+}
+
+.final__coins-item:first-child {
+    filter: blur(107.99px);
+    background: rgb(255, 212, 100);
+    width: 161px;
+    height: 161px;
+    z-index: 10;
+
+}
+
+.final__coins-item:nth-child(2) {
+    filter: blur(129.64px);
+    background: rgb(255, 138, 30);
+    width: 203.72px;
+    height: 203.72px;
+    z-index: 7;
+    border-radius: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+}
+
+
+.final__coins-item:nth-child(3) {
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 164.09px;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 6;
+    filter: blur(113.95px);
+    background: rgba(255, 43, 30, 0.8);
+    transform: translateY(-50%);
+}
+

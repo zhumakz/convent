@@ -1,0 +1,173 @@
+
+.header-last {
+    background-color: #6CB54B;
+    position: relative;
+
+    &::before {
+        content: "";
+        width: 114px;
+        background-color: #6CB54B;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 214px;
+        box-shadow: 0px 4px 50px 0px rgba(39, 81, 20, 0.9);
+        background: rgb(108, 181, 75);
+        border-radius: 0 0 57px 0;
+    }
+
+    &::after {
+        content: "";
+        width: 114px;
+        background-color: #6CB54B;
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 214px;
+        border-radius: 0 0 0 57px;
+        box-shadow: 0px 4px 50px 0px rgba(39, 81, 20, 0.9);
+        background: rgb(108, 181, 75);
+    }
+}
+
+.header-second__inner {
+    box-shadow: 0px 4px 50px 0px rgba(39, 81, 20, 0.9);
+    background: rgb(108, 181, 75);
+    background-color: #6CB54B;
+}
+
+.seller {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+.seller__title {
+    font-size: 36.13px;
+    max-width: 336px;
+    text-align: center;
+    color: var(--white);
+}
+.seller__inner {
+
+    width: 100%;
+    height: 100%;
+    gap: 20px 0;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+
+
+.seller__form {
+    height: 100%;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    gap: 20px 0;
+}
+
+.seller__number {
+    padding: 25.5px 30px;
+    border-radius: 9px;
+    background-color: #282B34;
+    width: 100%;
+    padding-right: 110px;
+    color: #FBA138;
+}
+
+.seller__item {
+    position: relative;
+}
+
+.seller__coins {
+    position: absolute;
+    right: 24px;
+    top: 50%;
+    color: var(--pale-orange);
+    transform: translateY(-50%);
+    font-weight: 900;
+}
+
+.seller__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 20px;
+}
+
+.seller__button,
+.seller__delete  {
+    height: 59.5px;
+    width: calc((100% / 3) - 6px);
+    background-color: #595F68;
+    font-weight: 600;
+    border-radius: 9px;
+    color: var(--white);
+}
+
+
+.seller__span {
+    display: block;
+    width: calc((100% / 3) - 6px);
+
+}
+
+.seller__delete {
+    background-color: #404650;
+}
+
+.seller__submit {
+    margin-top: auto;
+}
+
+.qr__seller-image {
+     align-self: center;
+  margin-top: auto;
+}
+
+.qr__seller-wrapper {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px 0;
+    align-items: center;
+    font-weight: 900;
+}
+
+.final__coins-item:first-child {
+    filter: blur(107.99px);
+    background: rgb(255, 212, 100);
+    width: 161px;
+    height: 161px;
+    z-index: 10;
+
+}
+
+.final__coins-item:nth-child(2) {
+    filter: blur(129.64px);
+    background: rgb(255, 138, 30);
+    width: 203.72px;
+    height: 203.72px;
+    z-index: 7;
+    border-radius: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+}
+
+
+.final__coins-item:nth-child(3) {
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 164.09px;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 6;
+    filter: blur(113.95px);
+    background: rgba(255, 43, 30, 0.8);
+    transform: translateY(-50%);
+}
+

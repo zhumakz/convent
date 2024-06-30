@@ -1,0 +1,75 @@
+
+.homepage__title-wrapper {
+    position: relative;
+}
+
+.homepage__title {
+    margin-top: 25px;
+    font-size: 50px;
+    line-height: 60px;
+    font-weight: 900;
+}
+
+.homepage__title-icon {
+    position: absolute;
+    right: 0;
+    bottom: -40px;
+}
+
+.homepage__text {
+    margin-top: 45px;
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 31px;
+}
+
+.homepage__list {
+    margin-top: 47px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px 0;
+}
+
+.homepage__item {
+    border-radius: 24px;
+    padding: 38px 36px;
+    height: 240px;
+    position: relative;
+    background: linear-gradient(180.00deg, rgb(251, 161, 56), rgb(247, 62, 162) 100%), rgb(71, 192, 173);
+}
+
+.homepage__item:first-child {
+    padding-bottom: 34px;
+    background: linear-gradient(0.00deg, rgb(127, 87, 216), rgb(196, 27, 255) 100%), linear-gradient(180.00deg, rgb(138, 88, 249), rgb(23, 173, 137) 100%);
+}
+
+.homepage__item:last-child {
+    background: linear-gradient(0.00deg, rgb(26, 168, 199), rgb(76, 73, 243) 100%);
+    padding-bottom: 51px;
+}
+
+
+.homepage__link {
+    height: 100%;
+    display: flex;
+    color: var(--white);
+    font-size: 38px;
+    font-weight: 900;
+}
+
+.homepage__link-name {
+    max-width: 212px;
+    display: block;
+    margin-top: auto;
+}
+
+.homepage__item-icon {
+    position: absolute;
+    right: 15px;
+    top: 9px;
+}
+
+.homepage__button {
+    
+    margin-top: 118px;
+}

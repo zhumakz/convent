@@ -1,0 +1,25 @@
+{% extends base_template %}
+ {% load static %}
+{% block title %}Выбор языка{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'style/languages/languages.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="languages">
+    <div class="container flex languages__inner">
+        <p class="languages__text">
+            Тілді таңдаңыз <br />
+            Выбери язык
+        </p>
+        <div class="languages__buttons">
+            <form method="post">
+                {% csrf_token %}
+                <button class="button-s" type="submit" name="language" value="kk">Қазақ тілі</button>
+                <button class="button-s" type="submit" name="language" value="ru">Русский язык</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

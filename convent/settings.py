@@ -47,8 +47,7 @@ INSTALLED_APPS = [
     'doscam',
     'attractions',
     'static_pages',
-    'debug_toolbar',
-
+    # 'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -61,7 +60,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'convent.middleware.BaseTemplateMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'main.middleware.LanguageMiddleware',
 ]
 
 ROOT_URLCONF = 'convent.urls'

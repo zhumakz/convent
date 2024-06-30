@@ -1,0 +1,18 @@
+.languages__inner {
+    min-height: calc(var(--vh, 1vh) * 100);
+}
+
+.languages__text {
+    font-size: 40px;
+    text-align: center;
+    line-height: 2;
+    font-weight: 900;
+    margin-top: auto;
+}
+
+.languages__buttons {
+    margin-top: auto;
+    gap: 20px 0;
+    display: flex;
+    flex-direction: column;
+}

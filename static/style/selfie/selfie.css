@@ -1,0 +1,65 @@
+.selfie__file {
+    display: none;
+}
+
+.selfie__inner {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(var(--vh, 1vh) * 100);
+}
+
+.selfie__form {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 20px 0;
+}
+
+.selfie__label {
+    align-self: center;
+}
+
+.selfie__line {
+    margin-top: 51px;
+    align-self: center;
+
+    &::before {
+        border-color: #7E69AC;
+    }
+
+    &::after {
+        border-color: rgb(126, 105, 172,.5);
+    }
+}
+
+.selfie__image {
+    width: 163.5px;
+    height: 163.5px;
+    border-radius: 50px;
+}
+
+.selfie__text {
+    margin-top: 65px;
+    font-size: 24px;
+    color: var(--white);
+}
+
+.selfie__bottom-text {
+    max-width: 340px;
+    margin: 28px auto 0;
+    font-weight: 900;
+    font-size: 18px;
+    color: var(--purple);
+}
+
+.selfie__buttons {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 33px 0;
+}
+
+.selfie__link {
+    margin: 13px auto 0;
+}

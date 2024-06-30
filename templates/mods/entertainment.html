@@ -1,0 +1,40 @@
+<!-- entertainment.html -->
+{% extends "base.html" %}
+
+{% block title %}Entertainment{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'style/entertainment/entertainment.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="entertainment">
+    <div class="container entertainment__inner">
+        <div class="entertainment__coins">
+            <span>Выдано:</span>
+            <span class="count-s">+414</span>
+            <span class="entertainment__dos">Dos Coins</span>
+        </div>
+        <div class="history entertainment__history">
+            <h5 class="history__title">История транзакции:</h5>
+            <ul class="history__list entertainment__list">
+                <li class="history__item">
+                    <span class="history__time">16:15</span> |
+                    <span class="history__plus"> +1 DC </span>ID 010000
+                </li>
+                <li class="history__item">
+                    <span class="history__time">15:10</span> |
+                    <span class="history__plus"> +2 DC </span>ID 010000
+                </li>
+                <li class="history__item">
+                    <span class="history__time">14:15</span> |
+                    <span class="history__minus"> -1 DC </span>ID 010000
+                </li>
+            </ul>
+        </div>
+        <button class="button entertainment__button popup-button" data-index="1">
+            Scan QR code
+        </button>
+    </div>
+</section>
+{% endblock %}

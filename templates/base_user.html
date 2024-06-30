@@ -1,28 +1,22 @@
+{% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}User{% endblock %}</title>
- {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Project{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'style/main.css' %}">
+    {% block extra_css %}{% endblock %}
 </head>
-<body>
-{% load i18n %}
-<a href="{% url 'switch_language' 'ru' %}">{% trans "Russian" %}</a> |
-<a href="{% url 'switch_language' 'kk' %}">{% trans "Kazakh" %}</a>
+<body class="body--overflow">
+{#    {% include "includes/preloader.html" %}#}
+    {% include "includes/menu.html" %}
 
-    <header>
-        <nav>
-            <ul>
-                 <li><a href="{% url 'profile' %}">Profile</a></li>
-                <li><a href="{% url 'balance' %}">Balance</a></li>
-                <li><a href="{% url 'friends_list' %}">Friends</a></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+
+    {% block content %}{% endblock %}
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
