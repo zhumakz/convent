@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
@@ -10,7 +11,6 @@ from django.utils.translation import gettext_lazy as _, gettext as __
 from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm, ModeratorLoginForm
 from .models import User
 from .services import UserService
-
 
 def registration_view(request):
     if request.method == 'POST':
@@ -25,18 +25,31 @@ def registration_view(request):
     return render(request, 'accounts/registration.html', {'form': form})
 
 
-def login_view(request):
+def login_and_verify_view(request):
     if request.user.is_authenticated:
         return redirect('profile')
 
     if request.method == 'POST':
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            action = request.POST.get('action')
             phone_number = request.POST.get('phone_number')
-            user = UserService.get_user_by_phone_number(phone_number)
-            if user:
-                UserService.handle_sms_verification(request, phone_number)
-                return JsonResponse({'status': 'ok'})
-            return JsonResponse({'status': 'error', 'message': __('User not found')}, status=400)
+
+            if action == 'resend_sms':
+                return handle_resend_sms(request, phone_number)
+
+            if action == 'verify_login':
+                return handle_verify_login(request)
+
+            if action == 'send_sms':
+                user = UserService.get_user_by_phone_number(phone_number)
+                if user:
+                    UserService.handle_sms_verification(request, phone_number)
+                    request.session['phone_number'] = phone_number
+                    request.session['sms_sent'] = True
+                    return JsonResponse({'status': 'ok'})
+                return JsonResponse({'status': 'error', 'message': __('User not found')}, status=400)
+
+            return JsonResponse({'status': 'error', 'message': __('Invalid action')}, status=400)
 
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -45,73 +58,68 @@ def login_view(request):
             if user:
                 allowed, remaining_time = UserService.is_sms_verification_allowed(request)
                 if not allowed:
-                    return render(request, 'accounts/login.html', {
-                        'form': form,
-                        'verification_form': VerificationForm(),
-                        'show_popup': True,
-                        'remaining_time': remaining_time
-                    })
+                    return render_login_page(request, form, remaining_time)
 
                 UserService.handle_sms_verification(request, phone_number)
-                return render(request, 'accounts/login.html',
-                              {'form': form, 'verification_form': VerificationForm(), 'show_popup': True,
-                               'remaining_time': 60})
-        return render(request, 'accounts/login.html', {'form': form, 'show_popup': False})
+                request.session['phone_number'] = phone_number
+                request.session['sms_sent'] = True
+                return render_login_page(request, form, 60)
+        return render_login_page(request, form)
     else:
         form = LoginForm()
-        show_popup = request.session.get('sms_sent', False)
-        last_sms_time_str = request.session.get('last_sms_time')
-        if show_popup and last_sms_time_str:
-            last_sms_time = timezone.make_aware(parse_datetime(last_sms_time_str))
-            remaining_time = 60 - (timezone.now() - last_sms_time).total_seconds()
-            if remaining_time < 0:
-                remaining_time = None
-                show_popup = False
-        else:
-            remaining_time = None
-        return render(request, 'accounts/login.html',
-                      {'form': form, 'verification_form': VerificationForm(), 'show_popup': show_popup,
-                       'remaining_time': remaining_time})
+        show_popup, remaining_time = get_popup_status(request)
+        return render_login_page(request, form, remaining_time, show_popup)
 
 
-@csrf_exempt
-def resend_sms_view(request):
-    if request.method == 'POST':
-        phone_number = request.POST.get('phone_number')
-        if not phone_number:
-            return JsonResponse({'status': 'error', 'message': __('Phone number is required')}, status=400)
+def handle_resend_sms(request, phone_number):
+    if not phone_number:
+        return JsonResponse({'status': 'error', 'message': __('Phone number is required')}, status=400)
 
+    user = UserService.get_user_by_phone_number(phone_number)
+    if not user:
+        return JsonResponse({'status': 'error', 'message': __('User not found')}, status=400)
+
+    UserService.handle_sms_verification(request, phone_number)
+    return JsonResponse({'status': 'ok'})
+
+
+def handle_verify_login(request):
+    sms_code = request.POST.get('sms_code')
+    if sms_code == request.session.get('sms_code'):
+        phone_number = request.session.get('phone_number')
         user = UserService.get_user_by_phone_number(phone_number)
-        if not user:
+        user = authenticate(phone_number=phone_number)
+        if user is not None:
+            login(request, user)
+            request.session['sms_sent'] = False  # Сброс состояния отправки SMS
+            return JsonResponse({'status': 'ok', 'redirect_url': reverse('profile')})
+        else:
             return JsonResponse({'status': 'error', 'message': __('User not found')}, status=400)
-
-        UserService.handle_sms_verification(request, phone_number)
-        return JsonResponse({'status': 'ok'})
-
-    return JsonResponse({'status': 'error', 'message': __('Invalid request')}, status=400)
-
-
-def verify_login_view(request):
-    if request.method == 'POST':
-        form = VerificationForm(request.POST)
-        if form.is_valid():
-            sms_code = form.cleaned_data['sms_code']
-            if sms_code == request.session.get('sms_code'):
-                phone_number = request.session.get('phone_number')
-                user = UserService.get_user_by_phone_number(phone_number)
-                user = authenticate(phone_number=phone_number)
-                if user is not None:
-                    login(request, user)
-                    request.session['sms_sent'] = False  # Сброс состояния отправки SMS
-                    return redirect('profile')
-                else:
-                    form.add_error(None, __('User not found'))
-            else:
-                form.add_error('sms_code', __('Incorrect SMS code'))
     else:
-        form = VerificationForm()
-    return render(request, 'accounts/verify_login.html', {'form': form})
+        return JsonResponse({'status': 'error', 'message': __('Incorrect SMS code')}, status=400)
 
+
+def render_login_page(request, form, remaining_time=None, show_popup=False):
+    return render(request, 'accounts/login.html', {
+        'form': form,
+        'verification_form': VerificationForm(),
+        'show_popup': show_popup,
+        'remaining_time': remaining_time
+    })
+
+
+def get_popup_status(request):
+    show_popup = request.session.get('sms_sent', False)
+    last_sms_time_str = request.session.get('last_sms_time')
+    if show_popup and last_sms_time_str:
+        last_sms_time = timezone.make_aware(parse_datetime(last_sms_time_str))
+        remaining_time = 60 - (timezone.now() - last_sms_time).total_seconds()
+        if remaining_time < 0:
+            remaining_time = None
+            show_popup = False
+    else:
+        remaining_time = None
+    return show_popup, remaining_time
 
 @login_required
 def profile_view(request):

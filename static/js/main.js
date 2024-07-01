@@ -53,6 +53,20 @@ const backs = document.querySelectorAll(".back");
   back.addEventListener("click", () => window.history.back())
 );
 
+// BACK-BUTTON-Custom
+
+// const backs = document.querySelectorAll(".back");
+//
+// [...backs].forEach((back) =>
+//   back.addEventListener("click", () => {
+//     const targetURL = back.getAttribute('data-url');
+//     if (targetURL) {
+//       window.location.href = targetURL;
+//     }
+//   })
+// );
+
+
 //POPUP
 
 const popupClose = document.querySelectorAll(".popup-close");
