@@ -28,8 +28,8 @@
       <input class="sign__popup-item" name="sms_code" value="" maxlength="1" />
       <input class="sign__popup-item" name="sms_code" value="" maxlength="1" />
       <input class="sign__popup-item" name="sms_code" value="" maxlength="1" />
-
     </form>
+              <span class="error-message-popup"></span>
     <button class="sign__send-code" disabled>Выслать снова, 0:59</button>
   </div>
 </div>
@@ -72,152 +72,164 @@
     <script src="{% static 'js/sign/sign.js' %}"></script>
     <script src="{% static 'js/inputmask/inputmask.min.js' %}"></script>
     <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        const form = document.getElementById("loginForm");
-        const verifyForm = document.getElementById("verifyForm");
-        const popupForm = document.querySelector(".sign__popup-form");
-        const newNumberButton = document.querySelector(".sign__new-number");
-        const resendButton = document.querySelector(".sign__send-code");
-        const phoneNumberDisplay = document.getElementById("phoneNumberDisplay");
 
-        let activeIndex = 0;
+    document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("loginForm");
+    const verifyForm = document.getElementById("verifyForm");
+    const popupForm = document.querySelector(".sign__popup-form");
+    const newNumberButton = document.querySelector(".sign__new-number");
+    const resendButton = document.querySelector(".sign__send-code");
+    const phoneNumberDisplay = document.getElementById("phoneNumberDisplay");
 
-        let phoneInput = document.getElementById('phoneNumber');
-        let im = new Inputmask("+7 (999) 999-99-99");
-        im.mask(phoneInput);
+    let activeIndex = 0;
 
-        console.log(Inputmask.unmask(phoneInput.value, { alias: "+7 (999) 999-99-99" }));
+    let phoneInput = document.getElementById('phoneNumber');
+    let im = new Inputmask("+7 (999) 999-99-99");
+    im.mask(phoneInput);
 
-        form.addEventListener("submit", function(e) {
-          e.preventDefault();
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
 
-            phoneInput.addEventListener("input", function(e) {
-                hideError();
-            });
-            let unmaskedValue2 = phoneInput.inputmask.unmaskedvalue();
-            const phoneNumber = '+7' + unmaskedValue2;
-             let isValid = phoneInput.inputmask.isValid();
-                if (isValid) {
-                hideError();
-                    fetch("{% url 'login' %}", {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/x-www-form-urlencoded",
-                          "X-Requested-With": "XMLHttpRequest",
-                          "X-CSRFToken": "{{ csrf_token }}",
-                        },
-                        body: new URLSearchParams({
-                          phone_number: phoneNumber,
-                          action: "send_sms"
-                        })
-                      })
-                      .then(response => response.json())
-                      .then(data => {
-                        if (data.status === "ok") {
-                            phoneNumberDisplay.textContent = phoneInput.value;
-                          document.querySelector(".popup").classList.add("popup--active");
-                          document.body.classList.add("body--overflow");
-                          hideError();
-                        } else {
-                          errorMessage.textContent = data.message;
-                          showError(data.message);
-                        }
-                      })
-                      .catch(error => {
-                        console.error('Error:', error);
-                        showError('Ошибка соединения с сервером.');
-                      });
-                } else {
-                showError('Введите корректный номер телефона');
-                }
+        phoneInput.addEventListener("input", function(e) {
+            hideError();
         });
 
-        popupForm.addEventListener("input", function(e) {
-          const inputs = Array.from(popupForm.querySelectorAll(".sign__popup-item"));
-          const target = e.target;
-
-          if (target.value.match(/[^0-9]/g)) {
-            target.value = target.value.slice(0, target.value.length - 1);
-            return;
-          }
-
-          if (target.value.length === 1 && activeIndex < inputs.length - 1) {
-            activeIndex++;
-            inputs[activeIndex].focus();
-          }
-
-          if (inputs.every(input => input.value.length === 1)) {
-            const smsCode = inputs.map(input => input.value).join("");
-            fetch("{% url 'verify_login' %}", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "X-Requested-With": "XMLHttpRequest",
-                "X-CSRFToken": "{{ csrf_token }}",
-              },
-              body: new URLSearchParams({
-                sms_code: smsCode,
-                action: "verify_login"
-              })
+        let unmaskedValue2 = phoneInput.inputmask.unmaskedvalue();
+        const phoneNumber = '+7' + unmaskedValue2;
+        let isValid = phoneInput.inputmask.isValid();
+        if (isValid) {
+            hideError();
+            fetch("{% url 'login' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+                body: new URLSearchParams({
+                    phone_number: phoneNumber,
+                    action: "send_sms"
+                })
             })
             .then(response => response.json())
             .then(data => {
-              if (data.status === "ok") {
-                window.location.href = data.redirect_url;
-              } else {
-                alert(data.message);
-              }
+                if (data.status === "ok") {
+                    phoneNumberDisplay.textContent = phoneInput.value;
+                    document.querySelector(".popup").classList.add("popup--active");
+                    document.body.classList.add("body--overflow");
+                    hideError();
+                    startResendTimer(); // Запуск таймера после успешной отправки SMS
+                } else {
+                    showError(data.message);
+                }
             })
             .catch(error => {
-              console.error('Error:', error);
-              alert("Ошибка соединения с сервером.");
+                console.error('Error:', error);
+                showError('Ошибка соединения с сервером.');
             });
-          }
-        });
+        } else {
+            showError('Введите корректный номер телефона');
+        }
+    });
 
-        resendButton.addEventListener("click", function() {
-          const phoneNumber = Inputmask.unmask(phoneInput.value, { alias: "+7 (999) 999-99-99" });
+    popupForm.addEventListener("input", function(e) {
+        const inputs = Array.from(popupForm.querySelectorAll(".sign__popup-item"));
+        const target = e.target;
+        hideErrorPopup();
+        if (target.value.match(/[^0-9]/g)) {
+            target.value = target.value.slice(0, target.value.length - 1);
+            return;
+        }
 
-          fetch("{% url 'resend_sms' %}", {
+        if (target.value.length === 1 && activeIndex < inputs.length - 1) {
+            activeIndex++;
+            inputs[activeIndex].focus();
+        }
+
+        if (inputs.every(input => input.value.length === 1)) {
+            const smsCode = inputs.map(input => input.value).join("");
+            fetch("{% url 'verify_login' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+                body: new URLSearchParams({
+                    sms_code: smsCode,
+                    action: "verify_login"
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "ok") {
+                    window.location.href = data.redirect_url;
+                } else {
+                    showErrorPopup(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorPopup("Ошибка соединения с сервером.");
+            });
+        }
+    });
+
+    popupForm.addEventListener("keydown", function(e) {
+        const inputs = Array.from(popupForm.querySelectorAll(".sign__popup-item"));
+        const target = e.target;
+
+        if (e.key === "Backspace" && target.value === "" && activeIndex > 0) {
+            activeIndex--;
+            inputs[activeIndex].focus();
+        }
+    });
+
+    resendButton.addEventListener("click", function() {
+        let unmaskedValue2 = phoneInput.inputmask.unmaskedvalue();
+        const phoneNumber = '+7' + unmaskedValue2;
+        hideErrorPopup();
+        fetch("{% url 'resend_sms' %}", {
             method: "POST",
             headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-              "X-Requested-With": "XMLHttpRequest",
-              "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRFToken": "{{ csrf_token }}",
             },
             body: new URLSearchParams({
-              phone_number: phoneNumber,
-              action: "resend_sms"
+                phone_number: phoneNumber,
+                action: "resend_sms"
             })
-          })
-          .then(response => response.json())
-          .then(data => {
+        })
+        .then(response => response.json())
+        .then(data => {
             if (data.status === "ok") {
-              resendButton.disabled = true;
-              startResendTimer();
+                resendButton.disabled = true;
+                startResendTimer();
             } else {
-              alert(data.message);
+                showErrorPopup("data.message");
             }
-          })
-          .catch(error => console.error('Error:', error));
-        });
+        })
+        .catch(error => console.error('Error:', error));
+    });
 
-        newNumberButton.addEventListener("click", function() {
-          location.reload();
-        });
+    newNumberButton.addEventListener("click", function() {
+        location.reload();
+    });
 
-        function startResendTimer() {
-          let time = 59;
-          const interval = setInterval(() => {
-            resendButton.textContent = `Выслать снова, ${time > 9 ? time : "0" + time}`;
+    function startResendTimer() {
+        let time = 59;
+        resendButton.disabled = true;
+        const interval = setInterval(() => {
+            resendButton.textContent = `Выслать снова через ${time > 9 ? time : "0" + time}`;
             if (time <= 0) {
-              resendButton.disabled = false;
-              resendButton.textContent = "Выслать снова";
-              clearInterval(interval);
+                resendButton.disabled = false;
+                resendButton.textContent = "Выслать смс код снова";
+                clearInterval(interval);
             }
             time--;
-          }, 1000);
-        }
-      });
+        }, 1000);
+    }
+});
     </script>
 {% endblock %}
