@@ -21,7 +21,7 @@ urlpatterns += i18n_patterns(
     path('sms/', include('sms.urls')),
     path('qr_handler/', include('qr_handler.urls')),
     path('doscam/', include('doscam.urls')),
-    path('attractions/', include('attractions.urls')),
+    path('events/', include('attractions.urls')),
     path('static_pages/', include('static_pages.urls')),
 )
 if settings.DEBUG:

@@ -1,22 +1,7 @@
-{% extends "base.html" %}
-{% block content %}
-<h2>Attractions</h2>
-<ul>
-    {% for attraction in attractions %}
-        <li>
-            <a href="{% url 'attraction_detail' attraction.id %}">{{ attraction.title }}</a>
-            ({{ attraction.start_time }} - {{ attraction.end_time }})
-        </li>
-    {% endfor %}
-</ul>
-<a href="{% url 'create_attraction' %}">Create new attraction</a>
-{% endblock %}
-
-
-<!-- points.html -->
-{% extends "base.html" %}
-
-{% block title %}Points{% endblock %}
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}Attraction List{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'style/points/points.css' %}">
@@ -25,54 +10,62 @@
 {% block content %}
 <header class="header">
     <div class="container header__inner">
-        <button class="back" href="{% url 'index' %}">
-            <img class="back-image" src="{% static 'image/back.png' %}" alt="back">
-        </button>
+        <a class="back" href="{% url 'home' %}">
+            <img class="back-image" src="{% static 'image/back.png' %}" alt="back" />
+        </a>
         <svg class="header__icon" width="138" height="151" fill="none">
-            <use xlink:href="{% static 'image/icons.svg#points' %}"></use>
+            <use href="{% static 'image/icons.svg' %}#points"></use>
         </svg>
         <h2 class="header__title">Точки притяжения</h2>
     </div>
 </header>
+
+
 <section class="points">
     <div class="container points__inner">
         <ul class="points__list">
-            <li class="points__item">
-                <button class="popup-button points__button" data-index="1">
-                    <img class="points__button-image" src="{% static 'image/points/image-1.png' %}" alt="link">
-                </button>
-            </li>
-            <li class="points__item">
-                <button class="popup-button points__button" data-index="2">
-                    <img class="points__button-image" src="{% static 'image/points/image-2.png' %}" alt="link">
-                </button>
-            </li>
-        </ul>
-        <ul class="points__graphic">
-            <li class="points__graphic-item">
-                <h5 class="points__graphic-title">Баттл акционистов</h5>
-                <div class="points__descr">
-                    <span>Время</span>
-                    <span class="points__time"> 14:00 - 16:00</span>
+            {% for attraction in attractions %}
+                <li class="points__item">
+                    <button class="popup-button points__button" data-index="{{ forloop.counter0 }}">
+                        <img class="points__button-image" src="{{ attraction.photo.url }}" alt="link"/>
+                    </button>
+                </li>
+
+                <div class="popup points__popup flex" data-index="{{ forloop.counter0 }}">
+                    <div class="points__popup-top">
+                        <button class="popup-close points__close" data-index="{{ forloop.counter0 }}">
+                            <img class="popup-close__image" src="{% static 'image/back.png' %}" alt="close" />
+                        </button>
+                        <img class="points__popup-image" src="{{ attraction.photo.url }}" alt="image" />
+                    </div>
+                    <div class="points__wrapper">
+                        <div class="points__project">
+                            <h5 class="points__project-name">{{ attraction.title }}</h5>
+{#                            <div class="points__person">#}
+{#                                <img class="points__person-image" src="{% static 'image/points/photo.png' %}" alt="person" />#}
+{#                                <span class="points__person-name">Nurdaulet <span class="points__position">()</span></span>#}
+{#                            </div>#}
+                        </div>
+                        <ul class="points__popup-list">
+                            <li class="points__popup-item">Город: {{ attraction.location }}</li>
+                            <li class="points__popup-item">{{ attraction.description }}</li>
+                        </ul>
+                        <div class="points__descr points__popup-descr">
+                            <span>Время</span>
+                            <span class="points__time">{{ attraction.start_time|date:"H:i" }} - {{ attraction.end_time|date:"H:i" }}</span>
+                        </div>
+                        <div class="points__descr">
+                            <span>Место проведения</span>
+                            <span class="points__time">2 этаж, Зал 6</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="points__descr">
-                    <span> Место проведения</span>
-                    <span class="points__time"> 2 этаж, Зал 6</span>
-                </div>
-            </li>
-            <li class="points__graphic-item">
-                <h5 class="points__graphic-title">Гала-концерт</h5>
-                <div class="points__descr">
-                    <span>Время</span>
-                    <span class="points__time"> 14:00 - 16:00</span>
-                </div>
-                <div class="points__descr">
-                    <span> Место проведения</span>
-                    <span class="points__time"> 2 этаж, Зал 6</span>
-                </div>
-            </li>
+            {% endfor %}
         </ul>
     </div>
 </section>
 {% endblock %}
 
+{% block extra_js %}
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

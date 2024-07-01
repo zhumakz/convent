@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 <div class="menu">
   <div class="top">
     <button class="top__button">
@@ -7,22 +8,22 @@
         <use href="{% static 'image/icons.svg' %}#back"></use>
       </svg>
     </button>
-    <span class="top__title">Меню</span>
+    <span class="top__title">{% trans "Menu" %}</span>
   </div>
   <div class="menu__languages">
-    <button class="menu__languages-button" href="{% url 'switch_language' 'ru' %}">{% trans "Russian" %}</button>
-    <button class="menu__languages-button menu__languages-button--active" href="{% url 'switch_language' 'kk' %}">{% trans "Kazakh" %}</button>
+    <button class="menu__languages-button{% if LANGUAGE_CODE  == 'ru' %} menu__languages-button--active{% endif %}" href="{% url 'switch_language' 'ru' %}">RU</button>
+    <button class="menu__languages-button{% if LANGUAGE_CODE  == 'kk' %} menu__languages-button--active{% endif %}" href="{% url 'switch_language' 'kk' %}">KZ</button>
   </div>
   <nav class="menu__nav">
     <ul class="menu__list">
       <li class="menu__item">
-        <a class="menu__link">Старинца профиля</a>
+        <a class="menu__link" href="#">{% trans "Profile Page" %}</a>
       </li>
       <li class="menu__item">
-        <a class="menu__link" href="#">Страница мероприятий</a>
+        <a class="menu__link" href="#">{% trans "Events Page" %}</a>
       </li>
       <li class="menu__item">
-        <a class="menu__link" href="#">Страница DOS COINS</a>
+        <a class="menu__link" href="#">{% trans "DOS COINS Page" %}</a>
       </li>
     </ul>
   </nav>

@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import attraction_list, attraction_detail, create_attraction, edit_attraction
+from . import views
 
 urlpatterns = [
-    path('', attraction_list, name='attraction_list'),
-    path('<int:attraction_id>/', attraction_detail, name='attraction_detail'),
-    path('create/', create_attraction, name='create_attraction'),
-    path('<int:attraction_id>/edit/', edit_attraction, name='edit_attraction'),
+    path('', views.attraction_list, name='attraction_list'),
+    path('attractions/<int:attraction_id>/', views.attraction_detail, name='attraction_detail'),
+    path('attractions/<int:attraction_id>/json/', views.attraction_detail_json, name='attraction_detail_json'),
+    path('attractions/create/', views.create_attraction, name='create_attraction'),
+    path('attractions/<int:attraction_id>/edit/', views.edit_attraction, name='edit_attraction'),
 ]
