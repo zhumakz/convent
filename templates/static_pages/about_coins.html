@@ -1,0 +1,32 @@
+<!-- templates/your_app/about_coins.html -->
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+Что такое DOS COINS
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'style/coins/coins.css' %}">
+{% endblock %}
+
+{% block content %}
+<header class="header">
+    <div class="container header__inner">
+        <a class="back" href="{% url 'static_page_list' %}">
+            <img class="back-image" src="{% static 'image/back.png' %}" alt="back" />
+        </a>
+        <svg class="header__icon" width="148" height="148" fill="none">
+            <use href="{% static 'image/icons.svg' %}#coins"></use>
+        </svg>
+        <h2 class="header__title">{{ page.title }}</h2>
+    </div>
+</header>
+<section class="coins">
+    <div class="container">
+        <div class="coins__texts">
+            <p>{{ page.description }}</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

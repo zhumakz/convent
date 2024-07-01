@@ -49,6 +49,8 @@ body {
 
 .top__image-wrapper {
     position: relative;
+    max-width: 435px;
+    object-fit: contain;
 }
 
 .top__list:first-child .top__item:first-child {

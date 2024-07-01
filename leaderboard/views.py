@@ -17,6 +17,7 @@ def top_users_view(request):
 
     return render(request, 'leaderboard/top_users.html', {'top_users': top_users})
 
+
 @login_required
 def top_campaigns_view(request):
     top_campaigns = Campaign.objects.annotate(num_votes=Count('votes')).order_by('-num_votes')[:5]

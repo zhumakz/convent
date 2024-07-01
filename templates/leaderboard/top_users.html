@@ -1,14 +1,65 @@
-{% extends base_template %}
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
 
-{% block title %}Top 10 Users{% endblock %}
+{% block title %}Top Users{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'style/rating/rating.css' %}">
+{% endblock %}
 
 {% block content %}
-<h2>Top 10 Users by Number of Friends</h2>
-<ol>
+<section class="rating background-page">
+  <div class="background-page__item background-page__first">
+    <svg width="639" height="639" fill="none">
+      <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+    </svg>
+  </div>
+  <div class="background-page__item background-page__second">
+    <svg width="639" height="639" fill="none">
+      <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+    </svg>
+  </div>
+  <div class="background-page__item background-page__three">
+    <svg width="639" height="639" fill="none">
+      <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+    </svg>
+  </div>
+  <div class="background-page__item background-page__fourth">
+    <svg width="639" height="639" fill="none">
+      <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+    </svg>
+  </div>
+  <ul class="rating__list">
     {% for user in top_users %}
-    <li>
-        {{ user.name }} {{ user.surname }} - {{ user.num_friends }} Friends
+    <li class="rating__item">
+      <div class="photo-line rating__line">
+        {% if forloop.first %}
+        <img class="rating__top-icon" src="{% static 'image/top.png' %}" alt="top" />
+        <div class="rating__bg"></div>
+        {% endif %}
+        {% if user.profile_image_url %}
+        <img class="rating__image" src="{{ user.profile_image_url }}" alt="photo" />
+        {% else %}
+        <img class="rating__image" src="{% static 'image/photo.png' %}" alt="default photo" />
+        {% endif %}
+      </div>
+      <div class="rating__wrapper">
+        <span class="rating__name">{{ user.name }}<br>{{ user.surname }}</span>
+        <span class="rating__location">{{ user.city }}</span>
+      </div>
+      <div class="rating__right">
+        <div class="rating__icon">
+          {% if forloop.first %}
+          <img class="rating__img" alt="icon" src="{% static 'image/star.png' %}" />
+          {% else %}
+          <img class="rating__img" alt="icon" src="{% static 'image/rating.png' %}" />
+          {% endif %}
+        </div>
+        <span>{{ user.num_friends }}</span>
+      </div>
     </li>
     {% endfor %}
-</ol>
+  </ul>
+</section>
 {% endblock %}
