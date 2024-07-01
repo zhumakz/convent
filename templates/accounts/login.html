@@ -19,7 +19,7 @@
     </div>
 
     <p class="sign__text">
-      Введите код, который мы отправили на номер +7 707 777-77-10
+      Введите код, который мы отправили на номер  <span id="phoneNumberDisplay">+7 707 777-77-10</span>
     </p>
 
     <button class="sign__new-number">Другой номер</button>
@@ -49,13 +49,11 @@
     </p>
     <form class="sign__form" id="loginForm">
       <div class="sign__item">
-        <label class="sign__label">Код страны</label>
-        <input class="sign__input" name="code" type="text" value="+7" />
-      </div>
-      <div class="sign__item">
         <label class="sign__label">Номер телефона</label>
-        <input class="sign__input" name="number" type="text" value="" />
+        <input class="sign__input" id="phoneNumber" name="number" type="text" placeholder="+7 (777) 000-00-00" value="" />
+          <span class="error-message"></span>
       </div>
+
       <div class="sign__bottom">
         <button class="button" type="submit">Продолжить</button>
         <p class="sign__bottom-text">
@@ -64,7 +62,7 @@
           <a class="sign__text-link" href="#">принимаю условия пользовательского соглашения.</a>
         </p>
       </div>
-      <div class="error-message" style="color: red; display: none;"></div> <!-- Поле для ошибки -->
+
     </form>
   </div>
 </section>
@@ -72,6 +70,7 @@
 
 {% block extra_js %}
     <script src="{% static 'js/sign/sign.js' %}"></script>
+    <script src="{% static 'js/inputmask/inputmask.min.js' %}"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function() {
         const form = document.getElementById("loginForm");
@@ -79,44 +78,58 @@
         const popupForm = document.querySelector(".sign__popup-form");
         const newNumberButton = document.querySelector(".sign__new-number");
         const resendButton = document.querySelector(".sign__send-code");
-        const errorMessage = document.querySelector(".error-message");
+        const phoneNumberDisplay = document.getElementById("phoneNumberDisplay");
+
         let activeIndex = 0;
+
+        let phoneInput = document.getElementById('phoneNumber');
+        let im = new Inputmask("+7 (999) 999-99-99");
+        im.mask(phoneInput);
+
+        console.log(Inputmask.unmask(phoneInput.value, { alias: "+7 (999) 999-99-99" }));
 
         form.addEventListener("submit", function(e) {
           e.preventDefault();
 
-          const code = form.querySelector("[name='code']").value;
-          const number = form.querySelector("[name='number']").value;
-          const phoneNumber = code + number;
-
-          fetch("{% url 'login' %}", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-              "X-Requested-With": "XMLHttpRequest",
-              "X-CSRFToken": "{{ csrf_token }}",
-            },
-            body: new URLSearchParams({
-              phone_number: phoneNumber,
-              action: "send_sms"
-            })
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.status === "ok") {
-              document.querySelector(".popup").classList.add("popup--active");
-              document.body.classList.add("body--overflow");
-              errorMessage.style.display = "none";
-            } else {
-              errorMessage.textContent = data.message;
-              errorMessage.style.display = "block";
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            errorMessage.textContent = "Ошибка соединения с сервером.";
-            errorMessage.style.display = "block";
-          });
+            phoneInput.addEventListener("input", function(e) {
+                hideError();
+            });
+            let unmaskedValue2 = phoneInput.inputmask.unmaskedvalue();
+            const phoneNumber = '+7' + unmaskedValue2;
+             let isValid = phoneInput.inputmask.isValid();
+                if (isValid) {
+                hideError();
+                    fetch("{% url 'login' %}", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/x-www-form-urlencoded",
+                          "X-Requested-With": "XMLHttpRequest",
+                          "X-CSRFToken": "{{ csrf_token }}",
+                        },
+                        body: new URLSearchParams({
+                          phone_number: phoneNumber,
+                          action: "send_sms"
+                        })
+                      })
+                      .then(response => response.json())
+                      .then(data => {
+                        if (data.status === "ok") {
+                            phoneNumberDisplay.textContent = phoneInput.value;
+                          document.querySelector(".popup").classList.add("popup--active");
+                          document.body.classList.add("body--overflow");
+                          hideError();
+                        } else {
+                          errorMessage.textContent = data.message;
+                          showError(data.message);
+                        }
+                      })
+                      .catch(error => {
+                        console.error('Error:', error);
+                        showError('Ошибка соединения с сервером.');
+                      });
+                } else {
+                showError('Введите корректный номер телефона');
+                }
         });
 
         popupForm.addEventListener("input", function(e) {
@@ -163,9 +176,7 @@
         });
 
         resendButton.addEventListener("click", function() {
-          const code = form.querySelector("[name='code']").value;
-          const number = form.querySelector("[name='number']").value;
-          const phoneNumber = code + number;
+          const phoneNumber = Inputmask.unmask(phoneInput.value, { alias: "+7 (999) 999-99-99" });
 
           fetch("{% url 'resend_sms' %}", {
             method: "POST",

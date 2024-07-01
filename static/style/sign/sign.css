@@ -20,12 +20,7 @@
 }
 
 .sign__item {
-    width: calc(100% - 129px);
-
-    &:first-child {
-        width: 100px;
-        flex-shrink: 0;
-    }
+    width: calc(100%);
 }
 
 .sign__label {
@@ -88,4 +83,9 @@
     color: #23B0FF;
     display: block;
 
+}
+.error-message {
+    color: red;
+    display: none;
+      transition: visibility 0s, opacity 0.5s linear;
 }
