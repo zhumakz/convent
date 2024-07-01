@@ -1,50 +1,358 @@
-{% extends base_template %}
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
 
 {% block title %}Profile{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/profile/profile.css' %}">
+{% endblock %}
+
 {% block content %}
-<h1>Welcome, {{ user.name }} {{ user.surname }}!</h1>
 
-<p>Profile Picture:</p>
-{% if user.profile_picture %}
-    <img src="{{ user.profile_picture.url }}" alt="Profile Picture" style="max-width: 200px; max-height: 200px;">
-{% else %}
-    <p>No profile picture uploaded.</p>
-{% endif %}
-<p>Phone Number: {{ user.phone_number }}</p>
-<p>Age: {{ user.age }}</p>
-<p>City: {{ user.city.name }}</p>
-
-<h3>QR Code</h3>
-{% if user.qr_code %}
-    <img src="{{ user.qr_code.url }}" alt="QR Code" style="max-width: 200px;">
-{% else %}
-    <p>QR Code not available</p>
-{% endif %}
-
-<form method="post" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button type="submit">Logout</button>
-</form>
-<button onclick="showEditPopup()">Edit Profile</button>
-
-<div id="editPopup" style="display: none;">
-    <h2>Edit Profile</h2>
-    <form method="post" action="{% url 'profile_edit' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save Changes</button>
-        <button type="button" onclick="hideEditPopup()">Cancel</button>
-    </form>
+<section class="profile">
+  <div class="popup qr" data-index="1">
+    <div class="popup-container">
+      <div class="top">
+        <button class="top__button popup-close" data-index="1">
+          <svg width="46" height="46">
+            <use href="{% static 'image/icons.svg' %}#back"></use>
+          </svg>
+        </button>
+        <span class="top__title">Scan QR code</span>
+      </div>
+      <div id="my-qr-reader" class="qr__content">
+        <img class="qr__image" src="{% static 'image/qr.png' %}" alt="qr" />
+      </div>
+    </div>
+  </div>
+  <div class="popup  add" data-index="2">
+    <div class="bottom-gradient"></div>
+    <div class="popup-container add__inner flex">
+      <div class="top">
+        <button class="top__button popup-close" data-index="2">
+          <svg width="46" height="46">
+            <use href="{% static 'image/icons.svg' %}#back"></use>
+          </svg>
+        </button>
+        <span class="top__title">Добавление друга</span>
+      </div>
+      <div class="add__person">
+        <div class="photo-line add__line">
+          <img class="add__person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+        </div>
+        <div class="person__wrapper">
+          <span class="add-person__name">Zhasulan<br />Zhumadilov</span>
+          <span class="person__location">Astana</span>
+        </div>
+      </div>
+      <p class="add__text">Дай отсканировать QR code новому другу что бы он добавился к тебе в друзья и вы получите Dos Сoins</p>
+      <img class="add__qr" src="{% static 'image/qr.png' %}" alt="qr" />
+      <button class="button-s popups-close">Отмена</button>
+    </div>
+  </div>
+  <div class="popup  final" data-index="3">
+    <div class="bottom-gradient"></div>
+    <div class="popup-container final__inner flex">
+      <div class="top">
+        <button class="top__button popup-close" data-index="3">
+          <svg width="46" height="46">
+            <use href="{% static 'image/icons.svg' %}#back"></use>
+          </svg>
+        </button>
+        <span class="top__title">Добавление друга</span>
+      </div>
+      <div class="person">
+        <div class="photo-line final__line">
+          <img class="final__person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+          <span class="final__plus">+1</span>
+        </div>
+        <span class="person__location">Astana</span>
+        <span class="final__name">Zhasulan<br />Zhumadilov</span>
+      </div>
+      <div class="final__content">
+        <div class="final__coins-background">
+          <div class="final__coins-item"></div>
+          <div class="final__coins-item"></div>
+          <div class="final__coins-item"></div>
+          <img class="final__coins-layers" src="{% static 'image/layers.png' %}" alt="layers" />
+        </div>
+        <svg class="final__coins" width="150" height="150">
+          <use href="{% static 'image/icons.svg' %}#coins"></use>
+        </svg>
+      </div>
+      <div class="final__coins-add">
+        <span class="count">+2</span>
+        <span>Dos<br />Coins</span>
+      </div>
+      <p class="final__bottom-text">Поздравляем!<br />Dos Coins переведены</p>
+      <button class="button final__button popups-close">Назад</button>
+    </div>
+  </div>
+  <div class="popup  popup--black all-coins" data-index="4">
+  <div class="popup-container all-coins__inner flex">
+    <div class="top">
+      <button class="top__button popup-close" data-index="4">
+        <svg width="46" height="46">
+          <use href="{% static 'image/icons.svg' %}#back"></use>
+        </svg>
+      </button>
+    </div>
+    <div class="all-coins__wrapper">
+      <span class="all-coins__count">{{ user.doscointbalance.balance }}</span>
+      <span class="all-coins__value">Dos Coins</span>
+      <p class="all-coins__text">Краткое DOS Coins описание монеты. Где можно получить и где можно потратить.</p>
+      <svg class="all-coins__icon" width="112" height="112">
+        <use href="{% static 'image/icons.svg' %}#coins"></use>
+      </svg>
+    </div>
+    <div class="history">
+      <h5 class="history__title">История транзакции:</h5>
+      <ul class="history__list">
+        {% for transaction in transactions %}
+        <li class="history__item">
+          <span class="history__time">{{ transaction.timestamp }}</span>|
+          {% if transaction.amount > 0 %}
+          <span class="history__plus">+{{ transaction.amount }} DC</span> {{ transaction.description }}
+          {% else %}
+          <span class="history__minus">{{ transaction.amount }} DC</span> {{ transaction.description }}
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <button class="button popups-close">Закрыть</button>
+  </div>
 </div>
+  <div class="popup  popup--black friends" data-index="5">
+  <div class="popup-container friends__inner flex">
+    <div class="top">
+      <button class="top__button popup-close" data-index="5">
+        <svg width="46" height="46">
+          <use href="{% static 'image/icons.svg' %}#back"></use>
+        </svg>
+      </button>
+    </div>
+    <div class="friends__list-wrapper">
+      <h5 class="friends__title">Список друзей: {{ friends|length }}</h5>
+      <ul class="friends__list">
+        {% for friend in friends %}
+        <li class="friends__item">
+          <button class="friends__button popup-button" data-index="6">
+            <div class="person friends__person">
+              <div class="photo-line friends__line">
+                <img class="friends__person-img" src="{{ friend.profile_picture.url }}" alt="photo" />
+              </div>
+              <div class="person__wrapper">
+                <span class="friends__location">{{ friend.city.name }}</span>
+                <span class="friends__name">{{ friend.name }}<br />{{ friend.surname }}</span>
+              </div>
+            </div>
+          </button>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <button class="button popups-close">Закрыть</button>
+  </div>
+</div>
+  <div class="popup  friend" data-index="6">
+    <div class="bottom-gradient"></div>
+    <div class="popup-container flex">
+      <div class="top">
+        <button class="top__button popup-close" data-index="6">
+          <svg width="46" height="46">
+            <use href="{% static 'image/icons.svg' %}#back"></use>
+          </svg>
+        </button>
+        <span class="top__title">Профиль друга</span>
+      </div>
+      <div class="person">
+        <div class="photo-line friend__line">
+          <img class="friend__person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+        </div>
+        <span class="person__location">Astana</span>
+        <span class="friend__name">Zhasulan<br />Zhumadilov</span>
+      </div>
+      <div class="friend__socials">
+        <a class="friend__social" href="#">
+          <svg width="40" height="40">
+            <use href="{% static 'image/icons.svg' %}#instagram"></use>
+          </svg>
+          <span>Instagram</span>
+        </a>
+        <a class="friend__social" href="#">
+          <svg width="40" height="40">
+            <use href="{% static 'image/icons.svg' %}#tiktok"></use>
+          </svg>
+          <span>Tiktok</span>
+        </a>
+        <a class="friend__social" href="tel:77001000110">
+          <svg width="40" height="40">
+            <use href="{% static 'image/icons.svg' %}#phone"></use>
+          </svg>
+          <span>+7 700 100 01 10</span>
+        </a>
+      </div>
+      <button class="button popups-close">Закрыть</button>
+    </div>
+  </div>
 
-<script>
-    function showEditPopup() {
-        document.getElementById('editPopup').style.display = 'block';
-    }
+<div class="popup edit" data-index="7">
+  <div class="bottom-gradient"></div>
+  <div class="popup-container flex">
+    <div class="top">
+      <button class="top__button popup-close" data-index="7">
+        <svg width="46" height="46">
+          <use href="{% static 'image/icons.svg' %}#back"></use>
+        </svg>
+      </button>
+      <span class="top__title">Профиль</span>
+    </div>
+        <form class="edit__form" id="profileEditForm" method="post" enctype="multipart/form-data" action="{% url 'profile_edit' %}">
+            {% csrf_token %}
+            <div class="edit__top">
+                <div class="person">
+                    <div class="photo-line blue-line">
+                        {% if user.profile_picture %}
+                            <img class="blue-person-img" src="{{ user.profile_picture.url }}" alt="photo" />
+                        {% else %}
+                            <img class="blue-person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+                        {% endif %}
+                    </div>
+                </div>
+                <label class="edit__label" for="id_profile_picture">Изменить фото</label>
+                <input type="file" class="edit__file-input" id="id_profile_picture" name="profile_picture" />
+            </div>
+            <span class="edit__location">{{ user.city.name }}</span>
+            <span class="edit__name">{{ user.name }}<br />{{ user.surname }}</span>
+            <div class="edit__contacts">
+                <div class="edit__contacts-item">
+                    <svg width="40" height="40">
+                        <use href="{% static 'image/icons.svg' %}#inst"></use>
+                    </svg>
+                    <input class="edit__contacts-input" type="text" name="instagram" value="{{ user.instagram }}" placeholder="Instagram профиль" />
+                </div>
+                <div class="edit__contacts-item">
+                    <svg width="40" height="40">
+                        <use href="{% static 'image/icons.svg' %}#tiktok"></use>
+                    </svg>
+                    <input class="edit__contacts-input" type="text" name="tiktok" value="{{ user.tiktok }}" placeholder="Tiktok профиль" />
+                </div>
+            </div>
+            <button type="submit" class="button">Сохранить</button>
+        </form>
+  </div>
+</div>
+  <div class="popup  find" data-index="8">
+    <div class="bottom-gradient"></div>
+    <div class="popup-container flex find__inner">
+      <div class="top">
+        <button class="top__button popup-close" data-index="8">
+          <svg width="46" height="46">
+            <use href="{% static 'image/icons.svg' %}#back"></use>
+          </svg>
+        </button>
+        <span class="top__title">Dos Cam</span>
+      </div>
+      <p class="find__text">Найди этого человека за отведенное время и отсканируй его QR Code!</p>
+      <div class="person">
+        <div class="photo-line find__line">
+          <img class="profile__person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+        </div>
+        <span class="person__location">Astana</span>
+        <span class="person__name">Zhasulan<br />Zhumadilov</span>
+      </div>
+      <div class="timer"></div>
+      <button class="button-s popup-close find__button-close" data-index="8">Свернуть</button>
+    </div>
+  </div>
+  <div class="popup art" data-index="9">
+    <div class="art__top">
+      <div class="top">
+        <button class="top__button popup-close" data-index="9">
+          <svg width="46" height="46">
+            <use href="{% static 'image/icons.svg' %}#back"></use>
+          </svg>
+        </button>
+        <span class="top__title">Dos Cam</span>
+      </div>
+      <div class="art__logo">
+        <span>Лого</span>
+      </div>
+    </div>
+    <div class="popup-container art__inner">
+      <span class="art__name">Название Арт проекта</span>
+      <div class="person art__person">
+        <div class="photo-line art__line">
+          <img class="art__person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+        </div>
+        <span class="art__name">Nurdaulet<br />(-лидер гражданской компании)</span>
+      </div>
+      <ul class="art__points">
+        <li class="art__item">Города где работает проект: Астана, Караганда, Кокшетау.</li>
+        <li class="art__item">Краткое описание проекта</li>
+      </ul>
+      <p class="art__warn">Внимание: ты можешь проголосовать только 1 раз</p>
+      <button class="button art__button">Голосовать</button>
+      <button class="button-s popup-close art__button-close" data-index="9">Свернуть</button>
+    </div>
+  </div>
+  <div class="container flex profile__inner">
+    <div class="profile__top">
+      <div class="profile__wrapper">
+        <button class="menu-button">
+          <svg width="46" height="46">
+            <use href="{% static 'image/icons.svg' %}#menu-button"></use>
+          </svg>
+        </button>
+        <button class="popup-button find-button" data-index="8">
+          <svg width="46" height="46">
+            <use href="{% static 'image/icons.svg' %}#yang"></use>
+          </svg>
+        </button>
+      </div>
+      <div class="person">
+        <div class="photo-line profile__line">
+            {% if user.profile_picture %}
+                <img class="profile__person-img" src="{{ user.profile_picture.url }}" alt="photo" />
+                {% else %}
+                <img class="profile__person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+            {% endif %}
+        </div>
+        <span class="person__location">{{ user.city.name }}</span>
+        <span class="person__name">{{ user.name }}<br />{{ user.surname }}</span>
+      </div>
+      <button class="profile__edit popup-button" data-index="7">
+        <svg width="46" height="46">
+          <use href="{% static 'image/icons.svg' %}#edit"></use>
+        </svg>
+      </button>
+    </div>
+    <div class="profile__qr">
+      <img class="profile__qr-image" src="{{ user.qr_code.url }}" alt="qr" />
+    </div>
+    <div class="profile__info">
+      <button class="profile__item popup-button" data-index="5">
+        <span class="profile__friends">{{ friends|length }}</span>
+        <span class="profile__item-name">Список<br />друзей</span>
+      </button>
+      <button class="profile__item popup-button" data-index="4">
+        <span class="profile__coins">{{ user.doscointbalance.balance }}</span>
+        <span class="profile__item-name">Dos<br />Coins</span>
+        <div class="profile__coins-icon">
+          <svg width="112" height="112">
+            <use href="{% static 'image/icons.svg' %}#coins"></use>
+          </svg>
+        </div>
+      </button>
+    </div>
+    <button class="button popup-button profile__button" data-index="1">Scan QR code</button>
+  </div>
+</section>
+{% endblock %}
 
-    function hideEditPopup() {
-        document.getElementById('editPopup').style.display = 'none';
-    }
-</script>
+{% block extra_js %}
+    <script src="{% static 'js/html5-qrcode.min.js' %}"></script>
+    <script src="{% static 'js/profile/profile.js' %}"></script>
 {% endblock %}

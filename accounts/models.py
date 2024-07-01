@@ -31,6 +31,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     surname = models.CharField(max_length=30)
     age = models.IntegerField()
     city = models.ForeignKey('City', on_delete=models.SET_NULL, null=True, blank=True)
+    instagram = models.CharField(max_length=255, null=True, blank=True,default='@')
+    tiktok = models.CharField(max_length=255, null=True, blank=True, default='@')
     profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
     qr_code = models.ImageField(upload_to='profile_pictures/qr_codes/', null=True, blank=True)
     is_active = models.BooleanField(default=True)

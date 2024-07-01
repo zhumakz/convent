@@ -30,20 +30,23 @@ class VerificationForm(forms.Form):
             raise forms.ValidationError(_("SMS код должен содержать только цифры."))
         return sms_code
 
+
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['name', 'surname', 'age', 'city', 'profile_picture']
+        fields = ['profile_picture', 'instagram', 'tiktok']
 
     def clean_profile_picture(self):
         profile_picture = self.cleaned_data.get('profile_picture')
 
         if profile_picture:
+            # Проверяем тип файла
             if not profile_picture.content_type.startswith('image'):
-                raise forms.ValidationError(_('File type is not image'))
+                raise forms.ValidationError('Файл должен быть изображением.')
 
+            # Проверяем размер файла
             if profile_picture.size > 5 * 1024 * 1024:
-                raise forms.ValidationError(_('File size should not exceed 5MB.'))
+                raise forms.ValidationError('Размер файла не должен превышать 5MB.')
 
         return profile_picture
 

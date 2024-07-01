@@ -8,9 +8,12 @@ from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.utils.translation import gettext_lazy as _, gettext as __
 
+from coins.services import CoinService
+from friends.services import FriendService
 from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm, ModeratorLoginForm
 from .models import User
 from .services import UserService
+
 
 def registration_view(request):
     if request.method == 'POST':
@@ -121,10 +124,19 @@ def get_popup_status(request):
         remaining_time = None
     return show_popup, remaining_time
 
+
 @login_required
 def profile_view(request):
-    form = ProfileEditForm(instance=request.user)
-    return render(request, 'accounts/profile.html', {'user': request.user, 'form': form})
+    user = request.user
+    friends = FriendService.get_friends(user)
+    transactions = CoinService.get_transactions(user).select_related('sender', 'recipient').order_by('-timestamp')
+    processed_transactions = [CoinService.process_transaction(tx, user) for tx in transactions]
+
+    return render(request, 'accounts/profile.html', {
+        'user': user,
+        'friends': friends,
+        'transactions': processed_transactions,
+    })
 
 
 @login_required
@@ -133,7 +145,9 @@ def profile_edit_view(request):
         form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            return JsonResponse({'status': 'ok'})
+        else:
+            return JsonResponse({'status': 'error', 'errors': form.errors})
     return redirect('profile')
 
 
