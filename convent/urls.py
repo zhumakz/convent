@@ -23,8 +23,10 @@ urlpatterns += i18n_patterns(
     path('doscam/', include('doscam.urls')),
     path('events/', include('attractions.urls')),
     path('static_pages/', include('static_pages.urls')),
+    path('moderators/', include('moderators.urls')),
 )
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     import debug_toolbar
-    urlpatterns += [path('__debug__/', include(debug_toolbar.urls)),]
+
+    urlpatterns += [path('__debug__/', include(debug_toolbar.urls)), ]

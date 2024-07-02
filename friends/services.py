@@ -9,6 +9,14 @@ class FriendService:
 
     @staticmethod
     def send_friend_request(from_user, to_user):
+        # Проверка на попытку добавления самого себя
+        if from_user == to_user:
+            return False, __('You cannot add yourself as a friend.')
+
+        # Проверка на попытку добавления администратора или модератора
+        if to_user.is_admin or to_user.is_moderator:
+            return False, __('You cannot add administrators or moderators as friends.')
+
         # Проверка на существующий запрос
         existing_request = FriendRequest.objects.filter(from_user=to_user, to_user=from_user).first()
         if existing_request:
@@ -17,6 +25,10 @@ class FriendService:
             existing_request.delete()
             return True, __('You are now friends!')
         else:
+            # Проверка на дублирующий запрос
+            if FriendRequest.objects.filter(from_user=from_user, to_user=to_user).exists():
+                return False, __('Friend request already sent.')
+
             # Создаем новый запрос
             friend_request = FriendRequest(from_user=from_user, to_user=to_user)
             friend_request.save()

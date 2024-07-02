@@ -24,10 +24,10 @@
 
     <button class="sign__new-number">Другой номер</button>
     <form class="sign__popup-form" id="verifyForm">
-      <input class="sign__popup-item" name="sms_code" value="" maxlength="1" />
-      <input class="sign__popup-item" name="sms_code" value="" maxlength="1" />
-      <input class="sign__popup-item" name="sms_code" value="" maxlength="1" />
-      <input class="sign__popup-item" name="sms_code" value="" maxlength="1" />
+      <input class="sign__popup-item" inputmode="numeric" name="sms_code" value="" maxlength="1" />
+      <input class="sign__popup-item" inputmode="numeric" name="sms_code" value="" maxlength="1" />
+      <input class="sign__popup-item" inputmode="numeric" name="sms_code" value="" maxlength="1" />
+      <input class="sign__popup-item" inputmode="numeric" name="sms_code" value="" maxlength="1" />
     </form>
               <span class="error-message-popup"></span>
     <button class="sign__send-code" disabled>Выслать снова, 0:59</button>
@@ -50,7 +50,7 @@
     <form class="sign__form" id="loginForm">
       <div class="sign__item">
         <label class="sign__label">Номер телефона</label>
-        <input class="sign__input" id="phoneNumber" name="number" type="text" placeholder="+7 (777) 000-00-00" value="" />
+        <input class="sign__input" inputmode="tel" id="phoneNumber" name="number" type="text" placeholder="+7 (777) 000-00-00" value="" />
           <span class="error-message"></span>
       </div>
 

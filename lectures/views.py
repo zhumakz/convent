@@ -40,3 +40,13 @@ def scan_lecture_qr_end(request, lecture_id):
         messages.error(request, message)
 
     return redirect('lecture_detail', lecture_id=lecture_id)
+
+@login_required
+def show_qr_start(request, lecture_id):
+    lecture = LectureService.get_lecture_by_id(lecture_id)
+    return render(request, 'lectures/show_qr_start.html', {'lecture': lecture})
+
+@login_required
+def show_qr_end(request, lecture_id):
+    lecture = LectureService.get_lecture_by_id(lecture_id)
+    return render(request, 'lectures/show_qr_end.html', {'lecture': lecture})

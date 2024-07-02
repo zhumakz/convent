@@ -2,12 +2,14 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}{% trans "Lectures" %}{% endblock %}
+{% block title %}{% trans "End QR Code" %}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/top/top.css' %}"/>
 {% endblock %}
+
 {% block content %}
+
     <section class="top background-page">
         <div class="background-page__item background-page__first">
             <svg width="639" height="639" fill="none">
@@ -30,13 +32,14 @@
             </svg>
         </div>
         <div class="top__content">
-            <h2>Lectures</h2>
-            <ul>
-                {% for lecture in lectures %}
-                    <li><a href="{% url 'lecture_detail' lecture.id %}">{{ lecture.title }}</a> - {{ lecture.date }}
-                        at {{ lecture.location }}</li>
-                {% endfor %}
-            </ul>
+            <h2>{% trans "End QR Code for Lecture" %} {{ lecture.title }}</h2>
+            {% if lecture.qr_code_end %}
+                <img src="{{ lecture.qr_code_end.url }}" alt="End QR Code">
+            {% else %}
+                <p>{% trans "No end QR code available." %}</p>
+            {% endif %}
+            <br>
+            <a href="{% url 'lecture_detail' lecture.id %}">{% trans "Back to Lecture Details" %}</a>
         </div>
     </section>
 {% endblock %}

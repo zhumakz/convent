@@ -18,12 +18,12 @@ LAST_NAMES = [
 
 
 class Command(BaseCommand):
-    help = 'Create 1000 test users with random names and phone numbers'
+    help = 'Create 10 test users with random names and phone numbers'
 
     def handle(self, *args, **kwargs):
         users_created = 0
         cities = list(City.objects.all())
-        for i in range(1000):
+        for i in range(10):
             first_name = random.choice(FIRST_NAMES)
             last_name = random.choice(LAST_NAMES)
             phone_number = f'+77475{str(random.randint(100000, 999999)).zfill(6)}'

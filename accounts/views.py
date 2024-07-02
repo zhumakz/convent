@@ -203,10 +203,14 @@ def moderator_login_view(request):
             user = authenticate(phone_number=phone_number, password=password)
             if user is not None:
                 login(request, user)
-                if user.groups.filter(name='AddModerators').exists():
-                    return redirect('add_coins')
-                elif user.groups.filter(name='RemoveModerators').exists():
-                    return redirect('remove_coins')
+                if user.groups.filter(name='Главный оператор').exists():
+                    return redirect('moderator_dashboard')
+                elif user.groups.filter(name='Оператор').exists():
+                    return redirect('moderator_dashboard')
+                elif user.groups.filter(name='Продавец').exists():
+                    return redirect('moderator_dashboard')
+                elif user.groups.filter(name='Оператор Doscam').exists():
+                    return redirect('moderator_dashboard')
                 else:
                     return redirect('profile')
     else:

@@ -22,7 +22,9 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = ["https://c8fe-178-89-174-224.ngrok-free.app"]
 
 # Application definition
 
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
     'doscam',
     'attractions',
     'static_pages',
+    'moderators',
     # 'debug_toolbar',
 ]
 

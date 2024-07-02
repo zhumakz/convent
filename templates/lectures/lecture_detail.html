@@ -1,29 +1,46 @@
-{% extends base_template %}
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
 
-{% block title %}Lecture Detail{% endblock %}
+{% block title %}{% trans "Lecture Detail" %}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/top/top.css' %}"/>
+{% endblock %}
 
 {% block content %}
-<h2>{{ lecture.title }}</h2>
-<p>Speakers: {{ lecture.speakers }}</p>
-<p>Date: {{ lecture.date }}</p>
-<p>Location: {{ lecture.location }}</p>
-<p>Description: {{ lecture.description }}</p>
+    <section class="top background-page">
+        <div class="background-page__item background-page__first">
+            <svg width="639" height="639" fill="none">
+                <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+            </svg>
+        </div>
+        <div class="background-page__item background-page__second">
+            <svg width="639" height="639" fill="none">
+                <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+            </svg>
+        </div>
+        <div class="background-page__item background-page__three">
+            <svg width="639" height="639" fill="none">
+                <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+            </svg>
+        </div>
+        <div class="background-page__item background-page__fourth">
+            <svg width="639" height="639" fill="none">
+                <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+            </svg>
+        </div>
+        <div class="top__content">
+            <h2>{{ lecture.title }}</h2>
+            <p>Speakers: {{ lecture.speakers }}</p>
+            <p>Date: {{ lecture.date }}</p>
+            <p>Location: {{ lecture.location }}</p>
+            <p>Description: {{ lecture.description }}</p>
 
-{% if lecture.qr_code_start %}
-    <h3>Scan to Register</h3>
-    <img src="{{ lecture.qr_code_start.url }}" alt="Start QR Code">
-    <a href="{% url 'scan_lecture_qr_start' lecture.id %}">Scan Start QR Code</a>
-{% endif %}
-
-{% if attendance and attendance.start_scanned %}
-    {% if lecture.qr_code_end %}
-        <h3>Scan to Complete</h3>
-        <img src="{{ lecture.qr_code_end.url }}" alt="End QR Code">
-        <a href="{% url 'scan_lecture_qr_end' lecture.id %}">Scan End QR Code</a>
-    {% endif %}
-{% endif %}
-
-{% if attendance and attendance.end_scanned %}
-    <p>You have completed this lecture and received your reward.</p>
-{% endif %}
+            <div>
+                <a class="button" href="{% url 'show_qr_start' lecture.id %}">{% trans "Show Start QR Code" %}</a>
+                <a class="button" href="{% url 'show_qr_end' lecture.id %}">{% trans "Show End QR Code" %}</a>
+            </div>
+        </div>
+    </section>
 {% endblock %}
