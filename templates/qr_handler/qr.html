@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Profile{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/qr/qr.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="profile">
+  <div class="popup  add" data-index="2">
+    <div class="bottom-gradient"></div>
+    <div class="popup-container add__inner flex">
+      <div class="top">
+        <button class="top__button popup-close" data-index="2">
+          <svg width="46" height="46">
+            <use href="{% static 'image/icons.svg' %}#back"></use>
+          </svg>
+        </button>
+        <span class="top__title">Добавление друга</span>
+      </div>
+      <div class="add__person">
+        <div class="photo-line add__line">
+          <img class="add__person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+        </div>
+        <div class="person__wrapper">
+          <span class="add-person__name">Zhasulan<br />Zhumadilov</span>
+          <span class="person__location">Astana</span>
+        </div>
+      </div>
+      <p class="add__text">Дай отсканировать QR code новому другу что бы он добавился к тебе в друзья и вы получите Dos Сoins</p>
+      <img class="add__qr" src="{% static 'image/qr.png' %}" alt="qr" />
+      <button class="button-s popups-close">Отмена</button>
+    </div>
+  </div>
+  <div class="popup  final" data-index="3">
+    <div class="bottom-gradient"></div>
+    <div class="popup-container final__inner flex">
+      <div class="top">
+        <button class="top__button popup-close" data-index="3">
+          <svg width="46" height="46">
+            <use href="{% static 'image/icons.svg' %}#back"></use>
+          </svg>
+        </button>
+        <span class="top__title">Добавление друга</span>
+      </div>
+      <div class="person">
+        <div class="photo-line final__line">
+          <img class="final__person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+          <span class="final__plus">+1</span>
+        </div>
+        <span class="person__location">Astana</span>
+        <span class="final__name">Zhasulan<br />Zhumadilov</span>
+      </div>
+      <div class="final__content">
+        <div class="final__coins-background">
+          <div class="final__coins-item"></div>
+          <div class="final__coins-item"></div>
+          <div class="final__coins-item"></div>
+          <img class="final__coins-layers" src="{% static 'image/layers.png' %}" alt="layers" />
+        </div>
+        <svg class="final__coins" width="150" height="150">
+          <use href="{% static 'image/icons.svg' %}#coins"></use>
+        </svg>
+      </div>
+      <div class="final__coins-add">
+        <span class="count">+2</span>
+        <span>Dos<br />Coins</span>
+      </div>
+      <p class="final__bottom-text">Поздравляем!<br />Dos Coins переведены</p>
+      <button class="button final__button popups-close">Назад</button>
+    </div>
+  </div>
+
+  <div class="popup  friend" data-index="6">
+    <div class="bottom-gradient"></div>
+    <div class="popup-container flex">
+      <div class="top">
+        <button class="top__button popup-close" data-index="6">
+          <svg width="46" height="46">
+            <use href="{% static 'image/icons.svg' %}#back"></use>
+          </svg>
+        </button>
+        <span class="top__title">Профиль друга</span>
+      </div>
+      <div class="person">
+        <div class="photo-line friend__line">
+          <img class="friend__person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+        </div>
+        <span class="person__location">Astana</span>
+        <span class="friend__name">Zhasulan<br />Zhumadilov</span>
+      </div>
+      <div class="friend__socials">
+        <a class="friend__social" href="#">
+          <svg width="40" height="40">
+            <use href="{% static 'image/icons.svg' %}#instagram"></use>
+          </svg>
+          <span>Instagram</span>
+        </a>
+        <a class="friend__social" href="#">
+          <svg width="40" height="40">
+            <use href="{% static 'image/icons.svg' %}#tiktok"></use>
+          </svg>
+          <span>Tiktok</span>
+        </a>
+        <a class="friend__social" href="tel:77001000110">
+          <svg width="40" height="40">
+            <use href="{% static 'image/icons.svg' %}#phone"></use>
+          </svg>
+          <span>+7 700 100 01 10</span>
+        </a>
+      </div>
+      <button class="button popups-close">Закрыть</button>
+    </div>
+  </div>
+  <div class="popup  find" data-index="8">
+    <div class="bottom-gradient"></div>
+    <div class="popup-container flex find__inner">
+      <div class="top">
+        <button class="top__button popup-close" data-index="8">
+          <svg width="46" height="46">
+            <use href="{% static 'image/icons.svg' %}#back"></use>
+          </svg>
+        </button>
+        <span class="top__title">Dos Cam</span>
+      </div>
+      <p class="find__text">Найди этого человека за отведенное время и отсканируй его QR Code!</p>
+      <div class="person">
+        <div class="photo-line find__line">
+          <img class="profile__person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+        </div>
+        <span class="person__location">Astana</span>
+        <span class="person__name">Zhasulan<br />Zhumadilov</span>
+      </div>
+      <div class="timer"></div>
+      <button class="button-s popup-close find__button-close" data-index="8">Свернуть</button>
+    </div>
+  </div>
+  <div class="popup art" data-index="9">
+    <div class="art__top">
+      <div class="top">
+        <button class="top__button popup-close" data-index="9">
+          <svg width="46" height="46">
+            <use href="{% static 'image/icons.svg' %}#back"></use>
+          </svg>
+        </button>
+        <span class="top__title">Dos Cam</span>
+      </div>
+      <div class="art__logo">
+        <span>Лого</span>
+      </div>
+    </div>
+    <div class="popup-container art__inner">
+      <span class="art__name">Название Арт проекта</span>
+      <div class="person art__person">
+        <div class="photo-line art__line">
+          <img class="art__person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+        </div>
+        <span class="art__name">Nurdaulet<br />(-лидер гражданской компании)</span>
+      </div>
+      <ul class="art__points">
+        <li class="art__item">Города где работает проект: Астана, Караганда, Кокшетау.</li>
+        <li class="art__item">Краткое описание проекта</li>
+      </ul>
+      <p class="art__warn">Внимание: ты можешь проголосовать только 1 раз</p>
+      <button class="button art__button">Голосовать</button>
+      <button class="button-s popup-close art__button-close" data-index="9">Свернуть</button>
+    </div>
+  </div>
+
+    <section class="qr">
+      <div class="popup-container">
+        <div class="top">
+          <a class="top__button popup-close" href="{% url 'profile' %}">
+            <svg width="46" height="46">
+              <use href="{% static 'image/icons.svg' %}#back "></use>
+            </svg>
+          </a>
+          <span class="top__title">Scan QR code</span>
+        </div>
+        <div id="my-qr-reader" class="qr__content">
+          <img class="qr__image" src="{% static 'image/qr.png' %}" alt="qr" />
+        </div>
+      </div>
+    </section>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/html5-qrcode.min.js' %}"></script>
+    <script src="{% static 'js/qr/qr.js' %}"></script>
+{% endblock %}

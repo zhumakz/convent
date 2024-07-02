@@ -9,6 +9,9 @@ from coins.models import Transaction
 from django.conf import settings
 from shop.models import Purchase
 
+@login_required
+def qr_scan_view(request):
+    return render(request, 'qr_handler/qr.html')
 
 @login_required
 def handle_qr_data(request):
