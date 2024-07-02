@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Selfie{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/selfie/selfie.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="selfie">
+      <div class="container selfie__inner">
+        <div class="top">
+          <a class="top__button" href="{% url 'profile' %}">
+            <svg width="46" height="46">
+              <use href="{% static 'image/icons.svg' %}#back"></use>
+            </svg>
+          </a>
+          <span class="top__title">Добавить селфи</span>
+        </div>
+        <form class="selfie__form" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="photo-line selfie__line">
+            <label class="selfie__label">
+              <input class="selfie__file" type="file" name="profile_picture" />
+              <img class="selfie__image" src="{% static 'image/photo.png' %}" alt="photo" />
+            </label>
+          </div>
+
+          <p class="selfie__text">
+            Добавьте селфи аватар, он понадобиться для прохождения уникальных
+            квестов и получения призов!
+          </p>
+          <p class="selfie__bottom-text">
+            Ты не сможешь участвовать в Квестах если не сделаешь фото, Изменить
+            можно будет в профиле.
+          </p>
+          <div class="selfie__buttons">
+            <label class="selfie__label button">
+              <input class="selfie__file" type="file" name="profile_picture" />
+              Добавить селфи
+            </label>
+            <button type="submit" class="button">Сохранить</button>
+            <a class="button-s selfie__link" href="{% url 'profile' %}">Пропустить</a>
+          </div>
+        </form>
+      </div>
+    </section>
+{% endblock %}

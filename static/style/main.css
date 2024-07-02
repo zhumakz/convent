@@ -110,10 +110,17 @@ body {
     font-weight: 700;
     color: var(--white);
     padding-left: 98px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-content: center;
+    align-items: center;
 }
 
 .menu__languages-button--active {
     color: #4DCDB9;
+    border-bottom: 2px solid #4DCDB9;
 }
 
 .menu__languages-button {

@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import registration_view, login_and_verify_view, profile_view, profile_edit_view, user_profile_view, logout_view, moderator_login_view
+from .views import registration_view, login_and_verify_view, profile_view, profile_edit_view, user_profile_view, \
+    logout_view, moderator_login_view, selfie_view
 
 urlpatterns = [
     path('register/', registration_view, name='register'),
@@ -11,4 +12,5 @@ urlpatterns = [
     path('profile/<int:user_id>/', user_profile_view, name='user_profile'),
     path('logout/', logout_view, name='logout'),
     path('moderator/login/', moderator_login_view, name='moderator_login'),
+    path('selfie/', selfie_view, name='selfie'),  # Добавьте это
 ]

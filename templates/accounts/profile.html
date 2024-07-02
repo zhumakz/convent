@@ -10,239 +10,283 @@
 
 {% block content %}
 
-<section class="profile">
-  <div class="popup  popup--black all-coins" data-index="4">
-  <div class="popup-container all-coins__inner flex">
-    <div class="top">
-      <button class="top__button popup-close" data-index="4">
-        <svg width="46" height="46">
-          <use href="{% static 'image/icons.svg' %}#back"></use>
-        </svg>
-      </button>
-    </div>
-    <div class="all-coins__wrapper">
-      <span class="all-coins__count">{{ user.doscointbalance.balance }}</span>
-      <span class="all-coins__value">Dos Coins</span>
-      <p class="all-coins__text">Краткое DOS Coins описание монеты. Где можно получить и где можно потратить.</p>
-      <svg class="all-coins__icon" width="112" height="112">
-        <use href="{% static 'image/icons.svg' %}#coins"></use>
-      </svg>
-    </div>
-    <div class="history">
-      <h5 class="history__title">История транзакции:</h5>
-      <ul class="history__list">
-        {% for transaction in transactions %}
-        <li class="history__item">
-          <span class="history__time">{{ transaction.timestamp }}</span>|
-          {% if transaction.amount > 0 %}
-          <span class="history__plus">+{{ transaction.amount }} DC</span> {{ transaction.description }}
-          {% else %}
-          <span class="history__minus">{{ transaction.amount }} DC</span> {{ transaction.description }}
-          {% endif %}
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-    <button class="button popups-close">Закрыть</button>
-  </div>
-</div>
-  <div class="popup  popup--black friends" data-index="5">
-  <div class="popup-container friends__inner flex">
-    <div class="top">
-      <button class="top__button popup-close" data-index="5">
-        <svg width="46" height="46">
-          <use href="{% static 'image/icons.svg' %}#back"></use>
-        </svg>
-      </button>
-    </div>
-    <div class="friends__list-wrapper">
-      <h5 class="friends__title">Список друзей: {{ friends|length }}</h5>
-      <ul class="friends__list">
-        {% for friend in friends %}
-        <li class="friends__item">
-          <button class="friends__button popup-button" data-index="6">
-            <div class="person friends__person">
-              <div class="photo-line friends__line">
-                <img class="friends__person-img" src="{{ friend.profile_picture.url }}" alt="photo" />
-              </div>
-              <div class="person__wrapper">
-                <span class="friends__location">{{ friend.city.name }}</span>
-                <span class="friends__name">{{ friend.name }}<br />{{ friend.surname }}</span>
-              </div>
+    <section class="profile">
+        <div class="popup popup--black all-coins" data-index="4">
+            <div class="popup-container all-coins__inner flex">
+                <div class="top">
+                    <button class="top__button popup-close" data-index="4">
+                        <svg width="46" height="46">
+                            <use href="{% static 'image/icons.svg' %}#back"></use>
+                        </svg>
+                    </button>
+                </div>
+                <div class="all-coins__wrapper">
+                    <span class="all-coins__count">{{ user.doscointbalance.balance|floatformat:"-1" }}</span>
+                    <span class="all-coins__value">Dos Coins</span>
+                    <p class="all-coins__text">Краткое DOS Coins описание монеты. Где можно получить и где можно
+                        потратить.</p>
+                    <svg class="all-coins__icon" width="112" height="112">
+                        <use href="{% static 'image/icons.svg' %}#coins"></use>
+                    </svg>
+                </div>
+                <div class="history">
+                    <h5 class="history__title">История транзакции:</h5>
+                    <ul class="history__list">
+                        {% for transaction in transactions %}
+                            <li class="history__item">
+                                <span class="history__time">{{ transaction.timestamp }}</span>|
+                                {% if transaction.amount > 0 %}
+                                    <span class="history__plus">+{{ transaction.amount|floatformat:"-1" }} DC</span>
+                                    {{ transaction.description }}
+                                {% else %}
+                                    <span class="history__minus">{{ transaction.amount|floatformat:"-1" }} DC</span>
+                                    {{ transaction.description }}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <button class="button popups-close">Закрыть</button>
             </div>
-          </button>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-    <button class="button popups-close">Закрыть</button>
-  </div>
-</div>
-  <div class="popup  friend" data-index="6">
-    <div class="bottom-gradient"></div>
-    <div class="popup-container flex">
-      <div class="top">
-        <button class="top__button popup-close" data-index="6">
-          <svg width="46" height="46">
-            <use href="{% static 'image/icons.svg' %}#back"></use>
-          </svg>
-        </button>
-        <span class="top__title">Профиль друга</span>
-      </div>
-      <div class="person">
-        <div class="photo-line friend__line">
-          <img class="friend__person-img" src="{% static 'image/photo.png' %}" alt="photo" />
         </div>
-        <span class="person__location">Astana</span>
-        <span class="friend__name">Zhasulan<br />Zhumadilov</span>
-      </div>
-      <div class="friend__socials">
-        <a class="friend__social" href="#">
-          <svg width="40" height="40">
-            <use href="{% static 'image/icons.svg' %}#instagram"></use>
-          </svg>
-          <span>Instagram</span>
-        </a>
-        <a class="friend__social" href="#">
-          <svg width="40" height="40">
-            <use href="{% static 'image/icons.svg' %}#tiktok"></use>
-          </svg>
-          <span>Tiktok</span>
-        </a>
-        <a class="friend__social" href="tel:77001000110">
-          <svg width="40" height="40">
-            <use href="{% static 'image/icons.svg' %}#phone"></use>
-          </svg>
-          <span>+7 700 100 01 10</span>
-        </a>
-      </div>
-      <button class="button popups-close">Закрыть</button>
-    </div>
-  </div>
-  <div class="popup edit" data-index="7">
-  <div class="bottom-gradient"></div>
-  <div class="popup-container flex">
-    <div class="top">
-      <button class="top__button popup-close" data-index="7">
-        <svg width="46" height="46">
-          <use href="{% static 'image/icons.svg' %}#back"></use>
-        </svg>
-      </button>
-      <span class="top__title">Профиль</span>
-    </div>
-        <form class="edit__form" id="profileEditForm" method="post" enctype="multipart/form-data" action="{% url 'profile_edit' %}">
-              {% csrf_token %}
-              <div class="edit__top">
+        <div class="popup popup--black friends" data-index="5">
+            <div class="popup-container friends__inner flex">
+                <div class="top">
+                    <button class="top__button popup-close" data-index="5">
+                        <svg width="46" height="46">
+                            <use href="{% static 'image/icons.svg' %}#back"></use>
+                        </svg>
+                    </button>
+                </div>
+                <div class="friends__list-wrapper">
+                    <h5 class="friends__title">Список друзей: {{ friends|length }}</h5>
+                    <ul class="friends__list">
+                        {% for friend in friends %}
+                            <li class="friends__item">
+                                <button class="friends__button popup-button" data-index="6"
+                                        data-friend-id="{{ friend.id }}"
+                                        data-friend-name="{{ friend.name }}"
+                                        data-friend-surname="{{ friend.surname }}"
+                                        data-friend-profile-picture="{% if friend.profile_picture %} {{ friend.profile_picture.url }}{% endif %}"
+                                        data-friend-city="{{ friend.city.name }}"
+                                        data-friend-instagram="{{ friend.instagram }}"
+                                        data-friend-tiktok="{{ friend.tiktok }}"
+                                        data-friend-phone="{{ friend.phone_number }}">
+                                    <div class="person friends__person">
+                                        <div class="photo-line friends__line">
+                                            {% if friend.profile_picture %}
+                                                <img class="friends__person-img" src="{{ friend.profile_picture.url }}"
+                                                     alt="photo"/>
+                                            {% else %}
+                                                <img class="friends__person-img" src="{% static 'image/photo.png' %}"
+                                                     alt="photo"/>
+                                            {% endif %}
+                                        </div>
+                                        <div class="person__wrapper">
+                                            <span class="friends__location">{{ friend.city.name }}</span>
+                                            <span class="friends__name">{{ friend.name }}<br/>{{ friend.surname }}</span>
+                                        </div>
+                                    </div>
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <button class="button popups-close">Закрыть</button>
+            </div>
+        </div>
+        <div class="popup friend" data-index="6">
+            <div class="bottom-gradient"></div>
+            <div class="popup-container flex">
+                <div class="top">
+                    <button class="top__button popup-close" data-index="6">
+                        <svg width="46" height="46">
+                            <use href="{% static 'image/icons.svg' %}#back"></use>
+                        </svg>
+                    </button>
+                    <span class="top__title">Профиль друга</span>
+                </div>
                 <div class="person">
-                  <div class="photo-line blue-line">
-                    {% if user.profile_picture %}
-                      <img class="blue-person-img" src="{{ user.profile_picture.url }}" alt="photo" />
-                    {% else %}
-                      <img class="blue-person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+                    <div class="photo-line friend__line">
+                        <img class="friend__person-img" id="friend-profile-picture" src="{% static 'image/photo.png' %}"
+                             alt="photo"/>
+                    </div>
+                    <span class="person__location" id="friend-location">Astana</span>
+                    <span class="friend__name" id="friend-name">Zhasulan<br/>Zhumadilov</span>
+                </div>
+                <div class="friend__socials">
+                    <a class="friend__social" id="friend-instagram" href="#">
+                        <svg width="40" height="40">
+                            <use href="{% static 'image/icons.svg' %}#instagram"></use>
+                        </svg>
+                        <span>Instagram</span>
+                    </a>
+                    <a class="friend__social" id="friend-tiktok" href="#">
+                        <svg width="40" height="40">
+                            <use href="{% static 'image/icons.svg' %}#tiktok"></use>
+                        </svg>
+                        <span>Tiktok</span>
+                    </a>
+                    <a class="friend__social" id="friend-phone" href="tel:77001000110">
+                        <svg width="40" height="40">
+                            <use href="{% static 'image/icons.svg' %}#phone"></use>
+                        </svg>
+                        <span>+7 700 100 01 10</span>
+                    </a>
+                </div>
+                <button class="button popups-close">Закрыть</button>
+            </div>
+        </div>
+        <div class="popup edit" data-index="7">
+            <div class="bottom-gradient"></div>
+            <div class="popup-container flex">
+                <div class="top">
+                    <button class="top__button popup-close" data-index="7">
+                        <svg width="46" height="46">
+                            <use href="{% static 'image/icons.svg' %}#back"></use>
+                        </svg>
+                    </button>
+                    <span class="top__title">Профиль</span>
+                </div>
+                <form class="edit__form" id="profileEditForm" method="post" enctype="multipart/form-data"
+                      action="{% url 'profile_edit' %}">
+                    {% csrf_token %}
+                    <div class="edit__top">
+                        <div class="person">
+                            <div class="photo-line blue-line">
+                                {% if user.profile_picture %}
+                                    <img class="blue-person-img" src="{{ user.profile_picture.url }}" alt="photo"/>
+                                {% else %}
+                                    <img class="blue-person-img" src="{% static 'image/photo.png' %}" alt="photo"/>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <label class="edit__label" for="id_profile_picture">Изменить фото</label>
+                        <input type="file" class="edit__file-input" id="id_profile_picture" name="profile_picture"/>
+                    </div>
+                    <span class="edit__location">{{ user.city.name }}</span>
+                    <span class="edit__name">{{ user.name }}<br/>{{ user.surname }}</span>
+                    <div class="edit__contacts">
+                        <div class="edit__contacts-item">
+                            <svg width="40" height="40">
+                                <use href="{% static 'image/icons.svg' %}#inst"></use>
+                            </svg>
+                            <input class="edit__contacts-input" type="text" name="instagram"
+                                   value="{{ user.instagram }}" placeholder="Instagram профиль"/>
+                        </div>
+                        <div class="edit__contacts-item">
+                            <svg width="40" height="40">
+                                <use href="{% static 'image/icons.svg' %}#tiktok"></use>
+                            </svg>
+                            <input class="edit__contacts-input" type="text" name="tiktok" value="{{ user.tiktok }}"
+                                   placeholder="Tiktok профиль"/>
+                        </div>
+                    </div>
+                    <button type="submit" class="button-s edit_save-button">Сохранить</button>
+                </form>
+            </div>
+        </div>
+        {% if is_event_participant %}
+            <div class="popup find" data-index="8">
+                <div class="bottom-gradient"></div>
+                <div class="popup-container flex find__inner">
+                    <div class="top">
+                        <button class="top__button popup-close" data-index="8">
+                            <svg width="46" height="46">
+                                <use href="{% static 'image/icons.svg' %}#back"></use>
+                            </svg>
+                        </button>
+                        <span class="top__title">Dos Cam</span>
+                    </div>
+                    <p class="find__text">Найди этого человека за отведенное время и отсканируй его QR Code!</p>
+                    <div class="person">
+                        <div class="photo-line find__line">
+                            <img class="profile__person-img" src="
+                                    {% if current_event.participant1 == user %}
+                                    {{ current_event.participant2.profile_picture.url }}
+                                    {% else %}
+                                    {{ current_event.participant1.profile_picture.url }}
+                                    {% endif %}"
+                                 alt="photo"/>
+                        </div>
+                        <span class="person__location">
+                                  {% if current_event.participant1 == user %}
+                                      {{ current_event.participant2.city.name }}
+                                  {% else %}
+                                      {{ current_event.participant1.city.name }}
+                                  {% endif %}"</span>
+                        <span class="person__name">{{ current_event.participant2.name }}<br/>{{ current_event.participant2.surname }}</span>
+                    </div>
+                    <div class="timer"></div>
+                    <button class="button-s popup-close find__button-close" data-index="8">Свернуть</button>
+                </div>
+            </div>
+        {% endif %}
+        <div class="container flex profile__inner">
+            <div class="profile__top">
+                <div class="profile__wrapper">
+                    <button class="menu-button">
+                        <svg width="46" height="46">
+                            <use href="{% static 'image/icons.svg' %}#menu-button"></use>
+                        </svg>
+                    </button>
+                    {% if is_event_participant %}
+                        <button class="popup-button find-button" data-index="8">
+                            <svg width="46" height="46">
+                                <use href="{% static 'image/icons.svg' %}#yang"></use>
+                            </svg>
+                        </button>
                     {% endif %}
-                  </div>
                 </div>
-                <label class="edit__label" for="id_profile_picture">Изменить фото</label>
-                <input type="file" class="edit__file-input" id="id_profile_picture" name="profile_picture" />
-              </div>
-              <span class="edit__location">{{ user.city.name }}</span>
-              <span class="edit__name">{{ user.name }}<br />{{ user.surname }}</span>
-              <div class="edit__contacts">
-                <div class="edit__contacts-item">
-                  <svg width="40" height="40">
-                    <use href="{% static 'image/icons.svg' %}#inst"></use>
-                  </svg>
-                  <input class="edit__contacts-input" type="text" name="instagram" value="{{ user.instagram }}" placeholder="Instagram профиль" />
+                <div class="person">
+                    <div class="photo-line profile__line">
+                        {% if user.profile_picture %}
+                            <img class="profile__person-img" src="{{ user.profile_picture.url }}" alt="photo"/>
+                        {% else %}
+                            <img class="profile__person-img" src="{% static 'image/photo.png' %}" alt="photo"/>
+                        {% endif %}
+                    </div>
+                    <span class="person__location">{{ user.city.name }}</span>
+                    <span class="person__name">{{ user.name }}<br/>{{ user.surname }}</span>
                 </div>
-                <div class="edit__contacts-item">
-                  <svg width="40" height="40">
-                    <use href="{% static 'image/icons.svg' %}#tiktok"></use>
-                  </svg>
-                  <input class="edit__contacts-input" type="text" name="tiktok" value="{{ user.tiktok }}" placeholder="Tiktok профиль" />
-                </div>
-              </div>
-              <button type="submit" class="button-s edit_save-button">Сохранить</button>
-            </form>
-  </div>
-</div>
-  <div class="popup  find" data-index="8">
-    <div class="bottom-gradient"></div>
-    <div class="popup-container flex find__inner">
-      <div class="top">
-        <button class="top__button popup-close" data-index="8">
-          <svg width="46" height="46">
-            <use href="{% static 'image/icons.svg' %}#back"></use>
-          </svg>
-        </button>
-        <span class="top__title">Dos Cam</span>
-      </div>
-      <p class="find__text">Найди этого человека за отведенное время и отсканируй его QR Code!</p>
-      <div class="person">
-        <div class="photo-line find__line">
-          <img class="profile__person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+                <button class="profile__edit popup-button" data-index="7">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#edit"></use>
+                    </svg>
+                </button>
+            </div>
+            <div class="profile__qr">
+                <img class="profile__qr-image" src="{{ user.qr_code.url }}" alt="qr"/>
+            </div>
+            <div class="profile__info">
+                <button class="profile__item popup-button" data-index="5">
+                    <span class="profile__friends">{{ friends|length }}</span>
+                    <span class="profile__item-name">Список<br/>друзей</span>
+                </button>
+                <button class="profile__item popup-button" data-index="4">
+                    <span class="profile__coins">{{ user.doscointbalance.balance|floatformat:"-1" }}</span>
+                    <span class="profile__item-name">Dos<br/>Coins</span>
+                    <div class="profile__coins-icon">
+                        <svg width="112" height="112">
+                            <use href="{% static 'image/icons.svg' %}#coins"></use>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+            <a class="button popup-button profile__button" href="{% url 'qr_scan' %}">Scan QR code</a>
         </div>
-        <span class="person__location">Astana</span>
-        <span class="person__name">Zhasulan<br />Zhumadilov</span>
-      </div>
-      <div class="timer"></div>
-      <button class="button-s popup-close find__button-close" data-index="8">Свернуть</button>
-    </div>
-  </div>
-  <div class="container flex profile__inner">
-    <div class="profile__top">
-      <div class="profile__wrapper">
-        <button class="menu-button">
-          <svg width="46" height="46">
-            <use href="{% static 'image/icons.svg' %}#menu-button"></use>
-          </svg>
-        </button>
-        <button class="popup-button find-button" data-index="8">
-          <svg width="46" height="46">
-            <use href="{% static 'image/icons.svg' %}#yang"></use>
-          </svg>
-        </button>
-      </div>
-      <div class="person">
-        <div class="photo-line profile__line">
-            {% if user.profile_picture %}
-                <img class="profile__person-img" src="{{ user.profile_picture.url }}" alt="photo" />
-                {% else %}
-                <img class="profile__person-img" src="{% static 'image/photo.png' %}" alt="photo" />
-            {% endif %}
-        </div>
-        <span class="person__location">{{ user.city.name }}</span>
-        <span class="person__name">{{ user.name }}<br />{{ user.surname }}</span>
-      </div>
-      <button class="profile__edit popup-button" data-index="7">
-        <svg width="46" height="46">
-          <use href="{% static 'image/icons.svg' %}#edit"></use>
-        </svg>
-      </button>
-    </div>
-    <div class="profile__qr">
-      <img class="profile__qr-image" src="{{ user.qr_code.url }}" alt="qr" />
-    </div>
-    <div class="profile__info">
-      <button class="profile__item popup-button" data-index="5">
-        <span class="profile__friends">{{ friends|length }}</span>
-        <span class="profile__item-name">Список<br />друзей</span>
-      </button>
-      <button class="profile__item popup-button" data-index="4">
-        <span class="profile__coins">{{ user.doscointbalance.balance }}</span>
-        <span class="profile__item-name">Dos<br />Coins</span>
-        <div class="profile__coins-icon">
-          <svg width="112" height="112">
-            <use href="{% static 'image/icons.svg' %}#coins"></use>
-          </svg>
-        </div>
-      </button>
-    </div>
-    <a class="button popup-button profile__button" href="{% url 'qr_scan' %}">Scan QR code</a>
-  </div>
-</section>
+    </section>
 {% endblock %}
+
 
 {% block extra_js %}
     <script src="{% static 'js/html5-qrcode.min.js' %}"></script>
     <script src="{% static 'js/profile/profile.js' %}"></script>
+    {% if is_event_participant %}
+        <script>
+            const timer = new Timer(document.querySelector('.timer'))
+            document.querySelector('.find-button').addEventListener('click', () => timer.timerStart())
+            document.querySelector('.find__button-close').addEventListener('click', () => timer.closeInterval())
+        </script>
+    {% endif %}
 {% endblock %}

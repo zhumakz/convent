@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.urls import reverse
@@ -9,8 +10,10 @@ from django.utils.dateparse import parse_datetime
 from django.utils.translation import gettext_lazy as _, gettext as __
 
 from coins.services import CoinService
+from doscam.models import Event
 from friends.services import FriendService
-from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm, ModeratorLoginForm
+from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm, ModeratorLoginForm, \
+    ProfilePictureForm
 from .models import User
 from .services import UserService
 
@@ -128,16 +131,39 @@ def get_popup_status(request):
 @login_required
 def profile_view(request):
     user = request.user
+
+    # Проверка наличия фото профиля
+    if not user.profile_picture:
+        return redirect('selfie')
+
     friends = FriendService.get_friends(user)
     transactions = CoinService.get_transactions(user).select_related('sender', 'recipient').order_by('-timestamp')
     processed_transactions = [CoinService.process_transaction(tx, user) for tx in transactions]
+
+    # Проверка текущего события
+    current_event = Event.objects.filter(
+        (Q(participant1=user) | Q(participant2=user)) & Q(is_completed=False)
+    ).first()
 
     return render(request, 'accounts/profile.html', {
         'user': user,
         'friends': friends,
         'transactions': processed_transactions,
+        'current_event': current_event,
+        'is_event_participant': current_event and (
+                    current_event.participant1 == user or current_event.participant2 == user)
     })
 
+
+@login_required
+def selfie_view(request):
+    if request.method == 'POST':
+        form = ProfilePictureForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+
+    return render(request, 'accounts/selfie.html')
 
 @login_required
 def profile_edit_view(request):

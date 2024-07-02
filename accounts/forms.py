@@ -54,6 +54,11 @@ class ProfileEditForm(forms.ModelForm):
 
         return profile_picture
 
+class ProfilePictureForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['profile_picture']
+
 class ModeratorLoginForm(forms.Form):
     phone_number = forms.CharField(max_length=15, label=_('Phone Number'))
     password = forms.CharField(widget=forms.PasswordInput, label=_('Password'))
