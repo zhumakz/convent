@@ -40,11 +40,15 @@ class ProfileEditForm(forms.ModelForm):
         profile_picture = self.cleaned_data.get('profile_picture')
 
         if profile_picture:
-            # Проверяем тип файла
-            if not profile_picture.content_type.startswith('image'):
+            from PIL import Image
+            # Открываем изображение и проверяем его формат
+            try:
+                img = Image.open(profile_picture)
+                img.verify()  # Проверяем, является ли файл изображением
+            except (IOError, SyntaxError):
                 raise forms.ValidationError('Файл должен быть изображением.')
 
-            # Проверяем размер файла
+            # Проверка размера файла
             if profile_picture.size > 5 * 1024 * 1024:
                 raise forms.ValidationError('Размер файла не должен превышать 5MB.')
 

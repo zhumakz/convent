@@ -145,10 +145,12 @@ def profile_edit_view(request):
         form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            return JsonResponse({'status': 'ok'})
+            return redirect('profile')  # Перенаправляем на страницу профиля после успешного сохранения
         else:
-            return JsonResponse({'status': 'error', 'errors': form.errors})
-    return redirect('profile')
+            return render(request, 'accounts/profile.html', {'form': form})
+    else:
+        form = ProfileEditForm(instance=request.user)
+        return render(request, 'accounts/profile.html', {'form': form})
 
 
 @login_required

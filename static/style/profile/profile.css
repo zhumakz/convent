@@ -369,6 +369,9 @@
     border-bottom: 1px solid var(--pale-orange);
 
 }
+.edit_save-button {
+    margin-top: 59px;
+}
 
 .find {
 

@@ -28,31 +28,31 @@ document.querySelector('.find__button-close').addEventListener('click', () => ti
 
 
 
-document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById('profileEditForm');
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const formData = new FormData(form);
-
-        fetch(form.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'ok') {
-                location.reload();
-            } else {
-                console.error('Error:', data.errors);
-                alert('Error: ' + JSON.stringify(data.errors));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error: ' + error);
-        });
-    });
-});
+// document.addEventListener("DOMContentLoaded", function() {
+//     const form = document.getElementById('profileEditForm');
+//     form.addEventListener('submit', function(event) {
+//         event.preventDefault();
+//         const formData = new FormData(form);
+//
+//         fetch(form.action, {
+//             method: 'POST',
+//             body: formData,
+//             headers: {
+//                 'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+//             },
+//         })
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.status === 'ok') {
+//                 location.reload();
+//             } else {
+//                 console.error('Error:', data.errors);
+//                 alert('Error: ' + JSON.stringify(data.errors));
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Error:', error);
+//             alert('Error: ' + error);
+//         });
+//     });
+// });

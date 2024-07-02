@@ -198,52 +198,52 @@
     </div>
   </div>
 
-<div class="popup edit" data-index="7">
-  <div class="bottom-gradient"></div>
-  <div class="popup-container flex">
-    <div class="top">
-      <button class="top__button popup-close" data-index="7">
-        <svg width="46" height="46">
-          <use href="{% static 'image/icons.svg' %}#back"></use>
-        </svg>
-      </button>
-      <span class="top__title">Профиль</span>
-    </div>
-        <form class="edit__form" id="profileEditForm" method="post" enctype="multipart/form-data" action="{% url 'profile_edit' %}">
-            {% csrf_token %}
-            <div class="edit__top">
-                <div class="person">
-                    <div class="photo-line blue-line">
+    <div class="popup edit" data-index="7">
+      <div class="bottom-gradient"></div>
+      <div class="popup-container flex">
+        <div class="top">
+          <button class="top__button popup-close" data-index="7">
+            <svg width="46" height="46">
+              <use href="{% static 'image/icons.svg' %}#back"></use>
+            </svg>
+          </button>
+          <span class="top__title">Профиль</span>
+        </div>
+            <form class="edit__form" id="profileEditForm" method="post" enctype="multipart/form-data" action="{% url 'profile_edit' %}">
+                  {% csrf_token %}
+                  <div class="edit__top">
+                    <div class="person">
+                      <div class="photo-line blue-line">
                         {% if user.profile_picture %}
-                            <img class="blue-person-img" src="{{ user.profile_picture.url }}" alt="photo" />
+                          <img class="blue-person-img" src="{{ user.profile_picture.url }}" alt="photo" />
                         {% else %}
-                            <img class="blue-person-img" src="{% static 'image/photo.png' %}" alt="photo" />
+                          <img class="blue-person-img" src="{% static 'image/photo.png' %}" alt="photo" />
                         {% endif %}
+                      </div>
                     </div>
-                </div>
-                <label class="edit__label" for="id_profile_picture">Изменить фото</label>
-                <input type="file" class="edit__file-input" id="id_profile_picture" name="profile_picture" />
-            </div>
-            <span class="edit__location">{{ user.city.name }}</span>
-            <span class="edit__name">{{ user.name }}<br />{{ user.surname }}</span>
-            <div class="edit__contacts">
-                <div class="edit__contacts-item">
-                    <svg width="40" height="40">
+                    <label class="edit__label" for="id_profile_picture">Изменить фото</label>
+                    <input type="file" class="edit__file-input" id="id_profile_picture" name="profile_picture" />
+                  </div>
+                  <span class="edit__location">{{ user.city.name }}</span>
+                  <span class="edit__name">{{ user.name }}<br />{{ user.surname }}</span>
+                  <div class="edit__contacts">
+                    <div class="edit__contacts-item">
+                      <svg width="40" height="40">
                         <use href="{% static 'image/icons.svg' %}#inst"></use>
-                    </svg>
-                    <input class="edit__contacts-input" type="text" name="instagram" value="{{ user.instagram }}" placeholder="Instagram профиль" />
-                </div>
-                <div class="edit__contacts-item">
-                    <svg width="40" height="40">
+                      </svg>
+                      <input class="edit__contacts-input" type="text" name="instagram" value="{{ user.instagram }}" placeholder="Instagram профиль" />
+                    </div>
+                    <div class="edit__contacts-item">
+                      <svg width="40" height="40">
                         <use href="{% static 'image/icons.svg' %}#tiktok"></use>
-                    </svg>
-                    <input class="edit__contacts-input" type="text" name="tiktok" value="{{ user.tiktok }}" placeholder="Tiktok профиль" />
-                </div>
-            </div>
-            <button type="submit" class="button">Сохранить</button>
-        </form>
-  </div>
-</div>
+                      </svg>
+                      <input class="edit__contacts-input" type="text" name="tiktok" value="{{ user.tiktok }}" placeholder="Tiktok профиль" />
+                    </div>
+                  </div>
+                  <button type="submit" class="button-s edit_save-button">Сохранить</button>
+                </form>
+      </div>
+    </div>
   <div class="popup  find" data-index="8">
     <div class="bottom-gradient"></div>
     <div class="popup-container flex find__inner">
