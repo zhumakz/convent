@@ -132,9 +132,11 @@ def get_popup_status(request):
 def profile_view(request):
     user = request.user
 
-    # Проверка наличия фото профиля
-    if not user.profile_picture:
-        return redirect('selfie')
+    # Проверка наличия фото профиля один раз за сессию
+    if not request.session.get('profile_picture_checked', False):
+        if not user.profile_picture:
+            request.session['profile_picture_checked'] = True
+            return redirect('selfie')
 
     friends = FriendService.get_friends(user)
     transactions = CoinService.get_transactions(user).select_related('sender', 'recipient').order_by('-timestamp')
@@ -151,7 +153,7 @@ def profile_view(request):
         'transactions': processed_transactions,
         'current_event': current_event,
         'is_event_participant': current_event and (
-                    current_event.participant1 == user or current_event.participant2 == user)
+                current_event.participant1 == user or current_event.participant2 == user)
     })
 
 
@@ -161,9 +163,11 @@ def selfie_view(request):
         form = ProfilePictureForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
+            request.session['profile_picture_checked'] = False  # Сбросить флаг проверки
             return redirect('profile')
 
-    return render(request, 'accounts/selfie.html')
+    return render(request, 'accounts/selfie.html', {'form': ProfilePictureForm()})
+
 
 @login_required
 def profile_edit_view(request):
