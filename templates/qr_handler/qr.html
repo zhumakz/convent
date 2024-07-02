@@ -6,10 +6,10 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/qr/qr.css' %}">
+    <link rel="stylesheet" href="{% static 'style/404/error.css' %}">
 {% endblock %}
 
 {% block content %}
-
     <section class="profile">
         <div class="popup add" data-index="2">
             <div class="bottom-gradient"></div>
@@ -31,18 +31,17 @@
                         <span class="person__location">Astana</span>
                     </div>
                 </div>
-                <p class="add__text">Дай отсканировать QR code новому другу что бы он добавился к тебе в друзья и вы
-                    получите Dos Сoins</p>
+                <p class="add__text">Дай отсканировать QR code новому другу, чтобы он добавился к тебе в друзья и вы
+                    получите Dos Coins</p>
                 <img class="add__qr" src="{% static 'image/qr.png' %}" alt="qr"/>
                 <a class="button-s popups-close" href="{% url 'profile' %}">Отмена</a>
             </div>
         </div>
-
-        <div class="popup  final" data-index="3">
+        <div class="popup final" data-index="3">
             <div class="bottom-gradient"></div>
             <div class="popup-container final__inner flex">
                 <div class="top">
-                    <a class="top__button popup-close" {% url 'profile' %} data-index="3">
+                    <a class="top__button popup-close" href="{% url 'profile' %}" data-index="3">
                         <svg width="46" height="46">
                             <use href="{% static 'image/icons.svg' %}#back"></use>
                         </svg>
@@ -73,72 +72,7 @@
                     <span>Dos<br/>Coins</span>
                 </div>
                 <p class="final__bottom-text">Поздравляем!<br/>Dos Coins переведены</p>
-                <a class="button final__button popups-close" {% url 'profile' %}>Назад</a>
-            </div>
-        </div>
-
-        <div class="popup  friend" data-index="6">
-            <div class="bottom-gradient"></div>
-            <div class="popup-container flex">
-                <div class="top">
-                    <button class="top__button popup-close" data-index="6">
-                        <svg width="46" height="46">
-                            <use href="{% static 'image/icons.svg' %}#back"></use>
-                        </svg>
-                    </button>
-                    <span class="top__title">Профиль друга</span>
-                </div>
-                <div class="person">
-                    <div class="photo-line friend__line">
-                        <img class="friend__person-img" src="{% static 'image/photo.png' %}" alt="photo"/>
-                    </div>
-                    <span class="person__location">Astana</span>
-                    <span class="friend__name">Zhasulan<br/>Zhumadilov</span>
-                </div>
-                <div class="friend__socials">
-                    <a class="friend__social" href="#">
-                        <svg width="40" height="40">
-                            <use href="{% static 'image/icons.svg' %}#instagram"></use>
-                        </svg>
-                        <span>Instagram</span>
-                    </a>
-                    <a class="friend__social" href="#">
-                        <svg width="40" height="40">
-                            <use href="{% static 'image/icons.svg' %}#tiktok"></use>
-                        </svg>
-                        <span>Tiktok</span>
-                    </a>
-                    <a class="friend__social" href="tel:77001000110">
-                        <svg width="40" height="40">
-                            <use href="{% static 'image/icons.svg' %}#phone"></use>
-                        </svg>
-                        <span>+7 700 100 01 10</span>
-                    </a>
-                </div>
-                <button class="button popups-close">Закрыть</button>
-            </div>
-        </div>
-        <div class="popup  find" data-index="8">
-            <div class="bottom-gradient"></div>
-            <div class="popup-container flex find__inner">
-                <div class="top">
-                    <button class="top__button popup-close" data-index="8">
-                        <svg width="46" height="46">
-                            <use href="{% static 'image/icons.svg' %}#back"></use>
-                        </svg>
-                    </button>
-                    <span class="top__title">Dos Cam</span>
-                </div>
-                <p class="find__text">Найди этого человека за отведенное время и отсканируй его QR Code!</p>
-                <div class="person">
-                    <div class="photo-line find__line">
-                        <img class="profile__person-img" src="{% static 'image/photo.png' %}" alt="photo"/>
-                    </div>
-                    <span class="person__location">Astana</span>
-                    <span class="person__name">Zhasulan<br/>Zhumadilov</span>
-                </div>
-                <div class="timer"></div>
-                <button class="button-s popup-close find__button-close" data-index="8">Свернуть</button>
+                <a class="button final__button popups-close" href="{% url 'profile' %}">Назад</a>
             </div>
         </div>
         <div class="popup art" data-index="9">
@@ -173,6 +107,30 @@
             </div>
         </div>
 
+        <div class="popup error" data-index="10">
+            <div class="art__top">
+                <div class="top">
+                    <button class="top__button popup-close" data-index="10">
+                        <svg width="46" height="46">
+                            <use href="{% static 'image/icons.svg' %}#back"></use>
+                        </svg>
+                    </button>
+                    <span class="top__title">Ошибка</span>
+                </div>
+                <div class="art__logo">
+                    <span>Лого</span>
+                </div>
+            </div>
+            <div class="popup-container error">
+                <h3 class="error__title">Ошибка</h3>
+                <img class="error__icon" src="{% static 'image/error.png' %}" alt="icon"/>
+                <p class="error__text">Недостаточно
+                    средств</p>
+                <button class="button-s  error__button">Закрыть</button>
+                <button class="button-s popup-close art__button-close" data-index="10">Закрыть</button>
+            </div>
+        </div>
+
         <section class="qr">
             <div class="popup-container">
                 <div class="top">
@@ -188,21 +146,50 @@
                 </div>
             </div>
         </section>
+
     </section>
 {% endblock %}
 
 {% block extra_js %}
     <script src="{% static 'js/html5-qrcode.min.js' %}"></script>
-    {#    <script src="{% static 'js/qr/qr.js' %}"></script>#}
     <script>
+        function showErrorPopup(message) {
+            const errorPopup = obj["10"];
+            const errorMessageElement = errorPopup.querySelector('.error__text');
+            errorMessageElement.textContent = message;
+            activePopup("10");
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
+            let isProcessing = false;
             const html5QrCodeScanner = new Html5QrcodeScanner("my-qr-reader", {fps: 10, qrbox: 250});
             html5QrCodeScanner.render(onScanSuccess);
 
             function onScanSuccess(decodedText, decodedResult) {
-                html5QrCodeScanner.clear();
+                if (isProcessing) {
+                    return;
+                }
 
-                fetch("{% url 'handle_qr_data' %}", {
+                isProcessing = true;
+                console.log(`Scanned QR Code: ${decodedText}`);
+
+                sendQrDataToServer(decodedText)
+                    .then(data => {
+                        if (data.status === 'ok') {
+                            alert(data.message);
+                        } else {
+                            showErrorPopup(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        console.log(`Error sending QR data: ${error}`);
+                    });
+            }
+
+            function sendQrDataToServer(decodedText) {
+                console.log(`Sending QR data to server: ${decodedText}`);
+                return fetch("{% url 'handle_qr_data' %}", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -212,34 +199,12 @@
                         'qr_data': decodedText
                     })
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'ok') {
-                            const userInfo = data.user_info;
-                            const popupIndex = data.popup_index;
-
-                            if (popupIndex === 2) {
-                                // Показать popup для отправки запроса на добавление в друзья
-                                document.querySelector('[data-index="2"]').classList.add('popup--active');
-                                document.querySelector('.add-person__name').textContent = userInfo.name;
-                                document.querySelector('.person__location').textContent = userInfo.location;
-                                document.querySelector('.add__person-img').src = userInfo.profile_picture || '{% static "image/photo.png" %}';
-                                document.querySelector('.add__qr').src = userInfo.qr_code || '{% static "image/qr.png" %}';
-                            } else if (popupIndex === 3) {
-                                // Показать popup для подтверждения дружбы
-                                document.querySelector('[data-index="3"]').classList.add('popup--active');
-                                document.querySelector('.final__name').textContent = userInfo.name;
-                                document.querySelector('.person__location').textContent = userInfo.location;
-                                document.querySelector('.final__person-img').src = userInfo.profile_picture || '{% static "image/photo.png" %}';
-                            }
-                            html5QrCodeScanner.render(onScanSuccess); // Останавливаем сканирование
-                        } else {
-                            // Обработка ошибки
-                            alert(data.message);
-                            html5QrCodeScanner.render(onScanSuccess);
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Server responded with ${response.status}`);
                         }
-                    })
-                    .catch(error => console.error('Error:', error));
+                        return response.json();
+                    });
             }
         });
     </script>
