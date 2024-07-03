@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Friend Confirmation{% endblock %}
+
+{% block extra_css %}
+      <link rel="stylesheet" href="{% static 'style/final/final.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="final all-size">
+        <div class="bottom-gradient"></div>
+        <div class="container final__inner flex">
+            <div class="top">
+                <a href="{% url 'profile' %}" class="top__button popup-close">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span class="top__title">Дружба состоялась</span>
+            </div>
+            <div class="person">
+                <div class="photo-line final__line">
+                    <img
+                            class="final__person-img"
+                            src="{% if to_user.profile_picture %}{{ to_user.profile_picture.url }}
+                        {% else %}{% static 'image/photo.png' %} {% endif %}"
+                            alt="photo"
+                    />
+                    <span class="final__plus">+1</span>
+                </div>
+                <span class="person__location">{{ to_user.city }}</span>
+                <span class="final__name">{{ to_user.name }} <br/>{{ to_user.surname }}</span>
+            </div>
+            <div class="final__content">
+                <div class="final__coins-background">
+                    <div class="final__coins-item"></div>
+                    <div class="final__coins-item"></div>
+                    <div class="final__coins-item"></div>
+                    <img
+                            class="final__coins-layers"
+                            src="{% static 'image/layers.png' %}"
+                            alt="layers"
+                    />
+                </div>
+                <svg class="final__coins" width="150" height="150">
+                    <use href="{% static 'image/icons.svg' %}#coins"></use>
+                </svg>
+            </div>
+            <div class="final__coins-add">
+                <span class="count">+{{ coins_transferred }}</span>
+                <span>Dos <br/>Coins</span>
+            </div>
+            <p class="final__bottom-text">
+                Поздравляем! <br/>Dos Coins переведены
+            </p>
+            <a href="{% url 'profile' %}" class="button final__button">Свернуть</a>
+        </div>
+    </section>
+{% endblock %}

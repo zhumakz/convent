@@ -30,6 +30,7 @@ def qr_scan_view(request):
     # Отображение страницы с формой для сканирования QR-кода
     return render(request, 'qr_handler/qr.html')
 
+
 @login_required
 def handle_qr_data(request):
     if request.method == 'POST':
@@ -77,12 +78,21 @@ def qr_friend_request(request):
 
     try:
         to_user = User.objects.get(id=user_id)
+
+        # Проверка, если уже дружат
+        if FriendService.are_friends(request.user, to_user):
+            request.session['qr_data']['user_id'] = to_user.id  # Обновляем данные в сессии
+            return redirect('friend_confirmation')
+
         success, message = FriendService.send_friend_request(request.user, to_user)
+        if success:
+            request.session['qr_data']['user_id'] = to_user.id  # Обновляем данные в сессии
+            return redirect('friend_confirmation')
         context = {
             'message': message,
             'success': success,
             'to_user': to_user,
-            'qr_code_url': request.user.qr_code.url
+            'qr_code_url': request.user.qr_code
         }
         return render(request, 'qr_handler/qr_friend_request.html', context)
     except User.DoesNotExist:
@@ -95,6 +105,26 @@ def qr_friend_request(request):
             'qr_code_url': None,
         }
         return render(request, 'qr_handler/qr_friend_request.html', context)
+
+
+@login_required
+def friend_confirmation(request):
+    data = request.session.get('qr_data')
+    if not data:
+        return redirect('profile')
+
+    user_id = data.get('user_id')
+
+    try:
+        to_user = User.objects.get(id=user_id)
+        coins_transferred = 5  #  settings.FRIEND_REWARD_COINS  Предполагаем, что это количество коинов за дружбу
+        context = {
+            'to_user': to_user,
+            'coins_transferred': coins_transferred
+        }
+        return render(request, 'qr_handler/friend_confirmation.html', context)
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
 
 
 @login_required
@@ -151,6 +181,7 @@ def qr_campaign_vote(request):
     }
     return render(request, 'qr_handler/qr_campaign_vote.html', context)
 
+
 @login_required
 def qr_lecture_start(request):
     data = request.session.get('qr_data')
@@ -172,6 +203,7 @@ def qr_lecture_start(request):
         'coins_transferred': coins_transferred
     }
     return render(request, 'qr_handler/qr_lecture_detail.html', context)
+
 
 @login_required
 def qr_lecture_end(request):

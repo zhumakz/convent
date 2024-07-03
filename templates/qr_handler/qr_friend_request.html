@@ -4,30 +4,43 @@
 
 {% block title %}Friend Request{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/add/add.css' %}">
+{% endblock %}
+
 {% block content %}
-    <section class="profile">
-        <h2>Friend Request</h2>
-
-        {% if message %}
-            <p>{{ message }}</p>
-        {% endif %}
-
-        {% if success %}
-            <p>Friend request sent successfully!</p>
-        {% else %}
-            <p>Failed to send friend request.</p>
-        {% endif %}
-
-        <div class="user-info">
-            <h3>Recipient Details:</h3>
-            <p>Name: {{ to_user.first_name }}</p>
-            <p>Surname: {{ to_user.last_name }}</p>
-            <p>City: {{ to_user.city }}</p>  <!-- Предполагается, что у пользователя есть поле city -->
+    <section class="add all-size" data-index="2">
+        <div class="bottom-gradient">
         </div>
+        <div class="add__inner container flex">
+            <div class="top">
+                <a href="{% url 'profile' %}" class="top__button popup-close">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span class="top__title">Добавление друга</span>
+            </div>
+            <div class="add__person">
+                <div class="photo-line add__line">
+                    <img class="add__person-img" src="{% if to_user.profile_picture %}{{ to_user.profile_picture.url }}
+                        {% else %}{% static 'image/photo.png' %} {% endif %}" alt="photo"/>
+                </div>
+                <div class="person__wrapper">
+                    <span class="add-person__name">{{ to_user.first_name }}
+                    <br/>{{ to_user.last_name }}</span>
+                    <span class="person__location">{{ to_user.city }}</span>
+                </div>
+            </div>
+            <p class="add__text">Дай отсканировать QR code новому другу, чтобы он добавился к тебе в друзья и вы
+                получите Dos Сoins</p>
 
-        <div class="qr-code">
-            <h3>Your QR Code:</h3>
-            <img src="{{ qr_code_url }}" alt="QR Code">
+            {% if message %}
+                <p  class="add__text">{{ message }}</p>
+            {% endif %}
+
+            <img class="add__qr" src="{% if qr_code_url %}{{ qr_code_url.url }} {% endif %}" alt="qr"/>
+            <a href="{% url 'profile' %}" class="button-s popups-close">Отмена</a>
         </div>
     </section>
 {% endblock %}
