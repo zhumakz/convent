@@ -136,17 +136,29 @@ def qr_purchase_detail(request):
     purchase_id = data.get('purchase_id')
     purchase = ShopService.get_purchase_by_id(purchase_id)
 
-    try:
-        message = ShopService.complete_purchase(purchase, request.user)
-        success = True
-    except ValidationError as e:
-        message = e.messages[0]
-        success = False
+    user_balance = request.user.doscointbalance.balance  # Предполагаем, что у пользователя есть атрибут баланса
+
+    if request.method == 'POST':
+        try:
+            message = ShopService.complete_purchase(purchase, request.user)
+            success = True
+        except ValidationError as e:
+            message = e.messages[0]
+            success = False
+
+        coins_transferred = purchase.amount if success else 0
+        context = {
+            'message': message,
+            'success': success,
+            'purchase': purchase,
+            'coins_transferred': coins_transferred
+        }
+        return render(request, 'qr_handler/purchase_confirmation.html', context)
 
     context = {
-        'message': message,
-        'success': success,
         'purchase': purchase,
+        'user_balance': user_balance,
+        'purchase_amount': purchase.amount
     }
     return render(request, 'qr_handler/qr_purchase_detail.html', context)
 

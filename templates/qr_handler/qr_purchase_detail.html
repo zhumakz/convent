@@ -1,8 +1,50 @@
 {% extends "base.html" %}
+{% load static %}
+{% load i18n %}
 
 {% block title %}Purchase Detail{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/add/add.css' %}">
+{% endblock %}
+
 {% block content %}
-    <h1>Purchase Detail</h1>
-    <p>Details for purchase ID: {{ purchase_id }}</p>
+    <section class="add-friend all-size">
+        <div class="bottom-gradient"></div>
+        <div class="container add-friend__inner flex">
+            <div class="top">
+               <a href="{% url 'profile' %}" class="top__button popup-close">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span class="top__title">Подтверждение оплаты</span>
+            </div>
+
+            <form class="add-friend__form" method="post">
+                {% csrf_token %}
+                <div class="final__content">
+                    <div class="final__coins-background">
+                        <div class="final__coins-item"></div>
+                        <div class="final__coins-item"></div>
+                        <div class="final__coins-item"></div>
+                        <img class="final__coins-layers" src="{% static 'image/layers.png' %}" alt="layers"/>
+                    </div>
+                    <svg class="final__coins" width="150" height="150">
+                        <use href="{% static 'image/icons.svg' %}#coins"></use>
+                    </svg>
+                    <div class="final__coins-add">
+                        <span class="count">-{{ purchase.amount }}</span>
+                        <span>Dos <br/>Coins</span>
+                    </div>
+                </div>
+                {% if user_balance >= purchase.amount %}
+                    <button class="button add-friend__submit" type="submit">Подтвердить</button>
+                {% else %}
+                    <p>Недостаточно средств для завершения покупки.</p>
+                {% endif %}
+                <a href="{% url 'profile' %}" class="button-s back">Отмена</a>
+            </form>
+        </div>
+    </section>
 {% endblock %}
