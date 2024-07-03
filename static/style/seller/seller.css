@@ -1,4 +1,3 @@
-
 .header-last {
     background-color: #6CB54B;
     position: relative;
@@ -41,12 +40,14 @@
     display: flex;
     flex-direction: column;
 }
+
 .seller__title {
     font-size: 36.13px;
     max-width: 336px;
     text-align: center;
     color: var(--white);
 }
+
 .seller__inner {
 
     width: 100%;
@@ -98,7 +99,7 @@
 }
 
 .seller__button,
-.seller__delete  {
+.seller__delete {
     height: 59.5px;
     width: calc((100% / 3) - 6px);
     background-color: #595F68;
@@ -120,20 +121,6 @@
 
 .seller__submit {
     margin-top: auto;
-}
-
-.qr__seller-image {
-     align-self: center;
-  margin-top: auto;
-}
-
-.qr__seller-wrapper {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px 0;
-    align-items: center;
-    font-weight: 900;
 }
 
 .final__coins-item:first-child {
@@ -170,4 +157,3 @@
     background: rgba(255, 43, 30, 0.8);
     transform: translateY(-50%);
 }
-

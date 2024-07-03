@@ -55,12 +55,13 @@
     text-align: center;
     align-self: center;
     margin-top: 62px;
-max-width: 260px;
+    max-width: 260px;
 }
 
 .dos__person-img {
     width: 100px;
     height: 100px;
+    border-radius: 50%;
 }
 
 .dos__line {
@@ -105,16 +106,14 @@ max-width: 260px;
     background-color: #40C3AF;
     width: calc(100% - 44px);
 
-    margin: 0 auto ;
+    margin: 0 auto;
 }
 
 .dos__button-stop {
-    margin: 0 auto ;
+    margin: 0 auto;
 }
 
-.qr__dos-image {
-    margin:auto 0;
-}
+
 
 .final__coins-item:first-child {
     filter: blur(107.99px);
@@ -150,4 +149,3 @@ max-width: 260px;
     background: rgba(255, 43, 30, 0.8);
     transform: translateY(-50%);
 }
-

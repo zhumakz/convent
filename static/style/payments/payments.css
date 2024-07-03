@@ -1,0 +1,40 @@
+.payments {
+    display: flex;
+    flex-direction: column;
+    background-color: #282B30;
+
+}
+
+.payments__inner {
+    width: 100%;
+    gap: 20px 0;
+}
+
+.payments__top {
+    width: 100%;
+    display: flex;
+    max-width: 300px;
+    justify-content: space-between;
+    margin-top: 60px;
+}
+
+
+
+.payments__item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px 0;
+    gap: 13px 0;
+    align-self: flex-start;
+}
+
+.payments__history {
+    margin-top: 10px;
+    padding: 20px 50px;
+    border-top: 1px solid var(--pale-orange);
+    border-bottom: 1px solid var(--pale-orange);
+}
+
+.payments__button  {
+    margin-top: auto;
+}

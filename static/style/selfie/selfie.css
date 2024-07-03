@@ -36,7 +36,7 @@
 .selfie__image {
     width: 163.5px;
     height: 163.5px;
-    border-radius: 50px;
+    border-radius: 50%;
 }
 
 .selfie__text {

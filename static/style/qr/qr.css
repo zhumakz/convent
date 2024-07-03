@@ -3,5 +3,38 @@
     background-color: #282B30;
     border-radius: 20px 20px 0 0;
     padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
 
 }
+
+
+.qr__dos-image {
+    margin: auto 0;
+}
+
+
+
+.qr__seller-image,.qr__code-image {
+    align-self: center;
+    margin:  auto 0;
+}
+
+.qr__seller-wrapper {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px 0;
+    align-items: center;
+    margin-bottom: 60px;
+    font-weight: 900;
+}
+
+
+.qr__name {
+    margin-top: 49px;
+}
+
+
+
+.qr__button {margin-top: auto;}

@@ -35,9 +35,8 @@ body {
 }
 
 .flex {
-
+    flex-grow: 1;
     height: 100%;
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -110,17 +109,10 @@ body {
     font-weight: 700;
     color: var(--white);
     padding-left: 98px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-around;
-    align-content: center;
-    align-items: center;
 }
 
 .menu__languages-button--active {
     color: #4DCDB9;
-    border-bottom: 2px solid #4DCDB9;
 }
 
 .menu__languages-button {
@@ -223,19 +215,19 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #282B30;
-    border-radius: 20px 20px 0 0;
-
     z-index: 100;
     opacity: 0;
     pointer-events: none;
     transition: .4s opacity ease;
     overflow-y: scroll;
+    background-color: #282B30;
+    border-radius: 20px 20px 0 0;
 }
 
 .popup--black {
-    border-radius: 0;
+    border-radius: none;
     background-color: var(--page-background);
+
 }
 
 .popup-container {
@@ -325,7 +317,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 630px;
+    height: 40%;
     background: linear-gradient(0.00deg, rgb(0, 0, 0), rgba(0, 0, 0, 0) 100%);
 }
 
@@ -570,26 +562,7 @@ body {
 
 
 
-.payments__top {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-}
 
-.payments__item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px 0;
-    gap: 13px 0;
-    align-self: flex-start;
-}
-
-.payments__history {
-    margin-top: 10px;
-    padding: 20px 50px;
-    border-top: 1px solid var(--pale-orange);
-    border-bottom: 1px solid var(--pale-orange);
-}
 
 #my-qr-reader {
     padding: 20px !important;
@@ -637,6 +610,7 @@ video {
 
 .blue-person-img {
     width: 96px;
+    border-radius: 50%;
     height: 96px;
 }
 
@@ -740,6 +714,7 @@ video {
     z-index: 10;
 
 }
+
 .background-page__fourth {
     bottom: 0;
     right: 0;
@@ -768,3 +743,12 @@ video {
         margin: 0;
     }
 }
+
+
+
+
+
+
+
+
+

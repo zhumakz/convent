@@ -20,6 +20,32 @@ def is_moderator(user):
     return user.groups.filter(name__in=['Главный оператор', 'Оператор', 'Продавец', 'Оператор Doscam']).exists()
 
 
+
+@login_required
+@permission_required('moderators.view_moderators', raise_exception=True)
+def moderator_dashboard(request):
+    return render(request, 'moderators/dashboard.html')
+
+
+@login_required
+@permission_required('moderators.add_coins', raise_exception=True)
+def operator_view(request):
+    # Получаем историю переводов
+    transactions = CoinService.get_transactions(request.user).select_related('sender', 'recipient').order_by('-timestamp')
+
+    # Обрабатываем историю переводов для отображения
+    processed_transactions = [CoinService.process_transaction(tx, request.user) for tx in transactions]
+
+    # Подсчитываем общее количество выданных монет
+    total_coins_issued = sum(tx.amount for tx in transactions if tx.sender == request.user)
+
+    return render(request, 'moderators/operator.html', {
+        'transactions': processed_transactions,
+        'operator_name': f"{request.user.name} {request.user.surname}",
+        'total_coins_issued': total_coins_issued
+    })
+
+
 @login_required
 def handle_qr_data(request):
     if request.method == 'POST':
@@ -56,29 +82,6 @@ def handle_qr_data(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
-@login_required
-@permission_required('moderators.view_moderators', raise_exception=True)
-def moderator_dashboard(request):
-    return render(request, 'moderators/dashboard.html')
-
-
-@login_required
-@permission_required('moderators.add_coins', raise_exception=True)
-def operator_view(request):
-    # Получаем историю переводов
-    transactions = CoinService.get_transactions(request.user).select_related('sender', 'recipient').order_by('-timestamp')
-
-    # Обрабатываем историю переводов для отображения
-    processed_transactions = [CoinService.process_transaction(tx, request.user) for tx in transactions]
-
-    # Подсчитываем общее количество выданных монет
-    total_coins_issued = sum(tx.amount for tx in transactions if tx.sender == request.user)
-
-    return render(request, 'moderators/operator.html', {
-        'transactions': processed_transactions,
-        'operator_name': f"{request.user.name} {request.user.surname}",
-        'total_coins_issued': total_coins_issued
-    })
 
 @login_required
 @permission_required('moderators.add_coins', raise_exception=True)

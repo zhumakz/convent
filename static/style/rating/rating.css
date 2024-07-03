@@ -74,6 +74,7 @@ body {
     width: 52px;
     height: 52px;
     position: relative;
+    border-radius: 50%;
     z-index: 10;
 }
 
