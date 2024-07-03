@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Friend Request{% endblock %}
+
+{% block content %}
+    <section class="profile">
+        <h2>Friend Request</h2>
+
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+
+        {% if success %}
+            <p>Friend request sent successfully!</p>
+        {% else %}
+            <p>Failed to send friend request.</p>
+        {% endif %}
+
+        <div class="user-info">
+            <h3>Recipient Details:</h3>
+            <p>Name: {{ to_user.first_name }}</p>
+            <p>Surname: {{ to_user.last_name }}</p>
+            <p>City: {{ to_user.city }}</p>  <!-- Предполагается, что у пользователя есть поле city -->
+        </div>
+
+        <div class="qr-code">
+            <h3>Your QR Code:</h3>
+            <img src="{{ qr_code_url }}" alt="QR Code">
+        </div>
+    </section>
+{% endblock %}

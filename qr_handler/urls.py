@@ -1,14 +1,12 @@
 from django.urls import path
-from django.views.generic import TemplateView
-from .views import qr_scan_view, handle_qr_data, operation_error
+from .views import qr_scan_view, handle_qr_data, qr_friend_request, qr_purchase_detail, qr_campaign_vote, \
+    qr_lecture_detail
 
 urlpatterns = [
     path('qr-scan/', qr_scan_view, name='qr_scan'),
     path('handle-qr-data/', handle_qr_data, name='handle_qr_data'),
-    path('friend-request-success/', TemplateView.as_view(template_name='qr_handler/friend_request_success.html'), name='friend_request_success'),
-    path('lecture-start-success/', TemplateView.as_view(template_name='lecture_start_success.html'), name='lecture_start_success'),
-    path('lecture-end-success/', TemplateView.as_view(template_name='lecture_end_success.html'), name='lecture_end_success'),
-    path('purchase-success/', TemplateView.as_view(template_name='purchase_success.html'), name='purchase_success'),
-    path('event-success/', TemplateView.as_view(template_name='event_success.html'), name='event_success'),
-    path('operation-error/', operation_error, name='operation_error'),
+    path('qr_friend_request/', qr_friend_request, name='qr_friend_request'),
+    path('qr_purchase_detail/<int:purchase_id>/', qr_purchase_detail, name='qr_purchase_detail'),
+    path('qr_campaign_vote/<str:campaign_vote>/', qr_campaign_vote, name='qr_campaign_vote'),
+    path('qr_lecture_detail/<str:lecture_start>/<str:lecture_end>/', qr_lecture_detail, name='qr_lecture_detail'),
 ]
