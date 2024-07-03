@@ -11,68 +11,111 @@
 
 {% block content %}
     <section class="profile">
-        <div class="popup add" data-index="2">
+        <div id="add-friend-popup" class="popup add" data-index="2">
             <div class="bottom-gradient"></div>
             <div class="popup-container add__inner flex">
                 <div class="top">
-                    <a class="top__button popup-close" href="{% url 'profile' %}" data-index="2">
+                    <a id="add-friend-popup-close" class="top__button popup-close" href="{% url 'profile' %}"
+                       data-index="2">
                         <svg width="46" height="46">
                             <use href="{% static 'image/icons.svg' %}#back"></use>
                         </svg>
                     </a>
-                    <span class="top__title">Добавление друга</span>
+                    <span id="add-friend-popup-title" class="top__title">Добавление друга</span>
                 </div>
-                <div class="add__person">
+                <div id="add-friend-person" class="add__person">
                     <div class="photo-line add__line">
-                        <img class="add__person-img" src="{% static 'image/photo.png' %}" alt="photo"/>
+                        <img id="add-friend-person-img" class="add__person-img" src="{% static 'image/photo.png' %}"
+                             alt="photo"/>
                     </div>
                     <div class="person__wrapper">
-                        <span class="add-person__name">Zhasulan<br/>Zhumadilov</span>
-                        <span class="person__location">Astana</span>
+                        <span id="add-friend-person-name" class="add-person__name">Zhasulan<br/>Zhumadilov</span>
+                        <span id="add-friend-person-location" class="person__location">Astana</span>
                     </div>
                 </div>
-                <p class="add__text">Дай отсканировать QR code новому другу, чтобы он добавился к тебе в друзья и вы
-                    получите Dos Coins</p>
-                <img class="add__qr" src="{% static 'image/qr.png' %}" alt="qr"/>
-                <a class="button-s popups-close" href="{% url 'profile' %}">Отмена</a>
+                <p id="add-friend-text" class="add__text">Дай отсканировать QR code новому другу, чтобы он добавился к
+                    тебе в друзья и вы получите Dos Coins</p>
+                <img id="add-self-qr" class="add__qr" src="{% static 'image/qr.png' %}" alt="qr"/>
+                <a id="add-friend-cancel" class="button-s popups-close" href="{% url 'profile' %}">Отмена</a>
             </div>
         </div>
-        <div class="popup final" data-index="3">
+        <div id="friend-success-popup" class="popup final" data-index="3">
             <div class="bottom-gradient"></div>
             <div class="popup-container final__inner flex">
                 <div class="top">
-                    <a class="top__button popup-close" href="{% url 'profile' %}" data-index="3">
+                    <a id="friend-success-popup-close" class="top__button popup-close" href="{% url 'profile' %}"
+                       data-index="3">
                         <svg width="46" height="46">
                             <use href="{% static 'image/icons.svg' %}#back"></use>
                         </svg>
                     </a>
-                    <span class="top__title">Добавление друга</span>
+                    <span id="friend-success-popup-title" class="top__title">Добавление друга</span>
                 </div>
-                <div class="person">
+                <div id="friend-success-person" class="person">
                     <div class="photo-line final__line">
-                        <img class="final__person-img" src="{% static 'image/photo.png' %}" alt="photo"/>
-                        <span class="final__plus">+1</span>
+                        <img id="friend-success-person-img" class="final__person-img"
+                             src="{% static 'image/photo.png' %}" alt="photo"/>
+                        <span id="friend-success-plus" class="final__plus">+1</span>
                     </div>
-                    <span class="person__location">Astana</span>
-                    <span class="final__name">Zhasulan<br/>Zhumadilov</span>
+                    <span id="friend-success-person-location" class="person__location">Astana</span>
+                    <span id="friend-success-person-name" class="final__name">Zhasulan<br/>Zhumadilov</span>
                 </div>
-                <div class="final__content">
+                <div id="friend-success-content" class="final__content">
                     <div class="final__coins-background">
                         <div class="final__coins-item"></div>
                         <div class="final__coins-item"></div>
                         <div class="final__coins-item"></div>
-                        <img class="final__coins-layers" src="{% static 'image/layers.png' %}" alt="layers"/>
+                        <img id="friend-success-coins-layers" class="final__coins-layers"
+                             src="{% static 'image/layers.png' %}" alt="layers"/>
                     </div>
-                    <svg class="final__coins" width="150" height="150">
+                    <svg id="friend-success-coins" class="final__coins" width="150" height="150">
                         <use href="{% static 'image/icons.svg' %}#coins"></use>
                     </svg>
                 </div>
-                <div class="final__coins-add">
-                    <span class="count">+2</span>
+                <div id="friend-success-coins" class="final__coins-add">
+                    <span id="friend-success-coins-add" class="count">+2</span>
                     <span>Dos<br/>Coins</span>
                 </div>
-                <p class="final__bottom-text">Поздравляем!<br/>Dos Coins переведены</p>
-                <a class="button final__button popups-close" href="{% url 'profile' %}">Назад</a>
+                <p id="friend-success-bottom-text" class="final__bottom-text">Поздравляем!<br/>Dos Coins переведены</p>
+                <a id="friend-success-back" class="button final__button popups-close"
+                   href="{% url 'profile' %}">Назад</a>
+            </div>
+        </div>
+        <div id="event-success-popup" class="popup final" data-index="4">
+            <div class="bottom-gradient"></div>
+            <div class="popup-container final__inner flex">
+                <div class="top">
+                    <a id="event-success-popup-close" class="top__button popup-close" href="{% url 'profile' %}"
+                       data-index="4">
+                        <svg width="46" height="46">
+                            <use href="{% static 'image/icons.svg' %}#back"></use>
+                        </svg>
+                    </a>
+                    <span id="event-success-popup-title" class="top__title">Добавление друга</span>
+                </div>
+                <div id="event-success-person" class="person">
+                    <span id="event-success-person-location" class="person__location">Astana</span>
+                    <span id="event-success-person-name" class="final__name">Zhasulan<br/>Zhumadilov</span>
+                </div>
+                <div id="event-success-content" class="final__content">
+                    <div class="final__coins-background">
+                        <div class="final__coins-item"></div>
+                        <div class="final__coins-item"></div>
+                        <div class="final__coins-item"></div>
+                        <img id="event-success-coins-layers" class="final__coins-layers"
+                             src="{% static 'image/layers.png' %}" alt="layers"/>
+                    </div>
+                    <svg id="event-success-coins" class="final__coins" width="150" height="150">
+                        <use href="{% static 'image/icons.svg' %}#coins"></use>
+                    </svg>
+                </div>
+                <div id="event-success-coins" class="final__coins-add">
+                    <span id="event-success-coins-add" class="count">+2</span>
+                    <span>Dos<br/>Coins</span>
+                </div>
+                <p id="event-success-bottom-text" class="final__bottom-text">Поздравляем!<br/>Dos Coins переведены</p>
+                <a id="event-success-back" class="button final__button popups-close"
+                   href="{% url 'profile' %}">Назад</a>
             </div>
         </div>
         <div class="popup art" data-index="9">
@@ -106,31 +149,29 @@
                 <button class="button-s popup-close art__button-close" data-index="9">Свернуть</button>
             </div>
         </div>
-
-        <div class="popup error" data-index="10">
+        <div id="error-popup" class="popup error" data-index="10">
             <div class="art__top">
                 <div class="top">
-                    <button class="top__button popup-close" data-index="10">
+                    <button id="error-popup-close" class="top__button popup-close" data-index="10">
                         <svg width="46" height="46">
                             <use href="{% static 'image/icons.svg' %}#back"></use>
                         </svg>
                     </button>
-                    <span class="top__title">Ошибка</span>
+                    <span id="error-popup-title" class="top__title">Ошибка</span>
                 </div>
-                <div class="art__logo">
+                <div id="error-popup-logo" class="art__logo">
                     <span>Лого</span>
                 </div>
             </div>
             <div class="popup-container">
-                <h3 class="error__title">Ошибка</h3>
-                <img class="error__icon" src="{% static 'image/error.png' %}" alt="icon"/>
-                <p class="error__text">Недостаточно
-                    средств</p>
-                <button class="button-s  error__button">Закрыть</button>
-                <button class="button-s popup-close art__button-close" data-index="10">Закрыть</button>
+                <h3 id="error-popup-heading" class="error__title">Ошибка</h3>
+                <img id="error-popup-icon" class="error__icon" src="{% static 'image/error.png' %}" alt="icon"/>
+                <p id="error-popup-text" class="error__text">Недостаточно средств</p>
+                <button id="error-popup-art-button-close" class="button-s popup-close art__button-close"
+                        data-index="10">Закрыть
+                </button>
             </div>
         </div>
-
         <section class="qr">
             <div class="popup-container">
                 <div class="top">
@@ -153,12 +194,32 @@
 {% block extra_js %}
     <script src="{% static 'js/html5-qrcode.min.js' %}"></script>
     <script>
-        function showErrorPopup(message) {
-            const errorPopup = obj["10"];
-            const errorMessageElement = errorPopup.querySelector('.error__text');
-            errorMessageElement.textContent = message;
-            activePopup("10");
-        }
+        const addFriendPopup = document.getElementById("add-friend-popup");
+        const addFriendPersonImg = document.getElementById("add-friend-person-img");
+        const addFriendPersonName = document.getElementById("add-friend-person-name");
+        const addFriendPersonLocation = document.getElementById("add-friend-person-location");
+        const addFriendSelfQr = document.getElementById("add-self-qr");
+
+        const friendSuccessPopup = document.getElementById("friend-success-popup");
+        const friendSuccessPersonImg = document.getElementById("friend-success-person-img");
+        const friendSuccessPersonLocation = document.getElementById("friend-success-person-location");
+        const friendSuccessPersonName = document.getElementById("friend-success-person-name");
+        const friendSuccessCoinsAdd = document.getElementById("friend-success-coins-add");
+
+        const errorPopup = document.getElementById("error-popup");
+        const errorPopupLogo = document.getElementById("error-popup-logo");
+        const errorPopupHeading = document.getElementById("error-popup-heading");
+        const errorPopupIcon = document.getElementById("error-popup-icon");
+        const errorPopupText = document.getElementById("error-popup-text");
+
+        const eventSuccessPopup = document.getElementById("event-success-popup");
+        const eventSuccessPopupTitle = document.getElementById("event-success-popup-title");
+        const eventSuccessPerson = document.getElementById("event-success-person");
+        const eventSuccessPersonLocation = document.getElementById("event-success-person-location");
+        const eventSuccessPersonName = document.getElementById("event-success-person-name");
+        const eventSuccessContent = document.getElementById("event-success-content");
+        const eventSuccessCoins = document.getElementById("event-success-coins");
+        const eventSuccessCoinsAdd = document.getElementById("event-success-coins-add");
 
         document.addEventListener("DOMContentLoaded", function () {
             let isProcessing = false;
@@ -176,14 +237,17 @@
                 sendQrDataToServer(decodedText)
                     .then(data => {
                         if (data.status === 'ok') {
-                            alert(data.message);
+                            handleQrData(data);
                         } else {
                             showErrorPopup(data.message);
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        console.log(`Error sending QR data: ${error}`);
+                        showErrorPopup(`Error sending QR data: ${error}`);
+                    })
+                    .finally(() => {
+                        isProcessing = false;
                     });
             }
 
@@ -206,6 +270,40 @@
                         return response.json();
                     });
             }
+
+            function handleQrData(data) {
+                if (data.popup_index === 2) {
+                    updateAddFriendPopup(data.user_info);
+                    activePopup("2");
+                } else if (data.popup_index === 3) {
+                    updateFriendSuccessPopup(data.user_info);
+                    activePopup("3");
+                } else {
+                    showErrorPopup("Unknown response");
+                }
+            }
+
+            function updateAddFriendPopup(userInfo) {
+                addFriendPersonImg.src = userInfo.profile_picture;
+                addFriendPersonName.textContent = `${userInfo.name}`;
+                addFriendPersonLocation.textContent = userInfo.location;
+                addFriendSelfQr.src = userInfo.qr_code;
+            }
+
+            function updateFriendSuccessPopup(userInfo) {
+                friendSuccessPersonImg.src = userInfo.profile_picture;
+                friendSuccessPersonName.textContent = `${userInfo.name}`;
+                friendSuccessPersonLocation.textContent = userInfo.location;
+                friendSuccessCoinsAdd.textContent = "+2 Dos Coins";
+            }
+
+            function showErrorPopup(message) {
+                const errorPopup = document.getElementById("error-popup");
+                const errorMessageElement = errorPopup.querySelector('.error__text');
+                errorMessageElement.textContent = message;
+                activePopup("10");
+            }
         });
+
     </script>
 {% endblock %}
