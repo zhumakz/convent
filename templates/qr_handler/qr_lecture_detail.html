@@ -3,28 +3,64 @@
 {% load i18n %}
 
 {% block title %}Lecture Detail{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/final/final.css' %}">
+{% endblock %}
 
 {% block content %}
-    <section class="lecture">
-        <h2>Lecture Detail</h2>
+    {% if lecture %}
+        <section class="final all-size">
+            <div class="bottom-gradient"></div>
+            <div class="container final__inner flex">
+                <div class="top">
+                    <a href="{% url 'profile' %}" class="top__button popup-close">
+                        <svg width="46" height="46">
+                            <use href="{% static 'image/icons.svg' %}#back"></use>
+                        </svg>
+                    </a>
+                    <span class="top__title">Lecture Detail</span>
+                </div>
+                <div class="person">
+                    <div class="photo-line final__line">
+                        <img class="final__person-img" src="{% static 'image/star.png' %}" alt="photo"/>
+                    </div>
+                    <span class="person__location">{{ lecture.start_time }} - {{ lecture.end_time }}</span>
+                    <span class="final__name">{{ lecture.title }}</span>
+                </div>
+                <div class="final__content">
+                    <div class="final__coins-background">
+                        <div class="final__coins-item"></div>
+                        <div class="final__coins-item"></div>
+                        <div class="final__coins-item"></div>
+                        <img class="final__coins-layers" src="{% static 'image/layers.png' %}" alt="layers"/>
+                    </div>
+                    {% if lecturePassed %}
+                        <svg class="final__coins" width="150" height="150">
+                            <use href="{% static 'image/icons.svg' %}#coins"></use>
+                        </svg>
+                    {% else %}
+                        <svg class="final__coins" width="150" height="150">
+                            <use href="{% static 'image/icons.svg' %}#points"></use>
+                        </svg>
+                    {% endif %}
+                </div>
+                {% if lecturePassed %}
+                    <div class="final__coins-add">
+                        <span class="count">+{{ coins_transferred }}</span>
+                        <span>Dos <br/>Coins</span>
+                    </div>
+                    <p class="final__bottom-text">
+                        Поздравляем! <br/>Dos Coins переведены
+                    </p>
+                {% endif %}
+                {% if message %}
+                    <p class="final__bottom-text">
+                        {{ message }}
+                    </p>
+                {% endif %}
 
-        {% if message %}
-            <p>{{ message }}</p>
-        {% endif %}
-
-        {% if success %}
-            <p>Lecture action successful!</p>
-        {% else %}
-            <p>Lecture action failed.</p>
-        {% endif %}
-
-        {% if lecture %}
-            <div class="lecture-info">
-                <h3>Lecture Details:</h3>
-                <p>Title: {{ lecture.title }}</p>
-                <p>Start Time: {{ lecture.start_time }}</p>
-                <p>End Time: {{ lecture.end_time }}</p>
+                <a href="{% url 'profile' %}" class="button final__button">Свернуть</a>
             </div>
-        {% endif %}
-    </section>
+        </section>
+    {% endif %}
 {% endblock %}

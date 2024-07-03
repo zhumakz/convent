@@ -5,6 +5,7 @@ from django.http import JsonResponse
 import json
 
 from campaigns.services import CampaignService
+from convent import settings
 from friends.models import FriendRequest
 from lectures.models import Lecture
 from coins.models import Transaction
@@ -150,7 +151,6 @@ def qr_campaign_vote(request):
     }
     return render(request, 'qr_handler/qr_campaign_vote.html', context)
 
-
 @login_required
 def qr_lecture_start(request):
     data = request.session.get('qr_data')
@@ -161,14 +161,17 @@ def qr_lecture_start(request):
     lecture = LectureService.get_lecture_by_id(lecture_id)
 
     success, message = LectureService.register_lecture_start(request.user, lecture)
+    lecture_passed = LectureService.get_attendance(request.user, lecture).end_scanned
+    coins_transferred = settings.LECTURE_REWARD_COINS if lecture_passed else 0
 
     context = {
         'message': message,
         'success': success,
         'lecture': lecture,
+        'lecturePassed': lecture_passed,
+        'coins_transferred': coins_transferred
     }
     return render(request, 'qr_handler/qr_lecture_detail.html', context)
-
 
 @login_required
 def qr_lecture_end(request):
@@ -180,10 +183,14 @@ def qr_lecture_end(request):
     lecture = LectureService.get_lecture_by_id(lecture_id)
 
     success, message = LectureService.register_lecture_end(request.user, lecture)
+    lecture_passed = LectureService.get_attendance(request.user, lecture).end_scanned
+    coins_transferred = settings.LECTURE_REWARD_COINS if lecture_passed else 0
 
     context = {
         'message': message,
         'success': success,
         'lecture': lecture,
+        'lecturePassed': lecture_passed,
+        'coins_transferred': coins_transferred
     }
     return render(request, 'qr_handler/qr_lecture_detail.html', context)
