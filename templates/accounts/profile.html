@@ -34,7 +34,7 @@
                     <ul class="history__list">
                         {% for transaction in transactions %}
                             <li class="history__item">
-                                <span class="history__time">{{ transaction.timestamp }}</span>|
+                                <span class="history__time">{{ transaction.timestamp|date:"d.m - H:i" }}</span>|
                                 {% if transaction.amount > 0 %}
                                     <span class="history__plus">+{{ transaction.amount|floatformat:"-1" }} DC</span>
                                     {{ transaction.description }}

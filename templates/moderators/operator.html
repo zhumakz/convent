@@ -132,12 +132,12 @@
             <div class="container entertainment__inner">
                 <div class="entertainment__coins">
                     <span>Выдано:</span>
-                    <span class="count-s">-{{ total_coins_issued }}</span>
+                    <span class="count-s">-{{ total_coins_issued|floatformat:"-1" }}</span>
                     <span class="entertainment__dos">Dos Coins</span>
                 </div>
                 <div class="entertainment__coins">
                     <span>Баланс:</span>
-                    <span class="count-s">{{ user.doscointbalance.balance }}</span>
+                    <span class="count-s">{{ user.doscointbalance.balance|floatformat:"-1" }}</span>
                     <span class="entertainment__dos">Dos Coins</span>
                 </div>
                 <div class="history entertainment__history">
@@ -147,13 +147,13 @@
                         {% for transaction in transactions %}
                             <li class="history__item">
                                 {% if transaction.sender == user %}
-                                    <span class="history__time">16:15</span> |
-                                    <span class="history__minus"> -{{ transaction.amount }} </span>
+                                    <span class="history__time">{{ transaction.timestamp|date:"d.m - H:i" }}</span> |
+                                    <span class="history__minus"> -{{ transaction.amount|floatformat:"-1" }} </span>
                                     {{ transaction.recipient.phone_number }}.
 
                                 {% else %}
-                                    <span class="history__time">16:15</span> |
-                                    <span class="history__plus"> -{{ transaction.amount }} </span>
+                                    <span class="history__time">{{ transaction.timestamp|date:"d.m - H:i" }}</span> |
+                                    <span class="history__plus"> -{{ transaction.amount|floatformat:"-1" }} </span>
                                     {{ transaction.sender.phone_number }}.
                                 {% endif %}
                             </li>
