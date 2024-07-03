@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import json
@@ -64,44 +64,48 @@ def handle_friend_request(request, user_id):
 
         if from_user == to_user:
             logger.warning("User tried to add themselves as a friend")
-            return JsonResponse({'status': 'error', 'message': 'You cannot add yourself as a friend.'})
+            message = 'You cannot add yourself as a friend.'
+            return redirect('operation_error', message=message)
 
         if to_user.is_admin or to_user.is_moderator:
             logger.warning("User tried to add an admin or moderator as a friend")
-            return JsonResponse(
-                {'status': 'error', 'message': 'You cannot add administrators or moderators as friends.'})
+            message = 'You cannot add administrators or moderators as friends.'
+            return redirect('operation_error', message=message)
 
         if FriendService.are_friends(from_user, to_user):
             logger.warning("Users are already friends")
-            return JsonResponse({'status': 'error', 'message': 'You are already friends'})
+            message = 'You are already friends.'
+            return redirect('operation_error', message=message)
 
         friend_request = FriendRequest.objects.filter(from_user=to_user, to_user=from_user).first()
 
         if friend_request:
             message = FriendService.confirm_friend_request(friend_request)
-            popup_index = 3
+
         else:
             if FriendRequest.objects.filter(from_user=from_user, to_user=to_user).exists():
                 logger.warning("Friend request already sent")
-                return JsonResponse({'status': 'error', 'message': 'Friend request already sent'})
+                message = 'Friend request already sent.'
+                return redirect('operation_error', message=message)
 
             success, message = FriendService.send_friend_request(from_user, to_user)
-            popup_index = 2
 
-        return JsonResponse({
+        request.session['friend_request_data'] = {
             'status': 'ok',
-            'message': message,
-            'popup_index': popup_index,
+            'message': 'Friend request sent successfully!',
             'user_info': {
                 'name': f"{to_user.name} {to_user.surname}",
                 'location': to_user.city.name if to_user.city else '',
                 'profile_picture': to_user.profile_picture.url if to_user.profile_picture else None,
                 'qr_code': to_user.qr_code.url if to_user.qr_code else None
             }
-        })
+        }
+        return redirect('friend_request_success')
+
+
     except Exception as e:
         logger.error("Error handling friend request: %s", e, exc_info=True)
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+        return redirect('operation_error', message=str(e))
 
 
 def handle_lecture_start(request, lecture_id):
@@ -113,10 +117,11 @@ def handle_lecture_start(request, lecture_id):
         if success:
             return JsonResponse({'status': 'ok', 'message': message})
         else:
-            return JsonResponse({'status': 'error', 'message': message})
+            message = 'Friend request already sent.'
+            return redirect('operation_error', message=message)
     except Exception as e:
         logger.error("Error handling lecture start: %s", e, exc_info=True)
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+        return redirect('operation_error', message=str(e))
 
 
 def handle_lecture_end(request, lecture_id):
@@ -131,7 +136,7 @@ def handle_lecture_end(request, lecture_id):
             return JsonResponse({'status': 'error', 'message': message})
     except Exception as e:
         logger.error("Error handling lecture end: %s", e, exc_info=True)
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+        return redirect('operation_error', message=str(e))
 
 
 def handle_purchase(request, purchase_id):
@@ -157,17 +162,30 @@ def handle_purchase(request, purchase_id):
         return JsonResponse({'status': 'ok', 'message': 'Purchase handled successfully'})
     except Exception as e:
         logger.error("Error handling purchase: %s", e, exc_info=True)
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+        return redirect('operation_error', message=str(e))
 
 
 def handle_doscam_request(request, user_id):
     try:
         return JsonResponse({'status': 'error', 'message': 'handle_doscam_request'})
     except Exception as e:
-        logger.error("Error handling doscam request: %s", e, exc_info=True)
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+        logger.error("Error handling event request: %s", e, exc_info=True)
+        return redirect('operation_error', message=str(e))
 
 
 @login_required
 def test_page(request):
     return render(request, 'qr_handler/test_page.html')
+
+
+def operation_error(request, message):
+    return render(request, 'qr_handler/operation_error.html', {'message': message})
+
+
+def friend_request_success(request):
+    friend_request_data = request.session.pop('friend_request_data', None)
+    if friend_request_data:
+        return render(request, 'qr_handler/friend_request_success.html', friend_request_data)
+    else:
+        # Если данных нет в сессии, обработка ошибки
+        return redirect('operation_error', message='Data not found')
