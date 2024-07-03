@@ -23,101 +23,6 @@
             </div>
         </div>
     </div>
-
-    <div id="transfer-coin-popup" class="popup add" data-index="2">
-        <div class="popup-container flex">
-            <div class="top">
-                <a href="{% url 'operator' %}" id="transfer-coin-popup-close" class="top__button popup-close" data-index="2">
-                    <svg width="46" height="46">
-                        <use href="{% static 'image/icons.svg' %}#back"></use>
-                    </svg>
-                </a>
-                <span id="transfer-coin-popup-title" class="top__title">Добавление друга</span>
-            </div>
-            <div class="person">
-                <div class="photo-line blue-line">
-                    <img id="transfer-coin-person-img" class="blue-person-img" src="{% static 'image/photo.png' %}"
-                         alt="photo"/>
-                </div>
-
-                <div class="person__wrapper add__wrapper">
-                    <span id="transfer-coin-person-name" class="person__name">Zhasulan <br/> Zhumadilov</span>
-                    <span id="transfer-coin-person-location" class="person__location">Astana</span>
-                </div>
-            </div>
-            <div class="add__entertainment-wrapper">
-                <span id="transfer-coin-person-balance" class="add__enterainment-coins count-s">14</span>
-                <span class="add__enterainment-name">Dos Coins</span>
-            </div>
-            <form id="transfer-coins-form" class="add__form" method="post" action="{% url 'transfer_coins' %}">
-                {% csrf_token %}
-                <div class="add__form-top">
-                    <button id="transfer-coin-plus-10" class="add__plus-top add__form-button" type="button"
-                            data-plus="10">10
-                    </button>
-                    <button id="transfer-coin-plus-50" class="add__plus-top add__form-button" type="button"
-                            data-plus="50">50
-                    </button>
-                    <button id="transfer-coin-plus-100" class="add__plus-top add__form-button" type="button"
-                            data-plus="100">100
-                    </button>
-                </div>
-                <div class="add__form-content">
-                    <button id="transfer-coin-minus" class="add__minus add__form-button" type="button">-</button>
-                    <div class="add__coins-wrapper add__form-wrapper">
-                        <input id="transfer-coin-amount-input" class="add__coins count" type="number" name="amount"
-                               value="14" readonly/>
-                        <span class="add__name"> Dos Coins </span>
-                    </div>
-                    <button id="transfer-coin-plus" class="add__plus add__form-button" type="button">+</button>
-                </div>
-                <input id="transfer-coin-user-id" type="hidden" name="user_id" value="">
-                <button id="transfer-coin-submit" class="button add__submit" type="submit">Перевести</button>
-                <a href="{% url 'operator' %}" id="transfer-coin-cancel" class="button-s popups-close" type="button">Отмена</a>
-            </form>
-        </div>
-    </div>
-
-    <div id="confirmation-popup" class="popup final" data-index="3">
-        <div class="bottom-gradient"></div>
-        <div class="popup-container final__inner flex">
-            <div class="top">
-                <a href="{% url 'operator' %}" id="confirmation-popup-close" class="top__button popup-close" data-index="3">
-                    <svg width="46" height="46">
-                        <use href="{% static 'image/icons.svg' %}#back"></use>
-                    </svg>
-                </a>
-                <span id="confirmation-popup-title" class="top__title">Добавление друга</span>
-            </div>
-            <div class="person">
-                <div class="photo-line final__line">
-                    <img id="confirmation-popup-person-img" class="final__person-img"
-                         src="{% static 'image/photo.png' %}" alt="photo"/>
-                </div>
-                <span id="confirmation-popup-person-location" class="person__location">Astana</span>
-                <span id="confirmation-popup-person-name" class="final__name">Zhasulan <br/> Zhumadilov</span>
-            </div>
-            <div class="final__content">
-                <div class="final__coins-background">
-                    <div class="final__coins-item"></div>
-                    <div class="final__coins-item"></div>
-                    <div class="final__coins-item"></div>
-                    <img class="final__coins-layers" src="{% static 'image/layers.png' %}" alt="layers"/>
-                </div>
-                <svg class="final__coins" width="150" height="150">
-                    <use href="{% static 'image/icons.svg' %}#coins"></use>
-                </svg>
-            </div>
-            <div class="final__coins-add">
-                <span id="confirmation-popup-coins-add" class="count">+2</span>
-                <span>Dos <br/> Coins</span>
-            </div>
-            <p id="confirmation-popup-bottom-text" class="final__bottom-text">Поздравляем! <br/> Dos Coins переведены
-            </p>
-            <a id="confirmation-popup-back" class="button final__button popups-close" href="{% url 'operator' %}">Назад</a>
-        </div>
-    </div>
-
     <div class="all-size flex">
         <header class="header-second">
             <div class="header-last"></div>
@@ -174,23 +79,15 @@
     <script src="{% static 'js/entertainment/entertainment.js' %}"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Переменные для QR-кода
-            const transferCoinPopup = document.getElementById("transfer-coin-popup");
-            const personName = document.getElementById("transfer-coin-person-name");
-            const personLocation = document.getElementById("transfer-coin-person-location");
-            const personImg = document.getElementById("transfer-coin-person-img");
-            const personBalance = document.getElementById("transfer-coin-person-balance");
-            const userIdInput = document.getElementById("transfer-coin-user-id");
-
-            const qrPopup = document.getElementById("qr-popup");
             const qrButton = document.getElementById("qr-Button");
+            const qrPopup = document.getElementById("qr-popup");
             let isProcessing = false;
 
             qrButton.addEventListener("click", () => {
                 domReady(function () {
                     let htmlscanner = new Html5QrcodeScanner("my-qr-reader", {
                         fps: 10,
-                        qrbos: 250,
+                        qrbox: 250,
                     });
                     htmlscanner.render(onScanSuccess);
 
@@ -205,7 +102,7 @@
                         sendQrDataToServer(decodedText)
                             .then(data => {
                                 if (data.status === 'ok') {
-                                    populateTransferCoinPopup(data.user_info);
+                                    window.location.href = data.redirect_url;
                                 } else {
                                     alert(data.message);
                                     console.log(data.message);
@@ -241,59 +138,7 @@
                         return response.json();
                     });
             }
-
-            function populateTransferCoinPopup(userInfo) {
-                personName.innerHTML = `${userInfo.name.split(' ')[0]} <br/> ${userInfo.name.split(' ')[1]}`;
-                personLocation.textContent = userInfo.location || '';
-                personImg.src = userInfo.profile_picture || '{% static "image/photo.png" %}';
-                personBalance.textContent = userInfo.balance;
-                userIdInput.value = userInfo.user_id;
-                transferCoinPopup.classList.add("popup--active");
-                qrPopup.classList.remove("popup--active");
-            }
-
-            // Переменные для формы перевода монет
-            const form = document.getElementById("transfer-coins-form");
-
-            const confirmationPopup = document.getElementById("confirmation-popup");
-            const confirmationPopupTitle = document.getElementById("confirmation-popup-title");
-            const confirmationPopupPersonName = document.getElementById("confirmation-popup-person-name");
-            const confirmationPopupPersonLocation = document.getElementById("confirmation-popup-person-location");
-            const confirmationPopupPersonImg = document.getElementById("confirmation-popup-person-img");
-            const confirmationPopupCoinsAdd = document.getElementById("confirmation-popup-coins-add");
-            const confirmationPopupBottomText = document.getElementById("confirmation-popup-bottom-text");
-
-            form.addEventListener("submit", function (event) {
-                event.preventDefault();
-                const formData = new FormData(form);
-
-                fetch("{% url 'transfer_coins' %}", {
-                    method: "POST",
-                    headers: {
-                        "X-CSRFToken": formData.get("csrfmiddlewaretoken"),
-                    },
-                    body: new URLSearchParams(formData)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === "ok") {
-                            confirmationPopupTitle.innerText = "Добавление друга";
-                            confirmationPopupPersonName.innerHTML = personName.innerHTML;
-                            confirmationPopupPersonLocation.innerText = personLocation.innerText;
-                            confirmationPopupPersonImg.src = personImg.src;
-                            confirmationPopupCoinsAdd.innerText = `+${document.querySelector("#transfer-coin-amount-input").value}`;
-                            confirmationPopupBottomText.innerText = "Поздравляем! \n Dos Coins переведены";
-                            confirmationPopup.classList.add("popup--active");
-                        } else {
-                            alert(data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                    });
-            });
         });
-
     </script>
 
 {% endblock %}

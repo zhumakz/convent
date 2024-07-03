@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Seller Dashboard{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/entertainment/entertainment.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="all-size flex">
+        <header class="header-second">
+            <div class="header-last"></div>
+            <div class="header-second__inner">
+                <button class="menu-button">
+                    <img class="menu-button__image" src="{% static 'image/menu-button.png' %}" alt="menu-button"/>
+                </button>
+                <h1 class="header-second__title">{{ seller_name }}</h1>
+            </div>
+        </header>
+        <section class="entertainment">
+            <div class="container entertainment__inner">
+                <div class="entertainment__coins">
+                    <span>Выручка:</span>
+                    <span class="count-s">{{ total_sales|floatformat:"-1" }}</span>
+                    <span class="entertainment__dos">Dos Coins</span>
+                </div>
+                <div class="history entertainment__history">
+                    <h5 class="history__title">История завершенных продаж:</h5>
+                    <ul class="history__list entertainment__list">
+                        {% for transaction in transactions %}
+                            <li class="history__item">
+                                <span class="history__time">{{ transaction.created_at|date:"d.m - H:i" }}</span> |
+                                <span class="history__plus">{{ transaction.amount|floatformat:"-1" }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <h2>Генерация QR-кода для продажи</h2>
+                <form method="post" action="{% url 'seller_view' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Сгенерировать QR-код</button>
+                </form>
+
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+{% endblock %}

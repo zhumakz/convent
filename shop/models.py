@@ -51,9 +51,11 @@ class Purchase(models.Model):
         self.qr_code.save(f"purchase_{self.id}_qr.png", filebuffer, save=False)
 
     def save(self, *args, **kwargs):
-        if not self.qr_code:
-            self.generate_qr_code()
+        is_new = self.pk is None
         super().save(*args, **kwargs)
+        if is_new:
+            self.generate_qr_code()
+            super().save(update_fields=['qr_code'])
 
     class Meta:
         verbose_name = _("Purchase")

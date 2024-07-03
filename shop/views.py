@@ -35,20 +35,3 @@ def generate_purchase_qr(request):
     else:
         form = PurchaseForm()
     return render(request, 'shop/generate_purchase_qr.html', {'form': form})
-
-@login_required
-def scan_qr(request, qr_data):
-    try:
-        qr_data = json.loads(qr_data)
-        purchase_id = qr_data.get("purchase_id")
-        purchase = ShopService.get_purchase_by_id(purchase_id)
-        buyer = request.user
-        message = ShopService.complete_purchase(purchase, buyer)
-        messages.success(request, message)
-        return redirect('product_list', shop_id=purchase.seller.shop_set.first().id)
-    except ValidationError as e:
-        messages.error(request, str(e))
-        return redirect('product_list', shop_id=purchase.seller.shop_set.first().id)
-    except Exception as e:
-        messages.error(request, 'Invalid QR code or purchase data.')
-        return redirect('shop_list')

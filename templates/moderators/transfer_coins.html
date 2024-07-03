@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Transfer Coins{% endblock %}
+
+{% block content %}
+    <h2>Перевод койнов</h2>
+    <p>Имя пользователя: {{ user_name }}</p>
+    <p>Баланс: {{ user_balance }}</p>
+    <form method="post" action="{% url 'transfer_coins' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Перевести</button>
+    </form>
+{% endblock %}
