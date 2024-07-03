@@ -4,196 +4,296 @@
 {% block title %}operator{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'style/entertainment/entertainment.css' %}">
+    <link rel="stylesheet" href="{% static 'style/entertainment/entertainment.css' %}">
 {% endblock %}
 
 {% block content %}
-    <div class="popup qr" data-index="1">
-      <div class="popup-container">
-        <div class="top">
-          <button class="top__button popup-close" data-index="1">
-            <svg width="46" height="46">
-              <use href="{% static 'image/icons.svg' %}#back"></use>
-            </svg>
-          </button>
-          <span class="top__title">Scan QR code</span>
-        </div>
-        <div id="my-qr-reader" class="qr__content">
-          <img class="qr__image" src="{% static 'image/qr.png' %}" alt="qr" />
-        </div>
-      </div>
-    </div>
-    <div class="popup popup--active  add" data-index="2">
-      <div class="popup-container flex">
-        <div class="top">
-          <button class="top__button popup-close" data-index="2">
-            <svg width="46" height="46">
-              <use href="{% static 'image/icons.svg' %}#back"></use>
-            </svg>
-          </button>
-          <span class="top__title">Добавление друга</span>
-        </div>
-        <div class="person">
-          <div class="photo-line blue-line">
-            <img class="blue-person-img" src="{% static 'image/photo.png' %}" alt="photo" />
-          </div>
-
-          <div class="person__wrapper add__wrapper">
-            <span class="person__name"
-              >Zhasulan <br />
-              Zhumadilov</span
-            >
-            <span class="person__location">Astana</span>
-          </div>
-        </div>
-        <div class="add__entertainment-wrapper">
-          <span class="add__enterainment-coins count-s">14</span>
-          <span class="add__enterainment-name">
-            Dos
-            Coins
-          </span>
-
-        </div>
-        <form class="add__form">
-          <div class="add__form-top">
-            <button class="add__plus-top add__form-button" type="button" data-plus="10">10</button>
-            <button class="add__plus-top add__form-button" type="button" data-plus="50">50</button>
-            <button class="add__plus-top add__form-button" type="button" data-plus="100">100</button>
-          </div>
-          <div class="add__form-content">
-            <button class="add__minus add__form-button" type="button">-</button>
-            <div class="add__coins-wrapper add__form-wrapper">
-              <input class="add__coins count"  type="number" value="14" readonly />
-              <span class="add__name"> Dos Coins </span>
+    <div id="qr-popup" class="popup qr" data-index="1">
+        <div class="popup-container">
+            <div class="top">
+                <a href="{% url 'operator' %}" class="top__button popup-close" data-index="1">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span class="top__title">Scan QR code</span>
             </div>
-            <button class="add__plus add__form-button" type="button">+</button>
-          </div>
+            <div id="my-qr-reader" class="qr__content">
+                <img class="qr__image" src="{% static 'image/qr.png' %}" alt="qr"/>
+            </div>
+        </div>
+    </div>
 
+    <div id="transfer-coin-popup" class="popup add" data-index="2">
+        <div class="popup-container flex">
+            <div class="top">
+                <a href="{% url 'operator' %}" id="transfer-coin-popup-close" class="top__button popup-close" data-index="2">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span id="transfer-coin-popup-title" class="top__title">Добавление друга</span>
+            </div>
+            <div class="person">
+                <div class="photo-line blue-line">
+                    <img id="transfer-coin-person-img" class="blue-person-img" src="{% static 'image/photo.png' %}"
+                         alt="photo"/>
+                </div>
 
-          <button class="button add__submit" type="submit">Перевести</button>
-
-          <button class="button-s popups-close" type="button">Отмена</button>
-        </form>
-
+                <div class="person__wrapper add__wrapper">
+                    <span id="transfer-coin-person-name" class="person__name">Zhasulan <br/> Zhumadilov</span>
+                    <span id="transfer-coin-person-location" class="person__location">Astana</span>
+                </div>
+            </div>
+            <div class="add__entertainment-wrapper">
+                <span id="transfer-coin-person-balance" class="add__enterainment-coins count-s">14</span>
+                <span class="add__enterainment-name">Dos Coins</span>
+            </div>
+            <form id="transfer-coins-form" class="add__form" method="post" action="{% url 'transfer_coins' %}">
                 {% csrf_token %}
-      {{ form.as_p }}
-      </div>
+                <div class="add__form-top">
+                    <button id="transfer-coin-plus-10" class="add__plus-top add__form-button" type="button"
+                            data-plus="10">10
+                    </button>
+                    <button id="transfer-coin-plus-50" class="add__plus-top add__form-button" type="button"
+                            data-plus="50">50
+                    </button>
+                    <button id="transfer-coin-plus-100" class="add__plus-top add__form-button" type="button"
+                            data-plus="100">100
+                    </button>
+                </div>
+                <div class="add__form-content">
+                    <button id="transfer-coin-minus" class="add__minus add__form-button" type="button">-</button>
+                    <div class="add__coins-wrapper add__form-wrapper">
+                        <input id="transfer-coin-amount-input" class="add__coins count" type="number" name="amount"
+                               value="14" readonly/>
+                        <span class="add__name"> Dos Coins </span>
+                    </div>
+                    <button id="transfer-coin-plus" class="add__plus add__form-button" type="button">+</button>
+                </div>
+                <input id="transfer-coin-user-id" type="hidden" name="user_id" value="">
+                <button id="transfer-coin-submit" class="button add__submit" type="submit">Перевести</button>
+                <a href="{% url 'operator' %}" id="transfer-coin-cancel" class="button-s popups-close" type="button">Отмена</a>
+            </form>
+        </div>
     </div>
-    <div class="popup  final" data-index="3">
-      <div class="bottom-gradient"></div>
-      <div class="popup-container final__inner flex">
-        <div class="top">
-          <button class="top__button popup-close" data-index="3">
-            <svg width="46" height="46">
-              <use href="{% static 'image/icons.svg' %}#back"></use>
-            </svg>
-          </button>
-          <span class="top__title">Добавление друга</span>
-        </div>
-        <div class="person">
-          <div class="photo-line final__line">
-            <img
-              class="final__person-img"
-              src="{% static 'image/photo.png' %}"
-              alt="photo"
-            />
-          </div>
-          <span class="person__location">Astana</span>
-          <span class="final__name"
-            >Zhasulan <br />
-            Zhumadilov</span
-          >
-        </div>
-        <div class="final__content">
-          <div class="final__coins-background">
-            <div class="final__coins-item"></div>
-            <div class="final__coins-item"></div>
-            <div class="final__coins-item"></div>
-            <img
-              class="final__coins-layers"
-              src="{% static 'image/layers.png' %}"
-              alt="layers"
-            />
-          </div>
-          <svg class="final__coins" width="150" height="150">
-            <use href="{% static 'image/icons.svg' %}#coins"></use>
-          </svg>
-        </div>
-        <div class="final__coins-add">
-          <span class="count">+2</span>
-          <span
-            >Dos <br />
-            Coins</span
-          >
-        </div>
-        <p class="final__bottom-text">
-          Поздравляем! <br />
-          Dos Coins переведены
-        </p>
-        <button class="button final__button popups-close">Назад</button>
-      </div>
-    </div>
-    <div class="all-size flex">
-      <header class="header-second">
-        <div class="header-last"></div>
-        <div class="header-second__inner">
-          <button class="menu-button">
-            <img
-              class="menu-button__image"
-              src="{% static 'image/menu-button.png' %}"
-              alt="menu-button"
-            />
-          </button>
 
-          <h1 class="header-second__title">Entertainment</h1>
+    <div id="confirmation-popup" class="popup final" data-index="3">
+        <div class="bottom-gradient"></div>
+        <div class="popup-container final__inner flex">
+            <div class="top">
+                <a href="{% url 'operator' %}" id="confirmation-popup-close" class="top__button popup-close" data-index="3">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span id="confirmation-popup-title" class="top__title">Добавление друга</span>
+            </div>
+            <div class="person">
+                <div class="photo-line final__line">
+                    <img id="confirmation-popup-person-img" class="final__person-img"
+                         src="{% static 'image/photo.png' %}" alt="photo"/>
+                </div>
+                <span id="confirmation-popup-person-location" class="person__location">Astana</span>
+                <span id="confirmation-popup-person-name" class="final__name">Zhasulan <br/> Zhumadilov</span>
+            </div>
+            <div class="final__content">
+                <div class="final__coins-background">
+                    <div class="final__coins-item"></div>
+                    <div class="final__coins-item"></div>
+                    <div class="final__coins-item"></div>
+                    <img class="final__coins-layers" src="{% static 'image/layers.png' %}" alt="layers"/>
+                </div>
+                <svg class="final__coins" width="150" height="150">
+                    <use href="{% static 'image/icons.svg' %}#coins"></use>
+                </svg>
+            </div>
+            <div class="final__coins-add">
+                <span id="confirmation-popup-coins-add" class="count">+2</span>
+                <span>Dos <br/> Coins</span>
+            </div>
+            <p id="confirmation-popup-bottom-text" class="final__bottom-text">Поздравляем! <br/> Dos Coins переведены
+            </p>
+            <a id="confirmation-popup-back" class="button final__button popups-close" href="{% url 'operator' %}">Назад</a>
         </div>
-      </header>
-      <section class="entertainment">
-        <div class="container entertainment__inner">
-          <div class="entertainment__coins">
-            <span>Выдано:</span>
-            <span class="count-s">+414</span>
-            <span class="entertainment__dos">Dos Coins</span>
-          </div>
-          <div class="history entertainment__history">
-            <h5 class="history__title">История транзакции:</h5>
-            <ul class="history__list entertainment__list">
-              <li class="history__item">
-                <span class="history__time">16:15</span> |
-                <span class="history__plus"> +1 DC </span>ID 010000
-              </li>
-              <li class="history__item">
-                <span class="history__time">15:10</span> |
-                <span class="history__plus"> +2 DC </span>ID 010000
-              </li>
-              <li class="history__item">
-                <span class="history__time">14:15</span> |
-                <span class="history__minus"> -1 DC </span>ID 010000
-              </li>
-              <li class="history__item">
-                <span class="history__time">13:10</span> |
-                <span class="history__plus"> +1 DC </span>ID 010000
-              </li>
-              <li class="history__item">
-                <span class="history__time">13:10</span> |
-                <span class="history__plus"> +1 DC </span>ID 010000
-              </li>
-              <li class="history__item">
-                <span class="history__time">13:10</span> |
-                <span class="history__plus"> +1 DC </span>ID 010000
-              </li>
-            </ul>
-          </div>
-          <button
-            class="button entertainment__button popup-button"
-            data-index="1">Scan QR code
-          </button>
-        </div>
-      </section>
+    </div>
+
+    <div class="all-size flex">
+        <header class="header-second">
+            <div class="header-last"></div>
+            <div class="header-second__inner">
+                <button class="menu-button">
+                    <img class="menu-button__image" src="{% static 'image/menu-button.png' %}" alt="menu-button"/>
+                </button>
+                <h1 class="header-second__title">{{ operator_name }}</h1>
+            </div>
+        </header>
+        <section class="entertainment">
+            <div class="container entertainment__inner">
+                <div class="entertainment__coins">
+                    <span>Выдано:</span>
+                    <span class="count-s">-{{ total_coins_issued }}</span>
+                    <span class="entertainment__dos">Dos Coins</span>
+                </div>
+                <div class="entertainment__coins">
+                    <span>Баланс:</span>
+                    <span class="count-s">{{ user.doscointbalance.balance }}</span>
+                    <span class="entertainment__dos">Dos Coins</span>
+                </div>
+                <div class="history entertainment__history">
+                    <h5 class="history__title">История транзакции:</h5>
+                    <ul class="history__list entertainment__list">
+
+                        {% for transaction in transactions %}
+                            <li class="history__item">
+                                {% if transaction.sender == user %}
+                                    <span class="history__time">16:15</span> |
+                                    <span class="history__minus"> -{{ transaction.amount }} </span>
+                                    {{ transaction.recipient.phone_number }}.
+
+                                {% else %}
+                                    <span class="history__time">16:15</span> |
+                                    <span class="history__plus"> -{{ transaction.amount }} </span>
+                                    {{ transaction.sender.phone_number }}.
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <button id="qr-Button"
+                        class="button entertainment__button popup-button"
+                        data-index="1">Scan QR code
+                </button>
+            </div>
+        </section>
     </div>
 {% endblock %}
 
 {% block extra_js %}
     <script src="{% static 'js/html5-qrcode.min.js' %}"></script>
     <script src="{% static 'js/entertainment/entertainment.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Переменные для QR-кода
+            const transferCoinPopup = document.getElementById("transfer-coin-popup");
+            const personName = document.getElementById("transfer-coin-person-name");
+            const personLocation = document.getElementById("transfer-coin-person-location");
+            const personImg = document.getElementById("transfer-coin-person-img");
+            const personBalance = document.getElementById("transfer-coin-person-balance");
+            const userIdInput = document.getElementById("transfer-coin-user-id");
+
+            const qrPopup = document.getElementById("qr-popup");
+            const qrButton = document.getElementById("qr-Button");
+            let isProcessing = false;
+
+            qrButton.addEventListener("click", () => {
+                domReady(function () {
+                    let htmlscanner = new Html5QrcodeScanner("my-qr-reader", {
+                        fps: 10,
+                        qrbos: 250,
+                    });
+                    htmlscanner.render(onScanSuccess);
+
+                    function onScanSuccess(decodedText, decodeResult) {
+                        if (isProcessing) {
+                            return;
+                        }
+
+                        isProcessing = true;
+                        console.log(`Scanned QR Code: ${decodedText}`);
+
+                        sendQrDataToServer(decodedText)
+                            .then(data => {
+                                if (data.status === 'ok') {
+                                    populateTransferCoinPopup(data.user_info);
+                                } else {
+                                    alert(data.message);
+                                    console.log(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                console.log(`Error sending QR data: ${error}`);
+                            })
+                            .finally(() => {
+                                isProcessing = false;
+                            });
+                    }
+                });
+            });
+
+            function sendQrDataToServer(decodedText) {
+                console.log(`Sending QR data to server: ${decodedText}`);
+                return fetch("{% url 'handle_qr_moderators' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: new URLSearchParams({
+                        'qr_data': decodedText
+                    })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Server responded with ${response.status}`);
+                        }
+                        return response.json();
+                    });
+            }
+
+            function populateTransferCoinPopup(userInfo) {
+                personName.innerHTML = `${userInfo.name.split(' ')[0]} <br/> ${userInfo.name.split(' ')[1]}`;
+                personLocation.textContent = userInfo.location || '';
+                personImg.src = userInfo.profile_picture || '{% static "image/photo.png" %}';
+                personBalance.textContent = userInfo.balance;
+                userIdInput.value = userInfo.user_id;
+                transferCoinPopup.classList.add("popup--active");
+                qrPopup.classList.remove("popup--active");
+            }
+
+            // Переменные для формы перевода монет
+            const form = document.getElementById("transfer-coins-form");
+
+            const confirmationPopup = document.getElementById("confirmation-popup");
+            const confirmationPopupTitle = document.getElementById("confirmation-popup-title");
+            const confirmationPopupPersonName = document.getElementById("confirmation-popup-person-name");
+            const confirmationPopupPersonLocation = document.getElementById("confirmation-popup-person-location");
+            const confirmationPopupPersonImg = document.getElementById("confirmation-popup-person-img");
+            const confirmationPopupCoinsAdd = document.getElementById("confirmation-popup-coins-add");
+            const confirmationPopupBottomText = document.getElementById("confirmation-popup-bottom-text");
+
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+                const formData = new FormData(form);
+
+                fetch("{% url 'transfer_coins' %}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": formData.get("csrfmiddlewaretoken"),
+                    },
+                    body: new URLSearchParams(formData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "ok") {
+                            confirmationPopupTitle.innerText = "Добавление друга";
+                            confirmationPopupPersonName.innerHTML = personName.innerHTML;
+                            confirmationPopupPersonLocation.innerText = personLocation.innerText;
+                            confirmationPopupPersonImg.src = personImg.src;
+                            confirmationPopupCoinsAdd.innerText = `+${document.querySelector("#transfer-coin-amount-input").value}`;
+                            confirmationPopupBottomText.innerText = "Поздравляем! \n Dos Coins переведены";
+                            confirmationPopup.classList.add("popup--active");
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
+            });
+        });
+
+    </script>
+
 {% endblock %}

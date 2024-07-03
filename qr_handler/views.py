@@ -14,9 +14,11 @@ from shop.models import Purchase
 
 logger = logging.getLogger(__name__)
 
+
 @login_required
 def qr_scan_view(request):
     return render(request, 'qr_handler/qr.html')
+
 
 @login_required
 def handle_qr_data(request):
@@ -53,6 +55,7 @@ def handle_qr_data(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
 
 def handle_friend_request(request, user_id):
     try:
@@ -100,6 +103,7 @@ def handle_friend_request(request, user_id):
         logger.error("Error handling friend request: %s", e, exc_info=True)
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
+
 def handle_lecture_start(request, lecture_id):
     try:
         user = request.user
@@ -114,6 +118,7 @@ def handle_lecture_start(request, lecture_id):
         logger.error("Error handling lecture start: %s", e, exc_info=True)
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
+
 def handle_lecture_end(request, lecture_id):
     try:
         user = request.user
@@ -127,6 +132,7 @@ def handle_lecture_end(request, lecture_id):
     except Exception as e:
         logger.error("Error handling lecture end: %s", e, exc_info=True)
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
 
 def handle_purchase(request, purchase_id):
     try:
@@ -153,12 +159,14 @@ def handle_purchase(request, purchase_id):
         logger.error("Error handling purchase: %s", e, exc_info=True)
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
+
 def handle_doscam_request(request, user_id):
     try:
         return JsonResponse({'status': 'error', 'message': 'handle_doscam_request'})
     except Exception as e:
         logger.error("Error handling doscam request: %s", e, exc_info=True)
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
 
 @login_required
 def test_page(request):
