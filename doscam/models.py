@@ -30,6 +30,8 @@ class Event(models.Model):
     is_completed = models.BooleanField(default=False, verbose_name=_("Is Completed"))
     participant1_confirmed = models.BooleanField(default=False, verbose_name=_("Participant 1 Confirmed"))
     participant2_confirmed = models.BooleanField(default=False, verbose_name=_("Participant 2 Confirmed"))
+    is_published = models.BooleanField(default=False, verbose_name=_("Is Published"))
+    is_draft = models.BooleanField(default=True, verbose_name=_("Is Draft"))
 
     def __str__(self):
         return _("Event between {participant1} and {participant2} at {location}").format(participant1=self.participant1,
@@ -41,6 +43,11 @@ class Event(models.Model):
             self.start_time = timezone.now()
             self.end_time = self.start_time + timezone.timedelta(minutes=self.duration_minutes)
         super().save(*args, **kwargs)
+
+    def update_publication_status(self):
+        if self.end_time < timezone.now():
+            self.is_published = False
+            self.save()
 
     @staticmethod
     def get_random_participants(filters):

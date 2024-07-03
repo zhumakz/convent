@@ -1,9 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Create Event</h2>
-<form method="post">
+<form method="post" id="event-form">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Create Event</button>
+    <button type="button" id="randomize-btn">Randomize Participants</button>
+    <p id="participants"></p>
+    <button type="submit" name="publish" value="false">Create Event</button>
+    <button type="submit" name="publish" value="true">Create and Publish Event</button>
 </form>
+
+<script>
+document.getElementById('randomize-btn').addEventListener('click', function() {
+    fetch('{% url "randomize_participants" %}', {
+        method: 'GET',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            document.getElementById('participants').innerText = `Participant 1: ${data.participant1}, Participant 2: ${data.participant2}`;
+            document.getElementById('submit-btn').disabled = false; // Enable the submit button after randomizing participants
+        }
+    });
+});
+</script>
 {% endblock %}

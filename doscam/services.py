@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class EventService:
 
     @staticmethod
-    def create_event(location, duration_minutes, min_friends, has_profile_picture):
+    def create_event(location, duration_minutes, min_friends, has_profile_picture, publish=False):
         filters = {
             'min_friends': min_friends,
             'has_profile_picture': has_profile_picture
@@ -25,11 +25,16 @@ class EventService:
             logger.warning("Not enough participants meet the criteria.")
             return None, __("Not enough participants meet the criteria.")
 
+        if publish:
+            Event.objects.filter(is_published=True, is_completed=False).update(is_published=False)
+
         event = Event.objects.create(
             participant1=participant1,
             participant2=participant2,
             location=location,
-            duration_minutes=duration_minutes
+            duration_minutes=duration_minutes,
+            is_published=publish,
+            is_draft=not publish
         )
         return event, None
 
@@ -77,3 +82,7 @@ class EventService:
         # Добавляем пользователей в друзья через приложение friends
         if not FriendService.are_friends(event.participant1, event.participant2):
             FriendService.create_friendship(event.participant1, event.participant2)
+
+        # Снимаем публикацию события после завершения
+        event.is_published = False
+        event.save()
