@@ -1,8 +1,31 @@
 {% extends "base.html" %}
+{% load static %}
+{% load i18n %}
 
 {% block title %}Campaign Vote{% endblock %}
 
 {% block content %}
-    <h1>Campaign Vote</h1>
-    <p>Details for campaign vote: {{ campaign_vote }}</p>
+    <section class="campaign-vote">
+        <h2>Campaign Vote</h2>
+
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+
+        {% if success %}
+            <p>Vote action successful!</p>
+        {% else %}
+            <p>Vote action failed.</p>
+        {% endif %}
+
+        {% if campaign %}
+            <div class="campaign-info">
+                <h3>Campaign Details:</h3>
+                <p>Name: {{ campaign.name }}</p>
+                <p>Description: {{ campaign.description }}</p>
+                <p>Start Time: {{ campaign.start_time }}</p>
+                <p>End Time: {{ campaign.end_time }}</p>
+            </div>
+        {% endif %}
+    </section>
 {% endblock %}

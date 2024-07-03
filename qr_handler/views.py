@@ -3,6 +3,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import json
+
+from campaigns.services import CampaignService
 from friends.models import FriendRequest
 from lectures.models import Lecture
 from coins.models import Transaction
@@ -12,6 +14,7 @@ import logging
 
 from lectures.services import LectureService
 from shop.models import Purchase
+from shop.services import ShopService
 
 logger = logging.getLogger(__name__)
 
@@ -183,8 +186,10 @@ def handle_qr_data(request):
                     return redirect('qr_purchase_detail')
                 elif campaign_vote:
                     return redirect('qr_campaign_vote')
-                elif lecture_start and lecture_end:
-                    return redirect('qr_lecture_detail')
+                elif lecture_start:
+                    return redirect('qr_lecture_start')
+                elif lecture_end:
+                    return redirect('qr_lecture_end')
                 else:
                     return redirect('profile')
 
@@ -192,7 +197,7 @@ def handle_qr_data(request):
                 # Обработка ошибки декодирования JSON
                 return JsonResponse({'error': 'Invalid QR data'}, status=400)
 
-    return redirect('qr_handler:profile')
+    return redirect('profile')
 
 @login_required
 def qr_friend_request(request):
@@ -223,19 +228,83 @@ def qr_friend_request(request):
         }
         return render(request, 'qr_handler/qr_friend_request.html', context)
 @login_required
-def qr_purchase_detail(request, purchase_id):
-    # Логика для отображения информации о покупке по QR-коду
-    context = {'purchase_id': purchase_id}
+def qr_purchase_detail(request):
+    data = request.session.get('qr_data')
+    if not data:
+        return redirect('profile')
+
+    purchase_id = data.get('purchase_id')
+    purchase = ShopService.get_purchase_by_id(purchase_id)
+
+    try:
+        message = ShopService.complete_purchase(purchase, request.user)
+        success = True
+    except ValidationError as e:
+        message = e.messages[0]
+        success = False
+
+    context = {
+        'message': message,
+        'success': success,
+        'purchase': purchase,
+    }
     return render(request, 'qr_handler/qr_purchase_detail.html', context)
 
 @login_required
-def qr_campaign_vote(request, campaign_vote):
-    # Логика для обработки голосования в кампании по QR-коду
-    context = {'campaign_vote': campaign_vote}
+def qr_campaign_vote(request):
+    data = request.session.get('qr_data')
+    if not data:
+        return redirect('profile')
+
+    campaign_id = data.get('campaign_vote')
+    campaign = CampaignService.get_campaign_by_id(campaign_id)
+
+    try:
+        message = CampaignService.vote_for_campaign(request.user, campaign)
+        success = True
+    except ValidationError as e:
+        message = e.messages[0]
+        success = False
+
+    context = {
+        'message': message,
+        'success': success,
+        'campaign': campaign,
+    }
     return render(request, 'qr_handler/qr_campaign_vote.html', context)
 
 @login_required
-def qr_lecture_detail(request, lecture_start, lecture_end):
-    # Логика для отображения информации о лекции по QR-коду
-    context = {'lecture_start': lecture_start, 'lecture_end': lecture_end}
+def qr_lecture_start(request):
+    data = request.session.get('qr_data')
+    if not data:
+        return redirect('profile')
+
+    lecture_id = data.get('lecture_start')  # Предполагаем, что в данных QR-кода есть идентификатор лекции
+    lecture = LectureService.get_lecture_by_id(lecture_id)
+
+    success, message = LectureService.register_lecture_start(request.user, lecture)
+
+    context = {
+        'message': message,
+        'success': success,
+        'lecture': lecture,
+    }
+    return render(request, 'qr_handler/qr_lecture_detail.html', context)
+
+@login_required
+def qr_lecture_end(request):
+    data = request.session.get('qr_data')
+    if not data:
+        return redirect('profile')
+
+    lecture_id = data.get('lecture_end')  # Предполагаем, что в данных QR-кода есть идентификатор лекции
+    lecture = LectureService.get_lecture_by_id(lecture_id)
+
+    success, message = LectureService.register_lecture_end(request.user, lecture)
+
+    context = {
+        'message': message,
+        'success': success,
+        'lecture': lecture,
+    }
     return render(request, 'qr_handler/qr_lecture_detail.html', context)

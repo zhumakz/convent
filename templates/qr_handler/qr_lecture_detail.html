@@ -1,9 +1,30 @@
 {% extends "base.html" %}
+{% load static %}
+{% load i18n %}
 
 {% block title %}Lecture Detail{% endblock %}
 
 {% block content %}
-    <h1>Lecture Detail</h1>
-    <p>Lecture start: {{ lecture_start }}</p>
-    <p>Lecture end: {{ lecture_end }}</p>
+    <section class="lecture">
+        <h2>Lecture Detail</h2>
+
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+
+        {% if success %}
+            <p>Lecture action successful!</p>
+        {% else %}
+            <p>Lecture action failed.</p>
+        {% endif %}
+
+        {% if lecture %}
+            <div class="lecture-info">
+                <h3>Lecture Details:</h3>
+                <p>Title: {{ lecture.title }}</p>
+                <p>Start Time: {{ lecture.start_time }}</p>
+                <p>End Time: {{ lecture.end_time }}</p>
+            </div>
+        {% endif %}
+    </section>
 {% endblock %}

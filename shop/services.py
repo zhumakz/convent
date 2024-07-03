@@ -21,6 +21,10 @@ class ShopService:
         return Product.objects.filter(shop=shop)
 
     @staticmethod
+    def get_purchase_by_id(purchase_id):
+        return get_object_or_404(Purchase, id=purchase_id)
+
+    @staticmethod
     def create_purchase(seller, amount):
         purchase = Purchase(seller=seller, amount=amount)
         purchase.save()
@@ -35,7 +39,8 @@ class ShopService:
             sender=buyer,
             recipient=purchase.seller,
             amount=purchase.amount,
-            description=__('Purchase in {shop_name}').format(shop_name=purchase.seller.shop_set.first().name)
+            description=__('Purchase in {shop_name}')
+            # description=__('Purchase in {shop_name}').format(shop_name=purchase.seller.shop_set.first().name)
         )
         purchase.is_completed = True
         purchase.buyer = buyer
