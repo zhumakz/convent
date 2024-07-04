@@ -126,10 +126,10 @@
     {#    <script src="{% static 'js/register/register.js' %}"></script>#}
     <script src="{% static 'js/inputmask/inputmask.min.js' %}"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let phoneInput = document.getElementById('id_phone_number');
-            let im = new Inputmask("+7 (999) 999-99-99");
-            im.mask(phoneInput);
-        });
+        {#document.addEventListener("DOMContentLoaded", function () {#}
+        {#    let phoneInput = document.getElementById('id_phone_number');#}
+        {#    let im = new Inputmask("+7 (999) 999-99-99");#}
+        {#    im.mask(phoneInput);#}
+        {#});#}
     </script>
 {% endblock %}

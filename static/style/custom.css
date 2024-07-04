@@ -70,3 +70,20 @@ select option {
 .language_mb {
     margin-bottom: 20px;
 }
+
+.menu__languages {
+    margin-top: 22px;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--white);
+    padding-left: 98px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+}
+.menu__languages-button--active {
+    border-bottom: 2px solid #4DCDB9;
+}

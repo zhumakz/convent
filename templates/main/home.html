@@ -5,51 +5,53 @@
 {% block title %}{% trans "Homepage" %}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'style/homepage/homepage.css' %}" />
+    <link rel="stylesheet" href="{% static 'style/homepage/homepage.css' %}"/>
+    <link rel="stylesheet" href="{% static 'style/custom.css' %}">
 {% endblock %}
 
 {% block content %}
-<section class="homepage">
-    <div class="container">
-        <button class="menu-button">
-            <img class="menu-button__image" src="{% static 'image/menu-button.png' %}" alt="{% trans 'menu-button' %}" />
-        </button>
-        <div class="homepage__title-wrapper">
-            <h1 class="homepage__title">{% trans "Казахстан — это на всю жизнь!" %}</h1>
-            <svg class="homepage__title-icon" width="164" height="164">
-                <use href="{% static 'image/icons.svg' %}#homepage"></use>
-            </svg>
+    <section class="homepage">
+        <div class="container">
+            <button class="menu-button">
+                <img class="menu-button__image" src="{% static 'image/menu-button.png' %}"
+                     alt="{% trans 'menu-button' %}"/>
+            </button>
+            <div class="homepage__title-wrapper">
+                <h1 class="homepage__title">{% trans "Казахстан — это на всю жизнь!" %}</h1>
+                <svg class="homepage__title-icon" width="164" height="164">
+                    <use href="{% static 'image/icons.svg' %}#homepage"></use>
+                </svg>
+            </div>
+            <p class="homepage__text">
+                {% trans "Описание проекта, Идейные соображения высшего порядка, а также рамки и место обучения кадров требуют определения и уточнения форм развития." %}
+            </p>
+            <nav class="homepage__nav">
+                <ul class="homepage__list">
+                    <li class="homepage__item">
+                        <a class="homepage__link" href="{% url 'attraction_list' %}">
+                            <span class="homepage__link-name">{% trans "Точки притяжения" %}</span>
+                        </a>
+                        <svg class="homepage__item-icon" width="138" height="151" fill="none">
+                            <use href="{% static 'image/icons.svg' %}#points"></use>
+                        </svg>
+                    </li>
+                    <li class="homepage__item">
+                        <a class="homepage__link" href="{% url 'about_coins' %}">
+                            <span class="homepage__link-name">{% trans "Что такое DOS COINS" %}</span>
+                        </a>
+                        <svg class="homepage__item-icon" width="148" height="148" fill="none">
+                            <use href="{% static 'image/icons.svg' %}#coins"></use>
+                        </svg>
+                    </li>
+                    <li class="homepage__item">
+                        <a class="homepage__link" href="{% url 'map' %}">
+                            <span class="homepage__link-name">{% trans "Карта" %}</span>
+                        </a>
+                        <img src="{% static 'image/maps.svg' %}" class="homepage__item-icon" alt="{% trans 'maps' %}"/>
+                    </li>
+                </ul>
+            </nav>
+            <a class="button homepage__button" href="{% url 'login' %}">{% trans "Вход" %}</a>
         </div>
-        <p class="homepage__text">
-            {% trans "Описание проекта, Идейные соображения высшего порядка, а также рамки и место обучения кадров требуют определения и уточнения форм развития." %}
-        </p>
-        <nav class="homepage__nav">
-            <ul class="homepage__list">
-                <li class="homepage__item">
-                    <a class="homepage__link" href="{% url 'attraction_list' %}">
-                        <span class="homepage__link-name">{% trans "Точки притяжения" %}</span>
-                    </a>
-                    <svg class="homepage__item-icon" width="138" height="151" fill="none">
-                        <use href="{% static 'image/icons.svg' %}#points"></use>
-                    </svg>
-                </li>
-                <li class="homepage__item">
-                    <a class="homepage__link" href="{% url 'about_coins' %}">
-                        <span class="homepage__link-name">{% trans "Что такое DOS COINS" %}</span>
-                    </a>
-                    <svg class="homepage__item-icon" width="148" height="148" fill="none">
-                        <use href="{% static 'image/icons.svg' %}#coins"></use>
-                    </svg>
-                </li>
-                <li class="homepage__item">
-                    <a class="homepage__link" href="{% url 'map' %}">
-                        <span class="homepage__link-name">{% trans "Карта" %}</span>
-                    </a>
-                    <img src="{% static 'image/maps.svg' %}" class="homepage__item-icon" alt="{% trans 'maps' %}" />
-                </li>
-            </ul>
-        </nav>
-        <a class="button homepage__button" href="{% url 'login' %}">{% trans "Вход" %}</a>
-    </div>
-</section>
+    </section>
 {% endblock %}
