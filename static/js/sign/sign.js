@@ -40,39 +40,39 @@ buttonSend.addEventListener("click", () => {
   second();
 });
 
-let activeIndex = 0;
-
-popupForm.addEventListener("input", ({ target }) => {
-  if (target.value.match(/[^0-9]/g)) {
-    target.value = target.value.slice(0, target.value.length - 1);
-    return;
-  }
-  if (!target.value.length && activeIndex) {
-    activeIndex--;
-    popupForm[activeIndex].focus();
-    return;
-  }
-  let tmp = "";
-  if (target !== popupForm[activeIndex]) {
-    popupForm[activeIndex].value = target.value;
-    activeIndex++;
-    target.value = "";
-    popupForm[activeIndex].focus();
-  } else if (target.value.length == 2 && activeIndex !== 3) {
-    tmp = target.value.slice(1, 2);
-    target.value = target.value.slice(0, 1);
-    activeIndex++;
-
-    popupForm[activeIndex].value = tmp;
-    popupForm[activeIndex].focus();
-  } else if (activeIndex == 3 && target.value.length == 2) {
-    target.value = target.value[1];
-  }
-
-  if (activeIndex === 3 && target.value.length) {
-    const code = target.value;
-    // Тут надо писать запрос формы на проверку кода
-    // и если код совбадет  перенаправить на страницу другую
-    window.location.pathname = "/selfie.html";
-  }
-});
+// let activeIndex = 0;
+//
+// popupForm.addEventListener("input", ({ target }) => {
+//   if (target.value.match(/[^0-9]/g)) {
+//     target.value = target.value.slice(0, target.value.length - 1);
+//     return;
+//   }
+//   if (!target.value.length && activeIndex) {
+//     activeIndex--;
+//     popupForm[activeIndex].focus();
+//     return;
+//   }
+//   let tmp = "";
+//   if (target !== popupForm[activeIndex]) {
+//     popupForm[activeIndex].value = target.value;
+//     activeIndex++;
+//     target.value = "";
+//     popupForm[activeIndex].focus();
+//   } else if (target.value.length == 2 && activeIndex !== 3) {
+//     tmp = target.value.slice(1, 2);
+//     target.value = target.value.slice(0, 1);
+//     activeIndex++;
+//
+//     popupForm[activeIndex].value = tmp;
+//     popupForm[activeIndex].focus();
+//   } else if (activeIndex == 3 && target.value.length == 2) {
+//     target.value = target.value[1];
+//   }
+//
+//   if (activeIndex === 3 && target.value.length) {
+//     const code = target.value;
+//     // Тут надо писать запрос формы на проверку кода
+//     // и если код совбадет  перенаправить на страницу другую
+//     window.location.pathname = "/selfie.html";
+//   }
+// });
