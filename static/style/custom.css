@@ -52,3 +52,21 @@ select option {
 .login-sms:focus {
     outline: none;
 }
+
+.agreement-section {
+    margin-bottom: 30px;
+}
+
+.agreement-section-title {
+    max-width: 100%;
+    margin-top: auto;
+    font-size: 26px;
+}
+
+.agreement-section h1 {
+    margin-bottom: 30px;
+}
+
+.language_mb {
+    margin-bottom: 20px;
+}

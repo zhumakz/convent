@@ -4,6 +4,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'style/languages/languages.css' %}">
+<link rel="stylesheet" href="{% static 'style/custom.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -16,8 +17,8 @@
         <div class="languages__buttons">
             <form method="post">
                 {% csrf_token %}
-                <button class="button-s" type="submit" name="language" value="kk">Қазақ тілі</button>
-                <button class="button-s" type="submit" name="language" value="ru">Русский язык</button>
+                <button class="button-s language_mb" type="submit" name="language" value="kk">Қазақ тілі</button>
+                <button class="button-s language_mb" type="submit" name="language" value="ru">Русский язык</button>
             </form>
         </div>
     </div>
