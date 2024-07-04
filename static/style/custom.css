@@ -15,7 +15,6 @@
     margin-top: 9px;
 }
 
-}
 .register__select:invalid {
     color: var(--white);
 }
@@ -96,4 +95,8 @@ select option {
 
 .edit_save-button {
     margin-top: 30px;
+}
+
+.selfie-edit-button {
+    border-bottom: 1px dotted;
 }

@@ -106,6 +106,23 @@ class ProfilePictureForm(forms.ModelForm):
         model = User
         fields = ['profile_picture']
 
+    def clean_profile_picture(self):
+        profile_picture = self.cleaned_data.get('profile_picture')
+
+        if profile_picture:
+            from PIL import Image
+            # Открываем изображение и проверяем его формат
+            try:
+                img = Image.open(profile_picture)
+                img.verify()  # Проверяем, является ли файл изображением
+            except (IOError, SyntaxError):
+                raise forms.ValidationError('Файл должен быть изображением.')
+
+            # Проверка размера файла
+            if profile_picture.size > 5 * 1024 * 1024:
+                raise forms.ValidationError('Размер файла не должен превышать 5MB.')
+
+        return profile_picture
 
 class ModeratorLoginForm(forms.Form):
     phone_number = forms.CharField(max_length=15, label=_('Phone Number'))

@@ -10,41 +10,98 @@
 
 {% block content %}
     <section class="selfie">
-      <div class="container selfie__inner">
-        <div class="top">
-          <a class="top__button" href="{% url 'profile' %}">
-            <svg width="46" height="46">
-              <use href="{% static 'image/icons.svg' %}#back"></use>
-            </svg>
-          </a>
-          <span class="top__title">Добавить селфи</span>
+        <div class="container selfie__inner">
+            <div class="top">
+                <a class="top__button" href="{% url 'profile' %}">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span class="top__title">Добавить селфи</span>
+            </div>
+            <form class="selfie__form" method="post" enctype="multipart/form-data" id="selfieForm">
+                {% csrf_token %}
+                <div class="photo-line selfie__line">
+                    <label class="selfie__label">
+                        <input class="selfie__file" type="file" name="profile_picture" id="id_profile_picture"/>
+                        <img class="selfie__image" id="selfie_image_preview" src="{% static 'image/photo.png' %}"
+                             alt="photo"/>
+                    </label>
+                </div>
+                {% if form.profile_picture.errors %}
+                    <div class="error">{{ form.profile_picture.errors }}</div>
+                {% endif %}
+                <p class="selfie__text">
+                    Добавьте селфи аватар, он понадобиться для прохождения уникальных
+                    квестов и получения призов!
+                </p>
+                <p class="selfie__bottom-text">
+                    Ты не сможешь участвовать в Квестах если не сделаешь фото, Изменить
+                    можно будет в профиле.
+                </p>
+                <div class="selfie__buttons">
+                    <label class="selfie__label button" id="upload_label">
+                        <input class="selfie__file" type="file" name="profile_picture" id="id_profile_picture_2"/>
+                        Добавить селфи
+                    </label>
+                    <button type="submit" class="button" id="save_button">Сохранить</button>
+                    <a class="button-s selfie__link" href="{% url 'profile' %}">Пропустить</a>
+                </div>
+            </form>
         </div>
-        <form class="selfie__form" method="post" enctype="multipart/form-data">
-          {% csrf_token %}
-          <div class="photo-line selfie__line">
-            <label class="selfie__label">
-              <input class="selfie__file" type="file" name="profile_picture" />
-              <img class="selfie__image" src="{% static 'image/photo.png' %}" alt="photo" />
-            </label>
-          </div>
-
-          <p class="selfie__text">
-            Добавьте селфи аватар, он понадобиться для прохождения уникальных
-            квестов и получения призов!
-          </p>
-          <p class="selfie__bottom-text">
-            Ты не сможешь участвовать в Квестах если не сделаешь фото, Изменить
-            можно будет в профиле.
-          </p>
-          <div class="selfie__buttons">
-            <label class="selfie__label button">
-              <input class="selfie__file" type="file" name="profile_picture" />
-              Добавить селфи
-            </label>
-            <button type="submit" class="button">Сохранить</button>
-            <a class="button-s selfie__link" href="{% url 'profile' %}">Пропустить</a>
-          </div>
-        </form>
-      </div>
     </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById('selfieForm');
+            const saveButton = document.getElementById('save_button');
+            const uploadLabel = document.getElementById('upload_label');
+            const fileInput1 = document.getElementById('id_profile_picture');
+            const fileInput2 = document.getElementById('id_profile_picture_2');
+            const imagePreview = document.getElementById('selfie_image_preview');
+            let initialFormState = new FormData(form);
+
+            function previewImage(input) {
+                const file = input.files[0];
+                const reader = new FileReader();
+
+                reader.onloadend = function () {
+                    imagePreview.src = reader.result;
+                }
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            function checkForChanges() {
+                const currentFormState = new FormData(form);
+                let formChanged = false;
+
+                for (let key of initialFormState.keys()) {
+                    if (initialFormState.get(key) !== currentFormState.get(key)) {
+                        formChanged = true;
+                        break;
+                    }
+                }
+
+                saveButton.style.display = formChanged ? 'block' : 'none';
+                uploadLabel.classList.add('selfie-edit-button');
+                uploadLabel.classList.remove('button');
+                uploadLabel.innerHTML = formChanged ? '<input class="selfie__file" type="file" name="profile_picture" id="id_profile_picture_2" onchange="previewImage(this)" />Выбрать другое' : '<input class="selfie__file" type="file" name="profile_picture" id="id_profile_picture_2" onchange="previewImage(this)" />Добавить селфи';
+            }
+
+            fileInput1.addEventListener('change', function () {
+                previewImage(fileInput1);
+                checkForChanges();
+            });
+
+            fileInput2.addEventListener('change', function () {
+                previewImage(fileInput2);
+                checkForChanges();
+            });
+
+            saveButton.style.display = 'none';
+        });
+    </script>
 {% endblock %}
