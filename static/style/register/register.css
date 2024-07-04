@@ -1,4 +1,10 @@
-
+input, textarea, button, select {
+	font-family: inherit;
+    font-size: inherit;
+width:100%;
+    color: inherit;
+    background-color: transparent;
+}
 .register__text {
     margin-top: 23px;
     font-size: 20px;

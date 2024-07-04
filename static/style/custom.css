@@ -11,6 +11,11 @@
     border-bottom: none;
 }
 
+.register__select {
+    margin-top: 9px;
+}
+
+}
 .register__select:invalid {
     color: var(--white);
 }
@@ -42,7 +47,7 @@ select option {
 
 .login-sms {
     font-size: 36px;
-    letter-spacing: 1.75ch;
+    letter-spacing: 1ch;
     width: calc(100% - 120px);
     border-bottom: 2px solid var(--white);
     text-align: center;
@@ -84,6 +89,11 @@ select option {
     justify-content: space-between;
     align-items: center;
 }
+
 .menu__languages-button--active {
     border-bottom: 2px solid #4DCDB9;
+}
+
+.edit_save-button {
+    margin-top: 30px;
 }

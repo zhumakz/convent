@@ -9,6 +9,7 @@
 
 .final__coins-item:first-child {
     filter: blur(107.99px);
+	-webkit-filter: blur(107.99px);
     background: rgb(255, 212, 100);
     width: 161px;
     height: 161px;
@@ -24,14 +25,13 @@
 
 .final__coins-item:nth-child(2) {
     filter: blur(60px);
+	  -webkit-filter: blur(60px);
     background: rgb(255, 138, 30);
     width: 203.72px;
     height: 203.72px;
     z-index: 7;
-    border-radius: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    overflow: hidden;
 }
 
 
@@ -40,8 +40,7 @@
     right: 0;
     width: 100%;
     height: 164.09px;
-    border-radius: 50%;
-    overflow: hidden;
+	-webkit-filter: blur(113.95px);
     z-index: 6;
     filter: blur(113.95px);
     background: rgba(201, 0, 120);

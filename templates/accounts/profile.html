@@ -6,6 +6,47 @@
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/profile/profile.css' %}">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById('profileEditForm');
+            const saveButton = document.querySelector('.edit_save-button');
+            const initialFormState = new FormData(form);
+
+            function previewImage() {
+                const file = document.getElementById('id_profile_picture').files[0];
+                const reader = new FileReader();
+
+                reader.onloadend = function () {
+                    document.getElementById('profile_picture_preview').src = reader.result;
+                }
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                } else {
+                    document.getElementById('profile_picture_preview').src = "{% static 'image/photo.png' %}";
+                }
+            }
+
+            function checkForChanges() {
+                const currentFormState = new FormData(form);
+                let formChanged = false;
+
+                for (let key of initialFormState.keys()) {
+                    if (initialFormState.get(key) !== currentFormState.get(key)) {
+                        formChanged = true;
+                        break;
+                    }
+                }
+
+                saveButton.style.display = formChanged ? 'block' : 'none';
+            }
+
+            form.addEventListener('change', checkForChanges);
+            document.getElementById('id_profile_picture').addEventListener('change', previewImage);
+
+            saveButton.style.display = 'none';
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -25,9 +66,8 @@
                     <span class="all-coins__value">Dos Coins</span>
                     <p class="all-coins__text">Краткое DOS Coins описание монеты. Где можно получить и где можно
                         потратить.</p>
-                    <svg class="all-coins__icon" width="112" height="112">
-                        <use href="{% static 'image/icons.svg' %}#coins"></use>
-                    </svg>
+                    <img class="all-coins__icon" src="{% static 'image/coins.png' %}" width="112" height="112"
+                         alt="icon"/>
                 </div>
                 <div class="history">
                     <h5 class="history__title">История транзакции:</h5>
@@ -108,7 +148,7 @@
                 </div>
                 <div class="person">
                     <div class="photo-line friend__line">
-                        <img class="friend__person-img" id="friend-profile-picture" src="{% static 'image/photo.png' %}"
+                        <img class="friends__person-img" id="friend-profile-picture" src="{% static 'image/photo.png' %}"
                              alt="photo"/>
                     </div>
                     <span class="person__location" id="friend-location">Astana</span>
@@ -154,18 +194,20 @@
                     <div class="edit__top">
                         <div class="person">
                             <div class="photo-line blue-line">
-                                {% if user.profile_picture %}
-                                    <img class="blue-person-img" src="{{ user.profile_picture.url }}" alt="photo"/>
-                                {% else %}
-                                    <img class="blue-person-img" src="{% static 'image/photo.png' %}" alt="photo"/>
-                                {% endif %}
+                                <img id="profile_picture_preview" src="
+
+                                        {% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'image/photo.png' %}{% endif %}"
+                                     alt="Profile Picture" class="blue-person-img" width="300"/>
                             </div>
                         </div>
+
                         <label class="edit__label" for="id_profile_picture">Изменить фото</label>
-                        <input type="file" class="edit__file-input" id="id_profile_picture" name="profile_picture"/>
+                        <input type="file" class="edit__file-input" id="id_profile_picture" name="profile_picture"
+                               onchange="previewImage()"/>
                     </div>
                     <span class="edit__location">{{ user.city.name }}</span>
                     <span class="edit__name">{{ user.name }}<br/>{{ user.surname }}</span>
+
                     <div class="edit__contacts">
                         <div class="edit__contacts-item">
                             <svg width="40" height="40">
@@ -182,7 +224,7 @@
                                    placeholder="Tiktok профиль"/>
                         </div>
                     </div>
-                    <button type="submit" class="button-s edit_save-button">Сохранить</button>
+                    <button type="submit" class="button edit_save-button">Сохранить</button>
                 </form>
             </div>
         </div>
@@ -267,9 +309,8 @@
                     <span class="profile__coins">{{ user.doscointbalance.balance|floatformat:"-1" }}</span>
                     <span class="profile__item-name">Dos<br/>Coins</span>
                     <div class="profile__coins-icon">
-                        <svg width="112" height="112">
-                            <use href="{% static 'image/icons.svg' %}#coins"></use>
-                        </svg>
+                        <img class="profile__coins-iconglow" src="{% static 'image/coins.png' %}" width="112"
+                             height="112" alt="icon"/>
                     </div>
                 </button>
             </div>
@@ -281,7 +322,7 @@
 
 {% block extra_js %}
     <script src="{% static 'js/html5-qrcode.min.js' %}"></script>
-    <script src="{% static 'js/profile/profile.js' %}"></script>
+    {#    <script src="{% static 'js/profile/profile.js' %}"></script>#}
     {% if is_event_participant %}
         <script>
             const timer = new Timer(document.querySelector('.timer'))
@@ -289,4 +330,7 @@
             document.querySelector('.find__button-close').addEventListener('click', () => timer.closeInterval())
         </script>
     {% endif %}
+
+
+
 {% endblock %}

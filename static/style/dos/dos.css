@@ -82,8 +82,16 @@
     font-weight: 700;
 }
 
+.dos__name{
+	font-size:20px;
+	font-weight:700;
+}
+
 .dos__location {
     display: block;
+	padding-top:5px;
+	font-size:16px;
+	font-weight:100;
 }
 
 .dos__vectors {

@@ -1,0 +1,56 @@
+@keyframes coinFlip {
+  0% {
+      transform: rotateY(0);
+  }
+  50% {
+      transform: rotateY(180deg);
+  }
+  100% {
+      transform: rotateY(360deg);
+  }
+}
+
+
+@keyframes coinShine {
+  0% {
+      box-shadow: 0 0 20px 10px rgba(255, 215, 0, 0.8); /* Начальное состояние свечения */
+  }
+  50% {
+      box-shadow: 0 0 40px 20px rgba(255, 215, 0, 1); /* Максимальное свечение */
+  }
+  100% {
+      box-shadow: 0 0 20px 10px rgba(255, 215, 0, 0.8); /* Возврат к начальному состоянию */
+  }
+}
+
+.final__coins {
+  animation: coinFlip 2s infinite, coinShine 3s infinite; /* Добавляем анимацию свечения */
+  position: relative;
+  z-index: 100;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.final__coins img {
+  width: 150px;
+  height: 150px;
+  display: block;
+  border-radius: 50%;
+}
+
+.profile__coins-iconglow{
+filter: drop-shadow(0 0 10px #FF8A1E);
+	
+}
+
+@keyframes blink {
+  100% {
+    opacity: 0;
+  }
+}
+.profile__line::before {
+  animation-name: blink;
+  animation-timing-function: linear;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
