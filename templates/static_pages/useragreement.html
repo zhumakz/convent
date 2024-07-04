@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+Карта
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'style/map/map.css' %}">
+{% endblock %}
+
+{% block content %}
+<header class="header">
+    <div class="container header__inner">
+        <a class="back" href="{% url 'home' %}">
+            <img class="back-image" src="{% static 'image/back.png' %}" alt="back" />
+        </a>
+        <img src="{% static 'image/maps.svg' %}" class="header__icon" alt="maps" />
+        <h2 class="header__title">{{ page.title }}</h2>
+    </div>
+</header>
+<section class="map">
+    <div class="container">
+        <img class="map__image" src="{% static 'image/map/map.png' %}" alt="map" />
+    </div>
+</section>
+{% endblock %}

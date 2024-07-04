@@ -24,3 +24,11 @@ class StaticPage(models.Model):
             'description': 'This is the map page.',
             'photo': None
         })
+        StaticPage.objects.get_or_create(title='policy', defaults={
+            'description': 'This is the policy page.',
+            'photo': None
+        })
+        StaticPage.objects.get_or_create(title='user_agreement', defaults={
+            'description': 'This is the user_agreement page.',
+            'photo': None
+        })
