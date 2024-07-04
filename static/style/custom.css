@@ -24,3 +24,31 @@ select option {
     font-size: 14px;
     margin-top: 5px;
 }
+
+.error-message-popup {
+    color: red;
+    font-size: 20px;
+    margin-top: 15px;
+    text-align: center;
+}
+
+
+.error-message {
+    color: red;
+    font-size: 20px;
+    margin-top: 15px;
+}
+
+
+.login-sms {
+    font-size: 36px;
+    letter-spacing: 1.75ch;
+    width: calc(100% - 120px);
+    border-bottom: 2px solid var(--white);
+    text-align: center;
+    padding-left: 25px;
+}
+
+.login-sms:focus {
+    outline: none;
+}

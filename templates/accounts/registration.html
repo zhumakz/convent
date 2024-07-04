@@ -110,10 +110,10 @@
                     <p class="register__bottom-text">
                         {% trans "Продолжая, я даю согласие на" %}
                         <a class="register__text-link"
-                           href="#">{% trans "обработку и передачу персональных данных" %}</a>
+                           href="{% url 'policy' %}">{% trans "обработку и передачу персональных данных" %}</a>
                         {% trans "и" %}
                         <a class="register__text-link"
-                           href="#">{% trans "принимаю условия пользовательского соглашения." %}</a>
+                           href="{% url 'user_agreement' %}">{% trans "принимаю условия пользовательского соглашения." %}</a>
                     </p>
                 </div>
             </form>

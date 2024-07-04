@@ -57,7 +57,7 @@ def login_and_verify_view(request):
                     request.session['phone_number'] = phone_number
                     request.session['sms_sent'] = True
                     return JsonResponse({'status': 'ok'})
-                return JsonResponse({'status': 'error', 'message': __('User not found')}, status=400)
+                return JsonResponse({'status': 'error', 'message': __('Пользователь с таким номером телефона не найден.')}, status=400)
 
             return JsonResponse({'status': 'error', 'message': __('Invalid action')}, status=400)
 
@@ -87,7 +87,7 @@ def handle_resend_sms(request, phone_number):
 
     user = UserService.get_user_by_phone_number(phone_number)
     if not user:
-        return JsonResponse({'status': 'error', 'message': __('User not found')}, status=400)
+        return JsonResponse({'status': 'error', 'message': __('Пользователь с таким номером телефона не найден.')}, status=400)
 
     UserService.handle_sms_verification(request, phone_number)
     return JsonResponse({'status': 'ok'})
@@ -104,9 +104,9 @@ def handle_verify_login(request):
             request.session['sms_sent'] = False  # Сброс состояния отправки SMS
             return JsonResponse({'status': 'ok', 'redirect_url': reverse('profile')})
         else:
-            return JsonResponse({'status': 'error', 'message': __('User not found')}, status=400)
+            return JsonResponse({'status': 'error', 'message': __('Пользователь с таким номером телефона не найден.')}, status=400)
     else:
-        return JsonResponse({'status': 'error', 'message': __('Incorrect SMS code')}, status=400)
+        return JsonResponse({'status': 'error', 'message': __('Неверный SMS код.')}, status=400)
 
 
 def render_login_page(request, form, remaining_time=None, show_popup=False):
