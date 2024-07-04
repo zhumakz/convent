@@ -20,12 +20,9 @@
 }
 
 .sign__item {
-    width: calc(100% - 129px);
+    width: calc(100% - 19px);
 
-    &:first-child {
-        width: 100px;
-        flex-shrink: 0;
-    }
+   
 }
 
 .sign__label {

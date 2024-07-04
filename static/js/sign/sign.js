@@ -5,15 +5,7 @@ const popupForm = document.querySelector(".sign__popup-form");
 const inputs = document.querySelectorAll(".sign__popup-item");
 const buttonSend = document.querySelector(".sign__send-code");
 
-form.addEventListener("input", ({ target }) => {
-  if (code.value.match(/[^0-9\^+]/g)) {
-    code.value = code.value.slice(0, target.value.length - 1);
-  }
 
-  if (number.value.match(/[^0-9]/g)) {
-    number.value = number.value.slice(0, target.value.length - 1);
-  }
-});
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();

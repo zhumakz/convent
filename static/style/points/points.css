@@ -6,12 +6,6 @@
     padding: 50px 24px 180px;
 }
 
-.points__list {
-    display: flex;
-    flex-direction: column;
-    gap: 24px 0;
-}
-
 .points__button,
 .points__button-image {
     width: 100%;
@@ -142,4 +136,31 @@
 
 .points__popup-descr {
     margin-top: auto;
+}
+
+.points__title {
+    font-weight: 900;
+    margin-top: 8px;
+}
+
+.points__text {
+    margin-top: 20px;
+    color: var(--white);
+}
+
+.points__list {
+    margin-top: 20px;
+    display: flex;
+    gap:5px;
+    flex-wrap: wrap;
+}
+
+.points__item {
+    font-size: 5px;
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+    align-items: center;
 }

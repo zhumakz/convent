@@ -1,0 +1,151 @@
+
+.register__text {
+    margin-top: 23px;
+    font-size: 20px;
+    color: var(--white);
+}
+
+.sing__inner {
+    min-height: calc(var(--vh, 1vh) * 100);
+    display: flex;
+    flex-direction: column;
+}
+
+.register__form {
+    margin-top: 35px;
+    display: flex;
+    flex-grow: 1;
+    gap: 20px 29px;
+    flex-wrap: wrap;
+}
+
+.register__item {
+    width: calc(100% - 129px);
+    border-bottom: 2px solid #D9D9D9;
+
+    &:first-child {
+        width: 100px;
+        flex-shrink: 0;
+    }
+}
+
+.register__label {
+    font-size: 14px;
+    color: rgb(255, 255, 255, .6);
+}
+
+.register__input {
+    width: 100%;
+    margin-top: 18px;
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--white);
+    line-height: 29px;
+    padding-bottom: 12px;
+}
+
+.register__bottom {
+    width: 100%;
+    margin-top: auto;
+}
+
+.register__bottom-text {
+    font-size: 13px;
+    margin: 34px auto 0;
+    max-width: 280px;
+    text-align: center;
+    color: rgb(255, 255, 255, .6);
+}
+
+.register__text-link {
+    color: #23B0FF;
+}
+
+
+
+
+.register__new-number {
+    margin-top: 17px;
+    color: #23B0FF;
+}
+
+.register__item-full {
+    border-bottom: 2px solid #D9D9D9;
+    width: 100%;
+    display: flex;
+    gap: 0 20px;
+    padding: 0 9px 12px;
+    margin-top: 50px;
+    color: var(--white);
+}
+
+
+.register__item-full >span {
+    opacity: .6;
+}
+
+.register__item-full--second {
+    margin-top: 39px;
+}
+
+.register__select-wrapper {
+    width: 100%;
+    position: relative;
+}
+
+.register__select {
+    height: 54px;
+    padding: 0 12px;
+    color: var(--white);
+    background-color: #D9D9D94D;
+    width: 100%;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.register__select  > span {
+    opacity: .6;
+}
+
+.register__select-list {
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    border-radius: 4px;
+    display: none;
+    flex-direction: column;
+    gap: 5px 0;
+    color: #000;
+    align-items: flex-start;
+    padding: 10px;
+    transform: translateY(100%);
+
+}
+
+.register__list-button {
+    width: 100%;
+    text-align: start;
+}
+
+
+
+.register__select--active svg {
+    transform: rotate(180deg);
+}
+.register__select--active + .register__select-list {
+    display: flex;
+}
+
+.register__item-age {
+    display: flex;
+    border-bottom: none;
+    flex-direction: column;
+}
+.register__item-age  input {
+    width: 100px;
+    border-bottom: 2px solid var(--white);
+}

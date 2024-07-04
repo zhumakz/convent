@@ -9,63 +9,64 @@
 {% endblock %}
 
 {% block content %}
-<div class="popup">
-  <div class="popup-container">
-    <div class="top">
-      <button class="popup-close">
-        <img class="popup-close__image" src="{% static 'image/back.png' %}" />
-      </button>
-      <span class="top__title">Вход в профиль</span>
+    <div class="popup">
+        <div class="popup-container">
+            <div class="top">
+                <button class="popup-close">
+                    <img class="popup-close__image" src="{% static 'image/back.png' %}"/>
+                </button>
+                <span class="top__title">Вход в профиль</span>
+            </div>
+
+            <p class="sign__text">
+                Введите код, который мы отправили на номер <span id="phoneNumberDisplay">+7 707 777-77-10</span>
+            </p>
+
+            <button class="sign__new-number">Другой номер</button>
+            <form class="sign__popup-form" id="verifyForm">
+                <input class="sign__popup-item" inputmode="numeric" name="sms_code" value="" maxlength="1"/>
+                <input class="sign__popup-item" inputmode="numeric" name="sms_code" value="" maxlength="1"/>
+                <input class="sign__popup-item" inputmode="numeric" name="sms_code" value="" maxlength="1"/>
+                <input class="sign__popup-item" inputmode="numeric" name="sms_code" value="" maxlength="1"/>
+            </form>
+            <span class="error-message-popup"></span>
+            <button class="sign__send-code" disabled>Выслать снова, 0:59</button>
+        </div>
     </div>
 
-    <p class="sign__text">
-      Введите код, который мы отправили на номер  <span id="phoneNumberDisplay">+7 707 777-77-10</span>
-    </p>
+    <section class="sign">
+        <div class="container sing__inner">
+            <div class="top">
+                <a class="top__button" href="{% url 'home' %}">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span class="top__title">Вход в профиль</span>
+            </div>
+            <p class="sign__text">
+                Введите ваш номер телефона. На него мы отправим SMS - сообщения с кодом для входа в профиль
+            </p>
+            <form class="sign__form" id="loginForm">
+                <div class="sign__item">
+                    <label class="sign__label">Номер телефона</label>
+                    <input class="sign__input" inputmode="tel" id="phoneNumber" name="number" type="text"
+                           placeholder="+7 (777) 000-00-00" value=""/>
+                    <span class="error-message"></span>
+                </div>
 
-    <button class="sign__new-number">Другой номер</button>
-    <form class="sign__popup-form" id="verifyForm">
-      <input class="sign__popup-item" inputmode="numeric" name="sms_code" value="" maxlength="1" />
-      <input class="sign__popup-item" inputmode="numeric" name="sms_code" value="" maxlength="1" />
-      <input class="sign__popup-item" inputmode="numeric" name="sms_code" value="" maxlength="1" />
-      <input class="sign__popup-item" inputmode="numeric" name="sms_code" value="" maxlength="1" />
-    </form>
-              <span class="error-message-popup"></span>
-    <button class="sign__send-code" disabled>Выслать снова, 0:59</button>
-  </div>
-</div>
+                <div class="sign__bottom">
+                    <button class="button" type="submit">Продолжить</button>
+                    <p class="sign__bottom-text">
+                        Продолжая, я даю согласие на
+                        <a class="sign__text-link" href="#">обработку и передачу персональных данных</a> и
+                        <a class="sign__text-link" href="#">принимаю условия пользовательского соглашения.</a>
+                    </p>
+                </div>
 
-<section class="sign">
-  <div class="container sing__inner">
-    <div class="top">
-      <a class="top__button" href="{% url 'home' %}">
-        <svg width="46" height="46">
-          <use href="{% static 'image/icons.svg' %}#back"></use>
-        </svg>
-      </a>
-      <span class="top__title">Вход в профиль</span>
-    </div>
-    <p class="sign__text">
-      Введите ваш номер телефона. На него мы отправим SMS - сообщения с кодом для входа в профиль
-    </p>
-    <form class="sign__form" id="loginForm">
-      <div class="sign__item">
-        <label class="sign__label">Номер телефона</label>
-        <input class="sign__input" inputmode="tel" id="phoneNumber" name="number" type="text" placeholder="+7 (777) 000-00-00" value="" />
-          <span class="error-message"></span>
-      </div>
-
-      <div class="sign__bottom">
-        <button class="button" type="submit">Продолжить</button>
-        <p class="sign__bottom-text">
-          Продолжая, я даю согласие на
-          <a class="sign__text-link" href="#">обработку и передачу персональных данных</a> и
-          <a class="sign__text-link" href="#">принимаю условия пользовательского соглашения.</a>
-        </p>
-      </div>
-
-    </form>
-  </div>
-</section>
+            </form>
+        </div>
+    </section>
 {% endblock %}
 
 {% block extra_js %}
@@ -73,163 +74,185 @@
     <script src="{% static 'js/inputmask/inputmask.min.js' %}"></script>
     <script>
 
-    document.addEventListener("DOMContentLoaded", function() {
-    const form = document.getElementById("loginForm");
-    const verifyForm = document.getElementById("verifyForm");
-    const popupForm = document.querySelector(".sign__popup-form");
-    const newNumberButton = document.querySelector(".sign__new-number");
-    const resendButton = document.querySelector(".sign__send-code");
-    const phoneNumberDisplay = document.getElementById("phoneNumberDisplay");
 
-    let activeIndex = 0;
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("loginForm");
+            const verifyForm = document.getElementById("verifyForm");
+            const popupForm = document.querySelector(".sign__popup-form");
+            const newNumberButton = document.querySelector(".sign__new-number");
+            const resendButton = document.querySelector(".sign__send-code");
+            const phoneNumberDisplay = document.getElementById("phoneNumberDisplay");
+            const errorMessage = document.querySelector(".error-message");
 
-    let phoneInput = document.getElementById('phoneNumber');
-    let im = new Inputmask("+7 (999) 999-99-99");
-    im.mask(phoneInput);
+            const errorMessagePopup = document.querySelector(".error-message-popup");
 
-    form.addEventListener("submit", function(e) {
-        e.preventDefault();
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
 
-        phoneInput.addEventListener("input", function(e) {
-            hideError();
-        });
+            function hideError() {
+                errorMessage.style.display = 'none';
+            }
 
-        let unmaskedValue2 = phoneInput.inputmask.unmaskedvalue();
-        const phoneNumber = '+7' + unmaskedValue2;
-        let isValid = phoneInput.inputmask.isValid();
-        if (isValid) {
-            hideError();
-            fetch("{% url 'login' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "X-Requested-With": "XMLHttpRequest",
-                    "X-CSRFToken": "{{ csrf_token }}",
-                },
-                body: new URLSearchParams({
-                    phone_number: phoneNumber,
-                    action: "send_sms"
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "ok") {
-                    phoneNumberDisplay.textContent = phoneInput.value;
-                    document.querySelector(".popup").classList.add("popup--active");
-                    document.body.classList.add("body--overflow");
+            function showErrorPopup(message) {
+                errorMessagePopup.textContent = message;
+                errorMessagePopup.style.display = 'flex';
+            }
+
+            function hideErrorPopup() {
+                errorMessagePopup.style.display = 'none';
+            }
+
+            let activeIndex = 0;
+
+            let phoneInput = document.getElementById('phoneNumber');
+            let im = new Inputmask("+7 (999) 999-99-99");
+            im.mask(phoneInput);
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                phoneInput.addEventListener("input", function (e) {
                     hideError();
-                    startResendTimer(); // Запуск таймера после успешной отправки SMS
+                });
+
+                let unmaskedValue2 = phoneInput.inputmask.unmaskedvalue();
+                const phoneNumber = '+7' + unmaskedValue2;
+                let isValid = phoneInput.inputmask.isValid();
+                if (isValid) {
+                    hideError();
+                    fetch("{% url 'login' %}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        },
+                        body: new URLSearchParams({
+                            phone_number: phoneNumber,
+                            action: "send_sms"
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "ok") {
+                                phoneNumberDisplay.textContent = phoneInput.value;
+                                document.querySelector(".popup").classList.add("popup--active");
+                                document.body.classList.add("body--overflow");
+                                hideError();
+                                startResendTimer(); // Запуск таймера после успешной отправки SMS
+                            } else {
+                                showError(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            showError('Ошибка соединения с сервером.');
+                        });
                 } else {
-                    showError(data.message);
+                    showError('Введите корректный номер телефона');
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showError('Ошибка соединения с сервером.');
             });
-        } else {
-            showError('Введите корректный номер телефона');
-        }
-    });
 
-    popupForm.addEventListener("input", function(e) {
-        const inputs = Array.from(popupForm.querySelectorAll(".sign__popup-item"));
-        const target = e.target;
-        hideErrorPopup();
-        if (target.value.match(/[^0-9]/g)) {
-            target.value = target.value.slice(0, target.value.length - 1);
-            return;
-        }
+            popupForm.addEventListener("input", function (e) {
+                const inputs = Array.from(popupForm.querySelectorAll(".sign__popup-item"));
+                const target = e.target;
+                hideErrorPopup();
+                if (target.value.match(/[^0-9]/g)) {
+                    target.value = target.value.slice(0, target.value.length - 1);
+                    return;
+                }
 
-        if (target.value.length === 1 && activeIndex < inputs.length - 1) {
-            activeIndex++;
-            inputs[activeIndex].focus();
-        }
+                if (target.value.length === 1 && activeIndex < inputs.length - 1) {
+                    activeIndex++;
+                    inputs[activeIndex].focus();
+                }
 
-        if (inputs.every(input => input.value.length === 1)) {
-            const smsCode = inputs.map(input => input.value).join("");
-            fetch("{% url 'verify_login' %}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "X-Requested-With": "XMLHttpRequest",
-                    "X-CSRFToken": "{{ csrf_token }}",
-                },
-                body: new URLSearchParams({
-                    sms_code: smsCode,
-                    action: "verify_login"
+                if (inputs.every(input => input.value.length === 1)) {
+                    const smsCode = inputs.map(input => input.value).join("");
+                    fetch("{% url 'verify_login' %}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        },
+                        body: new URLSearchParams({
+                            sms_code: smsCode,
+                            action: "verify_login"
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "ok") {
+                                window.location.href = data.redirect_url;
+                            } else {
+                                showErrorPopup(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            showErrorPopup("Ошибка соединения с сервером.");
+                        });
+                }
+            });
+
+            popupForm.addEventListener("keydown", function (e) {
+                const inputs = Array.from(popupForm.querySelectorAll(".sign__popup-item"));
+                const target = e.target;
+
+                if (e.key === "Backspace" && target.value === "" && activeIndex > 0) {
+                    activeIndex--;
+                    inputs[activeIndex].focus();
+                }
+            });
+
+            resendButton.addEventListener("click", function () {
+                let unmaskedValue2 = phoneInput.inputmask.unmaskedvalue();
+                const phoneNumber = '+7' + unmaskedValue2;
+                hideErrorPopup();
+                fetch("{% url 'resend_sms' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRFToken": "{{ csrf_token }}",
+                    },
+                    body: new URLSearchParams({
+                        phone_number: phoneNumber,
+                        action: "resend_sms"
+                    })
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "ok") {
-                    window.location.href = data.redirect_url;
-                } else {
-                    showErrorPopup(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showErrorPopup("Ошибка соединения с сервером.");
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "ok") {
+                            resendButton.disabled = true;
+                            startResendTimer();
+                        } else {
+                            showErrorPopup("data.message");
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
             });
-        }
-    });
 
-    popupForm.addEventListener("keydown", function(e) {
-        const inputs = Array.from(popupForm.querySelectorAll(".sign__popup-item"));
-        const target = e.target;
+            newNumberButton.addEventListener("click", function () {
+                location.reload();
+            });
 
-        if (e.key === "Backspace" && target.value === "" && activeIndex > 0) {
-            activeIndex--;
-            inputs[activeIndex].focus();
-        }
-    });
-
-    resendButton.addEventListener("click", function() {
-        let unmaskedValue2 = phoneInput.inputmask.unmaskedvalue();
-        const phoneNumber = '+7' + unmaskedValue2;
-        hideErrorPopup();
-        fetch("{% url 'resend_sms' %}", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "X-Requested-With": "XMLHttpRequest",
-                "X-CSRFToken": "{{ csrf_token }}",
-            },
-            body: new URLSearchParams({
-                phone_number: phoneNumber,
-                action: "resend_sms"
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === "ok") {
+            function startResendTimer() {
+                let time = 59;
                 resendButton.disabled = true;
-                startResendTimer();
-            } else {
-                showErrorPopup("data.message");
+                const interval = setInterval(() => {
+                    resendButton.textContent = `Выслать снова через ${time > 9 ? time : "0" + time}`;
+                    if (time <= 0) {
+                        resendButton.disabled = false;
+                        resendButton.textContent = "Выслать смс код снова";
+                        clearInterval(interval);
+                    }
+                    time--;
+                }, 1000);
             }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-
-    newNumberButton.addEventListener("click", function() {
-        location.reload();
-    });
-
-    function startResendTimer() {
-        let time = 59;
-        resendButton.disabled = true;
-        const interval = setInterval(() => {
-            resendButton.textContent = `Выслать снова через ${time > 9 ? time : "0" + time}`;
-            if (time <= 0) {
-                resendButton.disabled = false;
-                resendButton.textContent = "Выслать смс код снова";
-                clearInterval(interval);
-            }
-            time--;
-        }, 1000);
-    }
-});
+        });
     </script>
 {% endblock %}
