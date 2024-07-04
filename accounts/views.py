@@ -25,10 +25,14 @@ def registration_view(request):
             user = form.save(commit=False)
             user.set_password(None)
             user.save()
-            return redirect('login')
+            return redirect('registration_success')
     else:
         form = RegistrationForm()
     return render(request, 'accounts/registration.html', {'form': form})
+
+
+def registration_success_view(request):
+    return render(request, 'accounts/registration-success.html')
 
 
 def login_and_verify_view(request):

@@ -1,0 +1,26 @@
+.register__item {
+    width: calc(100%);
+    border-bottom: 2px solid #D9D9D9;
+
+    &:first-child {
+        width: calc(100%);
+    }
+}
+
+.register__item-age {
+    border-bottom: none;
+}
+
+.register__select:invalid {
+    color: var(--white);
+}
+
+select option {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.form-error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}

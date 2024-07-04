@@ -1,11 +1,136 @@
 {% extends base_template %}
+{% load static %}
+{% load i18n %}
 
 {% block title %}Register{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/register/register.css' %}">
+    <link rel="stylesheet" href="{% static 'style/custom.css' %}">
+{% endblock %}
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-</form>
+    <section class="register">
+        <div class="container register__inner">
+            <div class="top">
+                <a class="top__button" href="{% url 'home' %}">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span class="top__title">Страница регистрации</span>
+            </div>
+            <p class="register__text">
+                Введите ваш номер телефона. На него мы отправим SMS - сообщения с
+                кодом для входа в профиль
+            </p>
+            <form class="register__form" method="post">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="form-error">
+                        <ul>
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <div class="register__item">
+                    <label class="register__label" for="id_phone_number">{% trans "Номер телефона" %}</label>
+                    {{ form.phone_number }}
+                    {% if form.phone_number.errors %}
+                        <div class="form-error">
+                            <ul>
+                                {% for error in form.phone_number.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="register__item-full register__item-full--second">
+                    <label class="register__label" for="id_name">{% trans "Имя" %}</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="form-error">
+                            <ul>
+                                {% for error in form.name.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="register__item-full register__item-full--second">
+                    <label class="register__label" for="id_surname">{% trans "Фамилия" %}</label>
+                    {{ form.surname }}
+                    {% if form.surname.errors %}
+                        <div class="form-error">
+                            <ul>
+                                {% for error in form.surname.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="register__select-wrapper">
+                    <label class="register__label" for="id_city">{% trans "Город" %}</label>
+                    {{ form.city }}
+                    {% if form.city.errors %}
+                        <div class="form-error">
+                            <ul>
+                                {% for error in form.city.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="register__item register__item-age">
+                    <label class="register__label" for="id_age">{% trans "Впиши возраст (количество лет)" %}</label>
+                    {{ form.age }}
+                    {% if form.age.errors %}
+                        <div class="form-error">
+                            <ul>
+                                {% for error in form.age.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="register__bottom">
+                    <button class="button" type="submit">{% trans "Зарегистрироваться" %}</button>
+                    <p class="register__bottom-text">
+                        {% trans "Продолжая, я даю согласие на" %}
+                        <a class="register__text-link"
+                           href="#">{% trans "обработку и передачу персональных данных" %}</a>
+                        {% trans "и" %}
+                        <a class="register__text-link"
+                           href="#">{% trans "принимаю условия пользовательского соглашения." %}</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block extra_js %}
+    {#    <script src="{% static 'js/register/register.js' %}"></script>#}
+    <script src="{% static 'js/inputmask/inputmask.min.js' %}"></script>
+    <script>
+{##}
+{#        document.addEventListener("DOMContentLoaded", function () {#}
+{#            let phoneInput = document.getElementById('id_phone_number');#}
+{#            let im = new Inputmask("+7 (999) 999-99-99");#}
+{#            im.mask(phoneInput);#}
+{#        });#}
+    </script>
 {% endblock %}

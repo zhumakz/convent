@@ -1,0 +1,18 @@
+{% extends base_template %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Register{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/success/success.css' %}">
+    <link rel="stylesheet" href="{% static 'style/custom.css' %}">
+{% endblock %}
+{% block content %}
+    <section class="error">
+        <h3 class="error__title">Регистрация успешна!</h3>
+        <img class="error__icon" src="{% static 'image/star.png' %}"  alt="icon"/>
+        <p class="error__text">Вы успешно <br>зарегистрированы! Пожалуйста, подойдите к стойке администратора для активации вашего аккаунта.</p>
+            <a href="{% url 'login' %}" class="button-s  error__button">Войти</a>
+    </section>
+{% endblock %}

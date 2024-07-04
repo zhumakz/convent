@@ -1,0 +1,30 @@
+.error {
+    height: 100vh;
+    background: linear-gradient(180deg, #47C0AD 0%, #282B30 40%);
+border-radius: 20px 20px 0 0;
+padding: 150px 80px;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+
+.error__title {
+    font-size: 20px;
+}
+
+.error__icon {
+    margin-top: 38px;
+}
+
+.error__text {
+    margin-top: 330px;
+    font-weight: 900;
+    color: var(--white);
+    text-align: center;
+    max-width: 345px;
+    font-size: 32px;
+}
+
+.error__button {
+    margin-top: auto;
+}
