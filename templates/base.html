@@ -6,22 +6,21 @@
     <title>{% block title %}My Project{% endblock %}</title>
     {% load static %}
     {% load i18n %}
-    <link rel="icon" href="{% static 'image/../favicon.ico' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     <link rel="stylesheet" href="{% static 'style/main.css' %}">
+    <link rel="stylesheet" href="{% static 'style/custom.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body class="body--overflow">
-    {% include "includes/preloader.html" %}
+{% include "includes/preloader.html" %}
+{% include "includes/menu.html" %}
 
 
-    {% include "includes/menu.html" %}
+{% block content %}{% endblock %}
 
-
-    {% block content %}{% endblock %}
-
-    <script src="{% static 'js/main.js' %}"></script>
-    <script src="{% static 'js/custom.js' %}"></script>
-    {% block extra_js %}{% endblock %}
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>
 
