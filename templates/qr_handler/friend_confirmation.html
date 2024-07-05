@@ -5,7 +5,7 @@
 {% block title %}Friend Confirmation{% endblock %}
 
 {% block extra_css %}
-      <link rel="stylesheet" href="{% static 'style/final/final.css' %}">
+    <link rel="stylesheet" href="{% static 'style/final/final.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -44,18 +44,23 @@
                             alt="layers"
                     />
                 </div>
-                <svg class="final__coins" width="150" height="150">
-                    <use href="{% static 'image/icons.svg' %}#coins"></use>
-                </svg>
+                <img
+                        class="final__coins"
+                        src="{% static 'image/coins.png' %}"
+                        width="150"
+                        height="150"
+                        alt="icon"
+                />
             </div>
-            <div class="final__coins-add">
-                <span class="count">+{{ coins_transferred }}</span>
-                <span>Dos <br/>Coins</span>
-            </div>
-            <p class="final__bottom-text">
-                Поздравляем! <br/>Dos Coins переведены
-            </p>
-            <a href="{% url 'profile' %}" class="button final__button">Свернуть</a>
+   
+        <div class="final__coins-add">
+            <span class="count">+{{ coins_transferred }}</span>
+            <span>Dos <br/>Coins</span>
+        </div>
+        <p class="final__bottom-text">
+            Поздравляем! <br/>Dos Coins переведены
+        </p>
+        <a href="{% url 'profile' %}" class="button final__button">Свернуть</a>
         </div>
     </section>
 {% endblock %}
