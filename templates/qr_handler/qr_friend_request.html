@@ -36,11 +36,44 @@
                 получите Dos Сoins</p>
 
             {% if message %}
-                <p  class="add__text">{{ message }}</p>
+                <p class="add__text">{{ message }}</p>
             {% endif %}
 
             <img class="add__qr" src="{% if qr_code_url %}{{ qr_code_url.url }} {% endif %}" alt="qr"/>
             <a href="{% url 'profile' %}" class="button-s popups-close">Отмена</a>
         </div>
     </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var interval = 3000; // 3 seconds
+            var duration = 120000; // 2 minutes
+            var elapsed = 0;
+
+            function checkFriendRequestStatus() {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', '{% url "check_friend_request_status" %}', true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.status === 'confirmed') {
+                            window.location.href = '{% url "friend_confirmation" %}';
+                        }
+                    }
+                };
+                xhr.send();
+            }
+
+            function startPolling() {
+                var intervalId = setInterval(function () {
+                    elapsed += interval;
+                    if (elapsed >= duration) {
+                        clearInterval(intervalId);
+                    }
+                    checkFriendRequestStatus();
+                }, interval);
+            }
+
+            startPolling();
+        });
+    </script>
 {% endblock %}

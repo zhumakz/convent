@@ -6,7 +6,7 @@ import json
 
 from campaigns.services import CampaignService
 from convent import settings
-from friends.models import FriendRequest
+from friends.models import FriendRequest, Friendship
 from lectures.models import Lecture
 from coins.models import Transaction
 from accounts.models import User
@@ -134,7 +134,7 @@ def friend_confirmation(request):
 
     try:
         to_user = User.objects.get(id=user_id)
-        coins_transferred = 5  # settings.FRIEND_REWARD_COINS  Предполагаем, что это количество коинов за дружбу
+        coins_transferred = 2  # settings.FRIEND_REWARD_COINS  Предполагаем, что это количество коинов за дружбу
         context = {
             'to_user': to_user,
             'coins_transferred': coins_transferred
@@ -279,3 +279,19 @@ def qr_response_view(request):
         'error_message': error_message,
     }
     return render(request, 'qr_handler/qr_response.html', context)
+
+@login_required
+def check_friend_request_status(request):
+    data = request.session.get('qr_data')
+    if not data:
+        return JsonResponse({'status': 'error', 'message': 'Данные QR не найдены'}, status=400)
+
+    user_id = data.get('user_id')
+    try:
+        to_user = User.objects.get(id=user_id)
+        # Проверка, если уже дружат
+        if FriendService.are_friends(request.user, to_user):
+            return JsonResponse({'status': 'confirmed'})
+        return JsonResponse({'status': 'pending'})
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Пользователь не найден'}, status=404)
