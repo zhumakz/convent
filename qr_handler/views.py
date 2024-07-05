@@ -19,17 +19,14 @@ from shop.services import ShopService
 
 logger = logging.getLogger(__name__)
 
-
 @login_required
 def test_page(request):
     return render(request, 'qr_handler/test_page.html')
-
 
 @login_required
 def qr_scan_view(request):
     # Отображение страницы с формой для сканирования QR-кода
     return render(request, 'qr_handler/qr.html')
-
 
 @login_required
 def handle_qr_data(request):
@@ -59,20 +56,27 @@ def handle_qr_data(request):
                 elif lecture_end:
                     return redirect('qr_lecture_end')
                 else:
-                    return redirect('profile')
+                    request.session['error_message'] = 'Invalid QR data'
+                    request.session['positiveResponse'] = False
+                    return redirect('qr_response')
 
             except json.JSONDecodeError:
-                # Обработка ошибки декодирования JSON
-                return JsonResponse({'error': 'Invalid QR data'}, status=400)
+                request.session['error_message'] = 'Invalid QR data'
+                request.session['positiveResponse'] = False
+                return redirect('qr_response')
 
-    return redirect('profile')
+    request.session['error_message'] = 'Invalid request'
+    request.session['positiveResponse'] = False
+    return redirect('qr_response')
 
 
 @login_required
 def qr_friend_request(request):
     data = request.session.get('qr_data')
     if not data:
-        return redirect('profile')
+        request.session['error_message'] = 'Данные QR не найдены'
+        request.session['positiveResponse'] = False
+        return redirect('qr_response')
 
     user_id = data.get('user_id')
 
@@ -82,56 +86,72 @@ def qr_friend_request(request):
         # Проверка, если уже дружат
         if FriendService.are_friends(request.user, to_user):
             request.session['qr_data']['user_id'] = to_user.id  # Обновляем данные в сессии
-            return redirect('friend_confirmation')
+            request.session['positiveResponse'] = True
+            request.session['error_message'] = 'Вы уже друзья!'
+            return redirect('qr_response')
 
-        success, message = FriendService.send_friend_request(request.user, to_user)
-        if success:
+        # Попытка отправить запрос дружбы
+        state, message = FriendService.send_friend_requestQR(request.user, to_user)
+
+        if state == 'new_request' or state == 'already_sent':
+            # В любом случае показываем qr_friend_request
+            context = {
+                'message': message,
+                'success': state == 'new_request',
+                'to_user': to_user,
+                'qr_code_url': request.user.qr_code
+            }
+            return render(request, 'qr_handler/qr_friend_request.html', context)
+
+        elif state == 'now_friends':
             request.session['qr_data']['user_id'] = to_user.id  # Обновляем данные в сессии
             return redirect('friend_confirmation')
-        context = {
-            'message': message,
-            'success': success,
-            'to_user': to_user,
-            'qr_code_url': request.user.qr_code
-        }
-        return render(request, 'qr_handler/qr_friend_request.html', context)
+
+        elif state == 'error':
+            request.session['error_message'] = message
+            request.session['positiveResponse'] = False
+            return redirect('qr_response')
+
     except User.DoesNotExist:
-        return JsonResponse({'error': 'User not found'}, status=404)
+        request.session['error_message'] = 'Пользователь не найден'
+        request.session['positiveResponse'] = False
+        return redirect('qr_response')
     except ValidationError as e:
-        context = {
-            'message': e.messages[0],
-            'success': False,
-            'to_user': None,
-            'qr_code_url': None,
-        }
-        return render(request, 'qr_handler/qr_friend_request.html', context)
+        request.session['error_message'] = e.messages[0]
+        request.session['positiveResponse'] = False
+        return redirect('qr_response')
 
 
 @login_required
 def friend_confirmation(request):
     data = request.session.get('qr_data')
     if not data:
-        return redirect('profile')
+        request.session['error_message'] = 'No QR data found'
+        request.session['positiveResponse'] = False
+        return redirect('qr_response')
 
     user_id = data.get('user_id')
 
     try:
         to_user = User.objects.get(id=user_id)
-        coins_transferred = 5  #  settings.FRIEND_REWARD_COINS  Предполагаем, что это количество коинов за дружбу
+        coins_transferred = 5  # settings.FRIEND_REWARD_COINS  Предполагаем, что это количество коинов за дружбу
         context = {
             'to_user': to_user,
             'coins_transferred': coins_transferred
         }
         return render(request, 'qr_handler/friend_confirmation.html', context)
     except User.DoesNotExist:
-        return JsonResponse({'error': 'User not found'}, status=404)
-
+        request.session['error_message'] = 'User not found'
+        request.session['positiveResponse'] = False
+        return redirect('qr_response')
 
 @login_required
 def qr_purchase_detail(request):
     data = request.session.get('qr_data')
     if not data:
-        return redirect('profile')
+        request.session['error_message'] = 'No QR data found'
+        request.session['positiveResponse'] = False
+        return redirect('qr_response')
 
     purchase_id = data.get('purchase_id')
     purchase = ShopService.get_purchase_by_id(purchase_id)
@@ -153,7 +173,9 @@ def qr_purchase_detail(request):
             'purchase': purchase,
             'coins_transferred': coins_transferred
         }
-        return render(request, 'qr_handler/purchase_confirmation.html', context)
+        request.session['positiveResponse'] = success
+        request.session['error_message'] = message
+        return redirect('qr_response')
 
     context = {
         'purchase': purchase,
@@ -162,12 +184,13 @@ def qr_purchase_detail(request):
     }
     return render(request, 'qr_handler/qr_purchase_detail.html', context)
 
-
 @login_required
 def qr_campaign_vote(request):
     data = request.session.get('qr_data')
     if not data:
-        return redirect('profile')
+        request.session['error_message'] = 'No QR data found'
+        request.session['positiveResponse'] = False
+        return redirect('qr_response')
 
     campaign_id = data.get('campaign_vote')
     campaign = CampaignService.get_campaign_by_id(campaign_id)
@@ -191,14 +214,17 @@ def qr_campaign_vote(request):
         'campaign': campaign,
         'voted': voted,
     }
-    return render(request, 'qr_handler/qr_campaign_vote.html', context)
-
+    request.session['positiveResponse'] = success
+    request.session['error_message'] = message
+    return redirect('qr_response')
 
 @login_required
 def qr_lecture_start(request):
     data = request.session.get('qr_data')
     if not data:
-        return redirect('profile')
+        request.session['error_message'] = 'No QR data found'
+        request.session['positiveResponse'] = False
+        return redirect('qr_response')
 
     lecture_id = data.get('lecture_start')  # Предполагаем, что в данных QR-кода есть идентификатор лекции
     lecture = LectureService.get_lecture_by_id(lecture_id)
@@ -214,14 +240,17 @@ def qr_lecture_start(request):
         'lecturePassed': lecture_passed,
         'coins_transferred': coins_transferred
     }
-    return render(request, 'qr_handler/qr_lecture_detail.html', context)
-
+    request.session['positiveResponse'] = success
+    request.session['error_message'] = message
+    return redirect('qr_response')
 
 @login_required
 def qr_lecture_end(request):
     data = request.session.get('qr_data')
     if not data:
-        return redirect('profile')
+        request.session['error_message'] = 'No QR data found'
+        request.session['positiveResponse'] = False
+        return redirect('qr_response')
 
     lecture_id = data.get('lecture_end')  # Предполагаем, что в данных QR-кода есть идентификатор лекции
     lecture = LectureService.get_lecture_by_id(lecture_id)
@@ -237,4 +266,16 @@ def qr_lecture_end(request):
         'lecturePassed': lecture_passed,
         'coins_transferred': coins_transferred
     }
-    return render(request, 'qr_handler/qr_lecture_detail.html', context)
+    request.session['positiveResponse'] = success
+    request.session['error_message'] = message
+    return redirect('qr_response')
+
+@login_required
+def qr_response_view(request):
+    positive_response = request.session.get('positiveResponse', False)
+    error_message = request.session.get('error_message', 'Unknown error')
+    context = {
+        'positiveResponse': positive_response,
+        'error_message': error_message,
+    }
+    return render(request, 'qr_handler/qr_response.html', context)

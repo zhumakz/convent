@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}Scan QR code{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/qr/qr.css' %}">
@@ -10,31 +10,24 @@
 {% endblock %}
 
 {% block content %}
-    <section class="profile">
-        <h2>Scan QR Code</h2>
-
-    <form id="qr-form" action="{% url 'handle_qr_data' %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" id="qr_data" name="qr_data" required>
-    </form>
-
-
-        <section class="qr">
-            <div class="popup-container">
-                <div class="top">
-                    <a class="top__button popup-close" href="{% url 'profile' %}">
-                        <svg width="46" height="46">
-                            <use href="{% static 'image/icons.svg' %}#back "></use>
-                        </svg>
-                    </a>
-                    <span class="top__title">Scan QR code</span>
-                </div>
-                <div id="my-qr-reader" class="qr__content">
-                    <img class="qr__image" src="{% static 'image/qr.png' %}" alt="qr"/>
-                </div>
+    <section class="qr">
+        <div class="popup-container">
+            <div class="top">
+                <a class="top__button popup-close" href="{% url 'profile' %}">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back "></use>
+                    </svg>
+                </a>
+                <span class="top__title">Scan QR code</span>
             </div>
-        </section>
-
+            <form id="qr-form" action="{% url 'handle_qr_data' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" id="qr_data" name="qr_data" required>
+            </form>
+            <div id="my-qr-reader" class="qr__content">
+                <img class="qr__image" src="{% static 'image/qr.png' %}" alt="qr"/>
+            </div>
+        </div>
     </section>
 {% endblock %}
 
@@ -42,7 +35,7 @@
     <script src="{% static 'js/html5-qrcode.min.js' %}"></script>
     <script>
         let isProcessing = false;
-        const html5QrCodeScanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbox: 250 });
+        const html5QrCodeScanner = new Html5QrcodeScanner("my-qr-reader", {fps: 10, qrbox: 250});
 
         html5QrCodeScanner.render(onScanSuccess);
 
