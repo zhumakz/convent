@@ -1,15 +1,22 @@
 from django.contrib import admin
-from .models import DoscointBalance, Transaction
+from .models import DoscointBalance, Transaction, TransactionCategory
 
 
-class DoscointBalanceAdmin(admin.ModelAdmin):
-    list_display = ('user', 'balance')
+@admin.register(TransactionCategory)
+class TransactionCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price')
+    readonly_fields = ('name',)
 
 
+@admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('sender', 'recipient', 'amount', 'timestamp', 'description')
-    readonly_fields = ('sender', 'recipient', 'amount', 'timestamp', 'description')
+    list_display = ('sender', 'recipient', 'amount', 'timestamp', 'category', 'is_positive')
+    search_fields = ('sender__username', 'recipient__username', 'category__name')
+    list_filter = ('category', 'is_positive')
 
 
-admin.site.register(DoscointBalance, DoscointBalanceAdmin)
-admin.site.register(Transaction, TransactionAdmin)
+@admin.register(DoscointBalance)
+class DoscointBalanceAdmin(admin.ModelAdmin):
+    list_display = ('user', 'balance', 'total_earned', 'total_spent')
+    search_fields = ('user__username',)
+    list_filter = ('balance', 'total_earned', 'total_spent')

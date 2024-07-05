@@ -77,27 +77,25 @@ class FriendService:
         with db_transaction.atomic():
             Friendship.objects.create(user1=user1, user2=user2)
 
-            # Определяем количество койнов в зависимости от городов
+            # Определяем категорию транзакции в зависимости от городов пользователей
             if user1.city == user2.city:
-                coins = settings.SAME_CITY_FRIEND_REWARD
+                category_name = 'friend_bonus_same_city'
             else:
-                coins = settings.DIFFERENT_CITY_FRIEND_REWARD
+                category_name = 'friend_bonus_different_city'
 
-            # Создаем транзакции для обновления балансов пользователей
+            # Создаем транзакции для обоих пользователей
             CoinService.create_transaction(
                 sender=user1,
                 recipient=user1,
-                amount=coins,
                 description=__('Reward for adding friend {phone_number}').format(phone_number=user2.phone_number),
-                is_system_transaction=True
+                category_name=category_name
             )
 
             CoinService.create_transaction(
                 sender=user2,
                 recipient=user2,
-                amount=coins,
                 description=__('Reward for adding friend {phone_number}').format(phone_number=user1.phone_number),
-                is_system_transaction=True
+                category_name=category_name
             )
 
             # Удаляем все запросы на дружбу между этими пользователями
