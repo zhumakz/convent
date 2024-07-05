@@ -7,6 +7,7 @@ from django.http import JsonResponse
 import json
 
 from campaigns.services import CampaignService
+from coins.services import CoinService
 from convent import settings
 from friends.models import FriendRequest, Friendship
 from lectures.models import Lecture
@@ -172,8 +173,6 @@ def check_friend_request_status(request):
     except User.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Пользователь не найден'}, status=404)
 
-
-
 @login_required
 def qr_purchase_detail(request):
     data = request.session.get('qr_data')
@@ -212,8 +211,6 @@ def qr_purchase_detail(request):
         'purchase_amount': purchase.amount
     }
     return render(request, 'qr_handler/qr_purchase_detail.html', context)
-
-
 
 @login_required
 def qr_campaign_vote(request):
@@ -281,11 +278,13 @@ def campaign_vote_confirmation(request):
     }
 
     return render(request, 'qr_handler/campaign_vote_confirmation.html', context)
+
+
 @login_required
 def qr_lecture_start(request):
     data = request.session.get('qr_data')
     if not data:
-        request.session['error_message'] = 'No QR data found'
+        request.session['error_message'] = 'Данные QR не найдены'
         request.session['positiveResponse'] = False
         return redirect('qr_response')
 
@@ -293,8 +292,14 @@ def qr_lecture_start(request):
     lecture = LectureService.get_lecture_by_id(lecture_id)
 
     success, message = LectureService.register_lecture_start(request.user, lecture)
-    lecture_passed = LectureService.get_attendance(request.user, lecture).end_scanned
-    coins_transferred = settings.LECTURE_REWARD_COINS if lecture_passed else 0
+    attendance = LectureService.get_attendance(request.user, lecture)
+
+    lecture_passed = attendance.end_scanned if attendance else False
+
+    try:
+        coins_transferred = CoinService.get_price_by_category_name('lecture_bonus') if lecture_passed else 0
+    except ValidationError:
+        coins_transferred = 0
 
     context = {
         'message': message,
@@ -303,16 +308,14 @@ def qr_lecture_start(request):
         'lecturePassed': lecture_passed,
         'coins_transferred': coins_transferred
     }
-    request.session['positiveResponse'] = success
-    request.session['error_message'] = message
-    return redirect('qr_response')
+    return render(request, 'qr_handler/qr_lecture_detail.html', context)
 
 
 @login_required
 def qr_lecture_end(request):
     data = request.session.get('qr_data')
     if not data:
-        request.session['error_message'] = 'No QR data found'
+        request.session['error_message'] = 'Данные QR не найдены'
         request.session['positiveResponse'] = False
         return redirect('qr_response')
 
@@ -320,8 +323,14 @@ def qr_lecture_end(request):
     lecture = LectureService.get_lecture_by_id(lecture_id)
 
     success, message = LectureService.register_lecture_end(request.user, lecture)
-    lecture_passed = LectureService.get_attendance(request.user, lecture).end_scanned
-    coins_transferred = settings.LECTURE_REWARD_COINS if lecture_passed else 0
+    attendance = LectureService.get_attendance(request.user, lecture)
+
+    lecture_passed = attendance.end_scanned if attendance else False
+
+    try:
+        coins_transferred = CoinService.get_price_by_category_name('lecture_bonus') if lecture_passed else 0
+    except ValidationError:
+        coins_transferred = 0
 
     context = {
         'message': message,
@@ -330,11 +339,7 @@ def qr_lecture_end(request):
         'lecturePassed': lecture_passed,
         'coins_transferred': coins_transferred
     }
-    request.session['positiveResponse'] = success
-    request.session['error_message'] = message
-    return redirect('qr_response')
-
-
+    return render(request, 'qr_handler/qr_lecture_detail.html', context)
 @login_required
 def qr_response_view(request):
     positive_response = request.session.get('positiveResponse', False)

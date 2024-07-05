@@ -46,7 +46,7 @@
                 </div>
                 {% if lecturePassed %}
                     <div class="final__coins-add">
-                        <span class="count">+{{ coins_transferred }}</span>
+                        <span class="count">+{{ coins_transferred|floatformat:"-1" }}</span>
                         <span>Dos <br/>Coins</span>
                     </div>
                     <p class="final__bottom-text">

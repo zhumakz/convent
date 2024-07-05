@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db import transaction as db_transaction, models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _, gettext as __
@@ -5,6 +6,7 @@ from .models import DoscointBalance, Transaction, TransactionCategory
 import logging
 
 logger = logging.getLogger('coins')
+
 
 class CoinService:
 
@@ -14,13 +16,15 @@ class CoinService:
             logger.error(f'Transaction amount must be positive: {amount}')
             raise ValidationError(__("Transaction amount must be positive"))
 
-        if category.name not in ['friend_bonus_same_city', 'friend_bonus_different_city', 'lecture_bonus', 'event_bonus', 'vote_bonus'] and sender.doscointbalance.balance < amount:
+        if category.name not in ['friend_bonus_same_city', 'friend_bonus_different_city', 'lecture_bonus',
+                                 'event_bonus', 'vote_bonus'] and sender.doscointbalance.balance < amount:
             logger.error(f'Sender does not have enough balance: {sender.doscointbalance.balance}')
             raise ValidationError(__("Sender does not have enough balance"))
 
     @staticmethod
     def update_balances(sender, recipient, amount, category):
-        if category.name not in ['friend_bonus_same_city', 'friend_bonus_different_city', 'lecture_bonus', 'event_bonus', 'vote_bonus']:
+        if category.name not in ['friend_bonus_same_city', 'friend_bonus_different_city', 'lecture_bonus',
+                                 'event_bonus', 'vote_bonus']:
             sender.doscointbalance.update_balance(-amount)
         recipient.doscointbalance.update_balance(amount)
 
@@ -36,7 +40,8 @@ class CoinService:
     def create_transaction(sender, recipient, amount=None, description="", category_name=""):
         with db_transaction.atomic():
             category = TransactionCategory.objects.get(name=category_name)
-            if category.name in ['friend_bonus_same_city', 'friend_bonus_different_city', 'lecture_bonus', 'event_bonus', 'vote_bonus']:
+            if category.name in ['friend_bonus_same_city', 'friend_bonus_different_city', 'lecture_bonus',
+                                 'event_bonus', 'vote_bonus']:
                 amount = category.price
             elif amount is None:
                 raise ValidationError(__("Amount must be provided for non-system transactions"))
@@ -44,7 +49,8 @@ class CoinService:
             CoinService.validate_transaction(sender, amount, category)
             CoinService.update_balances(sender, recipient, amount, category)
 
-            if category.name not in ['friend_bonus_same_city', 'friend_bonus_different_city', 'lecture_bonus', 'event_bonus', 'vote_bonus']:
+            if category.name not in ['friend_bonus_same_city', 'friend_bonus_different_city', 'lecture_bonus',
+                                     'event_bonus', 'vote_bonus']:
                 sender.doscointbalance.increment_total_spent(amount)
             recipient.doscointbalance.increment_total_earned(amount)
 
@@ -57,9 +63,16 @@ class CoinService:
                 is_positive=(sender != recipient)
             )
             transaction.save()
-
+            # Очистка кэша для пользователя
+            CoinService.clear_cache(sender)
+            CoinService.clear_cache(recipient)
             logger.debug(f'Transaction created: {transaction}')
             return transaction
+
+    @staticmethod
+    def clear_cache(user):
+        cache_key = f'user_transactions_{user.id}'
+        cache.delete(cache_key)
 
     @staticmethod
     def get_balance(user):
@@ -78,3 +91,18 @@ class CoinService:
         return Transaction.objects.filter(
             models.Q(sender=user) | models.Q(recipient=user)
         )
+
+    @staticmethod
+    def get_price_by_category_name(category_name):
+        cache_key = f'category_price_{category_name}'
+        price = cache.get(cache_key)
+
+        if price is None:
+            try:
+                price = TransactionCategory.objects.values_list('price', flat=True).get(name=category_name)
+                cache.set(cache_key, price, timeout=60 * 15)
+            except TransactionCategory.DoesNotExist:
+                logger.error(f'Category not found: {category_name}')
+                raise ValidationError(__("Category not found"))
+
+        return price
