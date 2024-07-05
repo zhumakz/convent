@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _, gettext as __
 from coins.models import DoscointBalance, Transaction
 from qrcode_generator.utils import generate_qr_code
 
+
 class UserManager(BaseUserManager):
     def create_user(self, phone_number, name, surname, age, city=None, password=None):
         if not phone_number:
@@ -23,6 +24,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=15, unique=True, verbose_name=_("Номер телефона"))
     name = models.CharField(max_length=30, verbose_name=_("Имя"))
@@ -31,7 +33,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     city = models.ForeignKey('City', on_delete=models.SET_NULL, null=True, blank=True, verbose_name=_("Город"))
     instagram = models.CharField(max_length=255, null=True, blank=True, default=' ', verbose_name=_("Instagram"))
     tiktok = models.CharField(max_length=255, null=True, blank=True, default='@', verbose_name=_("TikTok"))
-    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True, verbose_name=_("Фотография профиля"))
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True,
+                                        verbose_name=_("Фотография профиля"))
     qr_code = models.ImageField(upload_to='profile_pictures/qr_codes/', null=True, blank=True, verbose_name=_("QR-код"))
     is_active = models.BooleanField(default=True, verbose_name=_("Активен"))
     is_admin = models.BooleanField(default=False, verbose_name=_("Администратор"))
@@ -79,6 +82,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.generate_qr_code()
             super().save(*args, **kwargs)
 
+
 class City(models.Model):
     name = models.CharField(max_length=100, verbose_name=_("Название"))
 
@@ -88,3 +92,34 @@ class City(models.Model):
     class Meta:
         verbose_name = _("Город")
         verbose_name_plural = _("Города")
+
+    @staticmethod
+    def create_default_city():
+        cities_data = [
+            {"id": 1, "name": "Астана"},
+            {"id": 2, "name": "Алматы"},
+            {"id": 3, "name": "Актау"},
+            {"id": 4, "name": "Актобе"},
+            {"id": 5, "name": "Атырау"},
+            {"id": 6, "name": "Жезказган"},
+            {"id": 7, "name": "Караганда"},
+            {"id": 8, "name": "Кокшетау"},
+            {"id": 9, "name": "Конаев"},
+            {"id": 10, "name": "Костанай"},
+            {"id": 11, "name": "Кызылорда"},
+            {"id": 12, "name": "Павлодар"},
+            {"id": 13, "name": "Петропавловск"},
+            {"id": 14, "name": "Семей"},
+            {"id": 15, "name": "Талдыкорган"},
+            {"id": 16, "name": "Тараз"},
+            {"id": 17, "name": "Туркестан"},
+            {"id": 18, "name": "Уральск"},
+            {"id": 19, "name": "Усть-Каменогорск"},
+            {"id": 20, "name": "Шымкент"}
+        ]
+
+        for data in cities_data:
+            City.objects.update_or_create(
+                id=data['id'],
+                defaults={'name': data['name']}
+            )
