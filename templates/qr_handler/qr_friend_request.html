@@ -5,7 +5,7 @@
 {% block title %}Friend Request{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'style/add-friend/add-friend.css' %}">
+    <link rel="stylesheet" href="{% static 'style/add/add.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -27,8 +27,8 @@
                         {% else %}{% static 'image/photo.png' %} {% endif %}" alt="photo"/>
                 </div>
                 <div class="person__wrapper">
-                    <span class="add-person__name">{{ to_user.first_name }}
-                    <br/>{{ to_user.last_name }}</span>
+                    <span class="add-person__name">{{ to_user.name }}
+                    <br/>{{ to_user.surname }}</span>
                     <span class="person__location">{{ to_user.city }}</span>
                 </div>
             </div>
