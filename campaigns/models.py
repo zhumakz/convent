@@ -10,7 +10,8 @@ class Campaign(models.Model):
     main_photo = models.ImageField(upload_to='campaigns/main_photos/',blank=True, null=True, verbose_name=_("Main Photo"))
     leader_name = models.CharField(max_length=100, verbose_name=_("Leader Name"))
     leader_photo = models.ImageField(upload_to='campaigns/leader_photos/',blank=True, null=True, verbose_name=_("Leader Photo"))
-    city = models.CharField(max_length=100, verbose_name=_("City"))
+    phone = models.CharField(max_length=100, verbose_name=_("Phone"))
+    city = models.CharField(max_length=100,default='+7', verbose_name=_("City"))
     description = models.TextField(verbose_name=_("Description"))
     qr_code = models.ImageField(upload_to='campaigns/qr_codes/', blank=True, null=True, verbose_name=_("QR Code"))
 
