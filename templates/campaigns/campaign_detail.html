@@ -7,9 +7,6 @@
 <p>{{ campaign.description }}</p>
 <p>Leader: {{ campaign.leader_name }}</p>
 <p>City: {{ campaign.city }}</p>
-<img src="{{ campaign.logo.url }}" alt="{{ campaign.name }} logo">
-<img src="{{ campaign.main_photo.url }}" alt="{{ campaign.name }} main photo">
-<img src="{{ campaign.leader_photo.url }}" alt="{{ campaign.leader_name }} photo">
 
 {% if campaign.qr_code %}
     <h3>Scan to Vote</h3>

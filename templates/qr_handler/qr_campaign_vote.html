@@ -11,7 +11,7 @@
     <section class="art all-size">
         <div class="art__top"
                 {% if campaign.main_photo %}
-             style=" background-image: url('{{ campaign.main_photo.url }}');
+             style="background-image: url('{{ campaign.main_photo.url }}');
                      background-repeat: no-repeat;
                      background-size: contain;
                      background-position: center;"
@@ -31,17 +31,28 @@
                 <span class="art__name">{{ campaign.name }}</span>
                 <div class="person art__person">
                     <div class="photo-line art__line">
-                        <img class="art__person-img" src="{{ campaign.leader_photo.url }}" alt="photo"/>
+                        {% if campaign.leader_photo %}
+                            <img class="art__person-img" src="{{ campaign.leader_photo.url }}" alt="photo"/>
+                        {% else %}
+                            <img class="art__person-img" src="{% static 'image/photo.png' %}"
+                                 alt="default photo"/>
+                        {% endif %}
                     </div>
                     <span class="art__name">{{ campaign.leader_name }} <br/>(лидер гражданской компании)</span>
                 </div>
                 <ul class="art__points">
-                    <li class="art__item">Города где работает проект: {{ campaign.city }}</li>
-                    <li class="art__item">{{ campaign.description }}</li>
+                    {% if campaign.city %}
+                        <li class="art__item">Города где работает проект: {{ campaign.city }}</li>
+                    {% endif %}
+                    {% if campaign.description %}
+                        <li class="art__item">{{ campaign.description }}</li>
+                    {% endif %}
                 </ul>
 
-                {% if message %}
-                    <p class="art__warn">{{ message }}</p>
+                {% if messages %}
+                    {% for message in messages %}
+                        <p class="art__warn">{{ message }}</p>
+                    {% endfor %}
                 {% endif %}
 
                 {% if not voted %}

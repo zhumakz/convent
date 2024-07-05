@@ -1,6 +1,5 @@
 from django.shortcuts import get_object_or_404
 from django.conf import settings
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _, gettext as __
 from django.db import transaction
 from .models import Campaign, Vote
@@ -22,6 +21,10 @@ class CampaignService:
         return Vote.objects.filter(user=user, campaign=campaign).exists()
 
     @staticmethod
+    def get_previous_vote(user):
+        return Vote.objects.filter(user=user).select_related('campaign').first()
+
+    @staticmethod
     @transaction.atomic
     def vote_for_campaign(user, campaign):
         if Vote.objects.filter(campaign=campaign, user=user).exists():
@@ -30,7 +33,7 @@ class CampaignService:
         Vote.objects.create(campaign=campaign, user=user)
 
         reward_amount = settings.VOTE_REWARD_COINS
-        CoinService.create_transaction(
+        transaction = CoinService.create_transaction(
             sender=user,
             recipient=user,
             amount=reward_amount,
@@ -38,7 +41,7 @@ class CampaignService:
             category_name='vote_bonus'
         )
 
-        return __('Вы успешно проголосовали за {campaign_name} и получили {reward_amount} монет.').format(
+        return transaction, __('Вы успешно проголосовали за {campaign_name} и получили {reward_amount} монет.').format(
             campaign_name=campaign.name, reward_amount=reward_amount)
 
     @staticmethod

@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import qr_scan_view, handle_qr_data, qr_friend_request, qr_purchase_detail, qr_campaign_vote, \
-    qr_lecture_start, qr_lecture_end, friend_confirmation, qr_response_view,check_friend_request_status
+    qr_lecture_start, qr_lecture_end, friend_confirmation, qr_response_view, check_friend_request_status, \
+    campaign_vote_confirmation
 
 urlpatterns = [
     path('qr-scan/', qr_scan_view, name='qr_scan'),
@@ -9,6 +10,7 @@ urlpatterns = [
     path('friend_confirmation/', friend_confirmation, name='friend_confirmation'),
     path('qr_purchase_detail/', qr_purchase_detail, name='qr_purchase_detail'),
     path('qr_campaign_vote/', qr_campaign_vote, name='qr_campaign_vote'),
+    path('campaign_vote_confirmation/', campaign_vote_confirmation, name='campaign_vote_confirmation'),
     path('qr_lecture_start/', qr_lecture_start, name='qr_lecture_start'),
     path('qr_lecture_end/', qr_lecture_end, name='qr_lecture_end'),
     path('qr_response/', qr_response_view, name='qr_response'),

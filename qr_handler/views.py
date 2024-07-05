@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -189,41 +191,73 @@ def qr_purchase_detail(request):
     return render(request, 'qr_handler/qr_purchase_detail.html', context)
 
 
+
 @login_required
 def qr_campaign_vote(request):
     data = request.session.get('qr_data')
     if not data:
-        request.session['error_message'] = 'No QR data found'
-        request.session['positiveResponse'] = False
-        return redirect('qr_response')
+        return redirect('profile')
 
     campaign_id = data.get('campaign_vote')
     campaign = CampaignService.get_campaign_by_id(campaign_id)
 
+    messages = request.session.pop('error_messages', [])
+
+    # Проверка, голосовал ли пользователь за какую-либо кампанию
+    previous_vote = CampaignService.get_previous_vote(request.user)
+    if previous_vote:
+        message = f"Вы уже отдали свой голос за '{previous_vote.campaign.name}'."
+        messages.append(message)
+        context = {
+            'messages': messages,
+            'campaign': campaign,
+            'voted': True,
+        }
+        return render(request, 'qr_handler/qr_campaign_vote.html', context)
+
     if request.method == 'POST':
         try:
-            message = CampaignService.vote_for_campaign(request.user, campaign)
-            success = True
+            transaction, message = CampaignService.vote_for_campaign(request.user, campaign)
+            request.session['positiveResponse'] = True
+            request.session['error_messages'] = [message]
+            request.session['campaign_id'] = campaign.id
+            request.session['coins_transferred'] = str(transaction.amount)  # Преобразование Decimal в строку
+            return redirect('campaign_vote_confirmation')
         except ValidationError as e:
-            message = e.messages[0]
-            success = False
-    else:
-        success = None
-        message = None
+            messages = e.messages
+            request.session['positiveResponse'] = False
+            request.session['error_messages'] = messages
+            return redirect('qr_response')
 
     voted = CampaignService.user_has_voted(request.user, campaign)
 
     context = {
-        'message': message,
-        'success': success,
+        'messages': messages,
         'campaign': campaign,
         'voted': voted,
     }
-    request.session['positiveResponse'] = success
-    request.session['error_message'] = message
-    return redirect('qr_response')
+    return render(request, 'qr_handler/qr_campaign_vote.html', context)
 
+@login_required
+def campaign_vote_confirmation(request):
+    # Извлечение данных из сессии
+    campaign_id = request.session.get('campaign_id')
+    coins_transferred_str = request.session.get('coins_transferred')
+    error_message = request.session.get('error_message')
 
+    if not campaign_id or not coins_transferred_str:
+        return redirect('profile')
+
+    campaign = CampaignService.get_campaign_by_id(campaign_id)
+    coins_transferred = Decimal(coins_transferred_str)  # Преобразование строки обратно в Decimal
+
+    context = {
+        'campaign': campaign,
+        'coins_transferred': coins_transferred,
+        'error_message': error_message,
+    }
+
+    return render(request, 'qr_handler/campaign_vote_confirmation.html', context)
 @login_required
 def qr_lecture_start(request):
     data = request.session.get('qr_data')

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Vote Confirmation{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/final/final.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="final all-size">
+        <div class="bottom-gradient"></div>
+        <div class="container final__inner flex">
+            <div class="top">
+                <a href="{% url 'profile' %}" class="top__button popup-close">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span class="top__title">Vote Confirmation</span>
+            </div>
+            <div class="person">
+                <div class="photo-line final__line">
+                    <img
+                            class="final__person-img"
+                            src="{% if campaign.logo %}{{ campaign.logo.url }}
+                        {% else %}{% static 'image/photo.png' %} {% endif %}"
+                            alt="photo"
+                    />
+                </div>
+                <span class="person__location">{{ campaign.leader_name }}</span>
+                <span class="final__name">{{ campaign.name }}</span>
+            </div>
+            <div class="final__content">
+                <div class="final__coins-background">
+                    <div class="final__coins-item"></div>
+                    <div class="final__coins-item"></div>
+                    <div class="final__coins-item"></div>
+                    <img
+                            class="final__coins-layers"
+                            src="{% static 'image/layers.png' %}"
+                            alt="layers"
+                    />
+                </div>
+                <img
+                        class="final__coins"
+                        src="{% static 'image/coins.png' %}"
+                        width="150"
+                        height="150"
+                        alt="icon"
+                />
+            </div>
+
+        <div class="final__coins-add">
+            <span class="count">+{{ coins_transferred|floatformat:"-1" }}</span>
+            <span>Dos <br/>Coins</span>
+        </div>
+        <p class="final__bottom-text">
+            Поздравляем! <br/>Dos Coins переведены
+        </p>
+        <a href="{% url 'profile' %}" class="button final__button">Свернуть</a>
+        </div>
+    </section>
+{% endblock %}
