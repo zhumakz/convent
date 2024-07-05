@@ -16,8 +16,16 @@ class DoscointBalance(models.Model):
         return f"{self.user.phone_number} - {self.balance} {__('Doscoint')}"
 
     def update_balance(self, amount):
-        self.balance += amount
-        self.save()
+        self.balance = models.F('balance') + amount
+        self.save(update_fields=['balance'])
+
+    def increment_total_earned(self, amount):
+        self.total_earned = models.F('total_earned') + amount
+        self.save(update_fields=['total_earned'])
+
+    def increment_total_spent(self, amount):
+        self.total_spent = models.F('total_spent') + amount
+        self.save(update_fields=['total_spent'])
 
     class Meta:
         verbose_name = _("Doscoint Balance")
@@ -33,12 +41,12 @@ class TransactionCategory(models.Model):
         ('vote_bonus', _("Vote Bonus")),
         ('moderator_transfer', _("Moderator Transfer")),
         ('vendor_purchase', _("Vendor Purchase")),
-        ('new_category', _("New Category")),  # Добавляем новый тип категории
+        ('new_category', _("New Category")),
     ]
 
     name = models.CharField(max_length=30, choices=CATEGORY_CHOICES, unique=True, verbose_name=_("Name"))
     price = models.DecimalField(max_digits=10, decimal_places=2, default=1, verbose_name=_("Price"))
-    display_name = models.CharField(max_length=100, verbose_name=_("Display Name"), default="")  # Добавляем новое поле
+    display_name = models.CharField(max_length=100, verbose_name=_("Display Name"), default="")
 
     def __str__(self):
         return f"{self.display_name} - {__('Price')}"
@@ -50,26 +58,23 @@ class TransactionCategory(models.Model):
     @staticmethod
     def create_default_categories():
         categories = [
-            {'name': 'friend_bonus_same_city', 'price': 1, 'display_name': _("Friend Bonus (Same City)")},
-            {'name': 'friend_bonus_different_city', 'price': 2, 'display_name': _("Friend Bonus (Different City)")},
-            {'name': 'lecture_bonus', 'price': 5, 'display_name': _("Lecture Bonus")},
-            {'name': 'event_bonus', 'price': 3, 'display_name': _("Event Bonus")},
-            {'name': 'vote_bonus', 'price': 1, 'display_name': _("Vote Bonus")},
-            {'name': 'moderator_transfer', 'price': 0, 'display_name': _("Moderator Transfer")},
-            {'name': 'vendor_purchase', 'price': 0, 'display_name': _("Vendor Purchase")},
-            {'name': 'new_category', 'price': 0, 'display_name': _("New Category")},  # Добавляем новый тип категории
+            {'name': 'friend_bonus_same_city', 'price': 1, 'display_name': _("Бонус за друга (тот же город)")},
+            {'name': 'friend_bonus_different_city', 'price': 2, 'display_name': _("Бонус за друга (другой город)")},
+            {'name': 'lecture_bonus', 'price': 5, 'display_name': _("Бонус за лекцию")},
+            {'name': 'event_bonus', 'price': 3, 'display_name': _("Бонус за мероприятие")},
+            {'name': 'vote_bonus', 'price': 1, 'display_name': _("Бонус за голосование")},
+            {'name': 'moderator_transfer', 'price': 0, 'display_name': _("Перевод модератора")},
+            {'name': 'vendor_purchase', 'price': 0, 'display_name': _("Покупка у продавца")},
+            {'name': 'new_category', 'price': 0, 'display_name': _("Новая категория")},
         ]
 
         for category in categories:
             TransactionCategory.objects.get_or_create(name=category['name'], defaults={'price': category['price'], 'display_name': category['display_name']})
 
 
-
 class Transaction(models.Model):
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_transactions',
-                               verbose_name=_("Sender"))
-    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                  related_name='received_transactions', verbose_name=_("Recipient"))
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_transactions', verbose_name=_("Sender"))
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_transactions', verbose_name=_("Recipient"))
     amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Amount"))
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_("Timestamp"))
     description = models.TextField(null=True, blank=True, verbose_name=_("Description"))

@@ -1,4 +1,4 @@
-from django.db import transaction as db_transaction
+from django.db import transaction as db_transaction, models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _, gettext as __
 from .models import DoscointBalance, Transaction, TransactionCategory
@@ -22,19 +22,15 @@ class CoinService:
     def update_balances(sender, recipient, amount, category):
         if category.name not in ['friend_bonus_same_city', 'friend_bonus_different_city', 'lecture_bonus', 'event_bonus', 'vote_bonus']:
             sender.doscointbalance.update_balance(-amount)
-            sender.doscointbalance.save()
         recipient.doscointbalance.update_balance(amount)
-        recipient.doscointbalance.save()
 
     @staticmethod
     def update_total_earned(user, amount):
-        user.doscointbalance.total_earned += amount
-        user.doscointbalance.save()
+        user.doscointbalance.increment_total_earned(amount)
 
     @staticmethod
     def update_total_spent(user, amount):
-        user.doscointbalance.total_spent += amount
-        user.doscointbalance.save()
+        user.doscointbalance.increment_total_spent(amount)
 
     @staticmethod
     def create_transaction(sender, recipient, amount=None, description="", category_name=""):
@@ -42,16 +38,15 @@ class CoinService:
             category = TransactionCategory.objects.get(name=category_name)
             if category.name in ['friend_bonus_same_city', 'friend_bonus_different_city', 'lecture_bonus', 'event_bonus', 'vote_bonus']:
                 amount = category.price
-            else:
-                if amount is None:
-                    raise ValidationError(__("Amount must be provided for non-system transactions"))
+            elif amount is None:
+                raise ValidationError(__("Amount must be provided for non-system transactions"))
 
             CoinService.validate_transaction(sender, amount, category)
             CoinService.update_balances(sender, recipient, amount, category)
 
             if category.name not in ['friend_bonus_same_city', 'friend_bonus_different_city', 'lecture_bonus', 'event_bonus', 'vote_bonus']:
-                CoinService.update_total_spent(sender, amount)
-            CoinService.update_total_earned(recipient, amount)
+                sender.doscointbalance.increment_total_spent(amount)
+            recipient.doscointbalance.increment_total_earned(amount)
 
             transaction = Transaction(
                 sender=sender,
@@ -80,4 +75,6 @@ class CoinService:
 
     @staticmethod
     def get_transactions(user):
-        return Transaction.objects.filter(sender=user) | Transaction.objects.filter(recipient=user)
+        return Transaction.objects.filter(
+            models.Q(sender=user) | models.Q(recipient=user)
+        )

@@ -19,14 +19,17 @@ from shop.services import ShopService
 
 logger = logging.getLogger(__name__)
 
+
 @login_required
 def test_page(request):
     return render(request, 'qr_handler/test_page.html')
+
 
 @login_required
 def qr_scan_view(request):
     # Отображение страницы с формой для сканирования QR-кода
     return render(request, 'qr_handler/qr.html')
+
 
 @login_required
 def handle_qr_data(request):
@@ -145,6 +148,7 @@ def friend_confirmation(request):
         request.session['positiveResponse'] = False
         return redirect('qr_response')
 
+
 @login_required
 def qr_purchase_detail(request):
     data = request.session.get('qr_data')
@@ -184,6 +188,7 @@ def qr_purchase_detail(request):
     }
     return render(request, 'qr_handler/qr_purchase_detail.html', context)
 
+
 @login_required
 def qr_campaign_vote(request):
     data = request.session.get('qr_data')
@@ -218,6 +223,7 @@ def qr_campaign_vote(request):
     request.session['error_message'] = message
     return redirect('qr_response')
 
+
 @login_required
 def qr_lecture_start(request):
     data = request.session.get('qr_data')
@@ -243,6 +249,7 @@ def qr_lecture_start(request):
     request.session['positiveResponse'] = success
     request.session['error_message'] = message
     return redirect('qr_response')
+
 
 @login_required
 def qr_lecture_end(request):
@@ -270,6 +277,7 @@ def qr_lecture_end(request):
     request.session['error_message'] = message
     return redirect('qr_response')
 
+
 @login_required
 def qr_response_view(request):
     positive_response = request.session.get('positiveResponse', False)
@@ -279,6 +287,7 @@ def qr_response_view(request):
         'error_message': error_message,
     }
     return render(request, 'qr_handler/qr_response.html', context)
+
 
 @login_required
 def check_friend_request_status(request):

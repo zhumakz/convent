@@ -2,6 +2,9 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _, gettext as __
 from .models import User, City
+from PIL import Image
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
 import re
 
 
@@ -77,6 +80,39 @@ class VerificationForm(forms.Form):
         return sms_code
 
 
+def process_profile_picture(profile_picture):
+    if profile_picture:
+        # Открываем изображение и проверяем его формат
+        try:
+            img = Image.open(profile_picture)
+            img.verify()  # Проверяем, является ли файл изображением
+            img = Image.open(profile_picture)  # Открываем заново, так как verify() закрывает файл
+        except (IOError, SyntaxError):
+            raise forms.ValidationError('Файл должен быть изображением.')
+
+        # Проверка размера файла
+        if profile_picture.size > 10 * 1024 * 1024:
+            raise forms.ValidationError('Размер файла не должен превышать 10MB.')
+
+        # Обрезка изображения
+        if img.width > 512:
+            # Сохранение пропорций
+            aspect_ratio = img.height / img.width
+            new_height = int(512 * aspect_ratio)
+            img = img.resize((512, new_height), Image.LANCZOS)  # Использование Image.LANCZOS вместо Image.ANTIALIAS
+
+            # Сохранение обрезанного изображения в BytesIO
+            output = BytesIO()
+            img.save(output, format='JPEG')
+            output.seek(0)
+
+            # Создание нового InMemoryUploadedFile для обновления profile_picture
+            profile_picture = InMemoryUploadedFile(output, 'ImageField', profile_picture.name, 'image/jpeg',
+                                                   output.getbuffer().nbytes, None)
+
+    return profile_picture
+
+
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = User
@@ -84,21 +120,7 @@ class ProfileEditForm(forms.ModelForm):
 
     def clean_profile_picture(self):
         profile_picture = self.cleaned_data.get('profile_picture')
-
-        if profile_picture:
-            from PIL import Image
-            # Открываем изображение и проверяем его формат
-            try:
-                img = Image.open(profile_picture)
-                img.verify()  # Проверяем, является ли файл изображением
-            except (IOError, SyntaxError):
-                raise forms.ValidationError('Файл должен быть изображением.')
-
-            # Проверка размера файла
-            if profile_picture.size > 5 * 1024 * 1024:
-                raise forms.ValidationError('Размер файла не должен превышать 5MB.')
-
-        return profile_picture
+        return process_profile_picture(profile_picture)
 
 
 class ProfilePictureForm(forms.ModelForm):
@@ -108,21 +130,8 @@ class ProfilePictureForm(forms.ModelForm):
 
     def clean_profile_picture(self):
         profile_picture = self.cleaned_data.get('profile_picture')
+        return process_profile_picture(profile_picture)
 
-        if profile_picture:
-            from PIL import Image
-            # Открываем изображение и проверяем его формат
-            try:
-                img = Image.open(profile_picture)
-                img.verify()  # Проверяем, является ли файл изображением
-            except (IOError, SyntaxError):
-                raise forms.ValidationError('Файл должен быть изображением.')
-
-            # Проверка размера файла
-            if profile_picture.size > 5 * 1024 * 1024:
-                raise forms.ValidationError('Размер файла не должен превышать 5MB.')
-
-        return profile_picture
 
 class ModeratorLoginForm(forms.Form):
     phone_number = forms.CharField(max_length=15, label=_('Phone Number'))

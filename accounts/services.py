@@ -2,7 +2,7 @@ from .models import User
 from sms.utils import handle_sms_verification
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
-
+from django.core.cache import cache
 
 class UserService:
 
@@ -24,7 +24,11 @@ class UserService:
 
     @staticmethod
     def get_user_by_phone_number(phone_number):
-        return User.objects.filter(phone_number=phone_number).first()
+        user = cache.get(f'user_{phone_number}')
+        if not user:
+            user = User.objects.filter(phone_number=phone_number).first()
+            cache.set(f'user_{phone_number}', user, timeout=300)
+        return user
 
     @staticmethod
     def handle_sms_verification(request, phone_number):

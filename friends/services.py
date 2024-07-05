@@ -1,6 +1,6 @@
 from .models import FriendRequest, Friendship
 from django.core.exceptions import ValidationError
-from django.db import transaction as db_transaction
+from django.db import transaction as db_transaction, models
 from coins.services import CoinService
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _, gettext as __
@@ -9,60 +9,45 @@ from django.utils.translation import gettext_lazy as _, gettext as __
 class FriendService:
 
     @staticmethod
-    def send_friend_request(from_user, to_user):
-        # Проверка на попытку добавления самого себя
+    def send_friend_request_common(from_user, to_user, is_qr=False):
         if from_user == to_user:
-            raise ValidationError(__('You cannot add yourself as a friend.'))
+            error_message = __('You cannot add yourself as a friend.')
+            return ('error', error_message) if is_qr else ValidationError(error_message)
 
-        # Проверка на попытку добавления администратора или модератора
         if to_user.is_admin or to_user.is_moderator:
-            raise ValidationError(__('You cannot add administrators or moderators as friends.'))
+            error_message = __('You cannot add administrators or moderators as friends.')
+            return ('error', error_message) if is_qr else ValidationError(error_message)
 
-        # Проверка на существующий запрос от получателя к отправителю
-        existing_request = FriendRequest.objects.filter(from_user=to_user, to_user=from_user).first()
+        existing_request = FriendRequest.objects.filter(
+            models.Q(from_user=from_user, to_user=to_user) |
+            models.Q(from_user=to_user, to_user=from_user)
+        ).first()
+
         if existing_request:
-            # Создаем дружбу и удаляем запросы
-            FriendService.create_friendship(from_user, to_user)
-            existing_request.delete()
-            return True, __('You are now friends!')
+            if existing_request.from_user == to_user:
+                FriendService.create_friendship(from_user, to_user)
+                existing_request.delete()
+                success_message = __('You are now friends!') if not is_qr else __('Теперь вы друзья!')
+                return ('now_friends', success_message) if is_qr else (True, success_message)
+            error_message = __('Friend request already sent.') if not is_qr else __(
+                'Запрос на добавление в друзья уже отправлен.')
+            return ('already_sent', error_message) if is_qr else ValidationError(error_message)
 
-        # Проверка на существующий запрос от отправителя к получателю
-        existing_request = FriendRequest.objects.filter(from_user=from_user, to_user=to_user).first()
-        if existing_request:
-            raise ValidationError(__('Friend request already sent.'))
-
-        # Создаем новый запрос
         friend_request = FriendRequest(from_user=from_user, to_user=to_user)
         friend_request.save()
-        return False, __('Friend request sent!')
+        success_message = __('Friend request sent!') if not is_qr else __('Запрос на добавление в друзья отправлен!')
+        return ('new_request', success_message) if is_qr else (False, success_message)
+
+    @staticmethod
+    def send_friend_request(from_user, to_user):
+        result, message = FriendService.send_friend_request_common(from_user, to_user, is_qr=False)
+        if isinstance(result, ValidationError):
+            raise result
+        return result, message
 
     @staticmethod
     def send_friend_requestQR(from_user, to_user):
-        # Проверка на попытку добавления самого себя
-        if from_user == to_user:
-            return 'error', __('Вы не можете добавить себя в друзья.')
-
-        # Проверка на попытку добавления администратора или модератора
-        if to_user.is_admin or to_user.is_moderator:
-            return 'error', __('Вы не можете добавить в друзья администраторов или модераторов.')
-
-        # Проверка на существующий запрос от получателя к отправителю
-        existing_request = FriendRequest.objects.filter(from_user=to_user, to_user=from_user).first()
-        if existing_request:
-            # Создаем дружбу и удаляем запросы
-            FriendService.create_friendship(from_user, to_user)
-            existing_request.delete()
-            return 'now_friends', __('Теперь вы друзья!')
-
-        # Проверка на существующий запрос от отправителя к получателю
-        existing_request = FriendRequest.objects.filter(from_user=from_user, to_user=to_user).first()
-        if existing_request:
-            return 'already_sent', __('Запрос на добавление в друзья уже отправлен.')
-
-        # Создаем новый запрос
-        friend_request = FriendRequest(from_user=from_user, to_user=to_user)
-        friend_request.save()
-        return 'new_request', __('Запрос на добавление в друзья отправлен!')
+        return FriendService.send_friend_request_common(from_user, to_user, is_qr=True)
 
     @staticmethod
     def confirm_friend_request(friend_request):
@@ -77,28 +62,19 @@ class FriendService:
         with db_transaction.atomic():
             Friendship.objects.create(user1=user1, user2=user2)
 
-            # Определяем категорию транзакции в зависимости от городов пользователей
-            if user1.city == user2.city:
-                category_name = 'friend_bonus_same_city'
-            else:
-                category_name = 'friend_bonus_different_city'
+            category_name = 'friend_bonus_same_city' if user1.city == user2.city else 'friend_bonus_different_city'
 
-            # Создаем транзакции для обоих пользователей
-            CoinService.create_transaction(
-                sender=user1,
-                recipient=user1,
-                description=__('Reward for adding friend {phone_number}').format(phone_number=user2.phone_number),
-                category_name=category_name
-            )
+            def create_transaction(user, friend):
+                CoinService.create_transaction(
+                    sender=user,
+                    recipient=user,
+                    description=__('Reward for adding friend {phone_number}').format(phone_number=friend.phone_number),
+                    category_name=category_name
+                )
 
-            CoinService.create_transaction(
-                sender=user2,
-                recipient=user2,
-                description=__('Reward for adding friend {phone_number}').format(phone_number=user1.phone_number),
-                category_name=category_name
-            )
+            create_transaction(user1, user2)
+            create_transaction(user2, user1)
 
-            # Удаляем все запросы на дружбу между этими пользователями
             FriendRequest.objects.filter(from_user=user1, to_user=user2).delete()
             FriendRequest.objects.filter(from_user=user2, to_user=user1).delete()
 

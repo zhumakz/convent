@@ -5,14 +5,12 @@ from qrcode_generator.utils import generate_qr_code
 
 
 class Lecture(models.Model):
-    title = models.CharField(max_length=255, verbose_name=_("Title"))
-    speakers = models.CharField(max_length=255, verbose_name=_("Speakers"))
-    date = models.DateTimeField(verbose_name=_("Date"))
-    location = models.CharField(max_length=255, verbose_name=_("Location"))
-    qr_code_start = models.ImageField(upload_to='lectures/qr_codes/start/', blank=True, null=True,
-                                      verbose_name=_("QR Code Start"))
-    qr_code_end = models.ImageField(upload_to='lectures/qr_codes/end/', blank=True, null=True,
-                                    verbose_name=_("QR Code End"))
+    title = models.CharField(max_length=255, verbose_name=_("Название"))
+    speakers = models.CharField(max_length=255, verbose_name=_("Спикеры"))
+    date = models.DateTimeField(verbose_name=_("Дата"))
+    location = models.CharField(max_length=255, verbose_name=_("Место проведения"))
+    qr_code_start = models.ImageField(upload_to='lectures/qr_codes/start/', blank=True, null=True, verbose_name=_("QR-код начала"))
+    qr_code_end = models.ImageField(upload_to='lectures/qr_codes/end/', blank=True, null=True, verbose_name=_("QR-код окончания"))
 
     def __str__(self):
         return self.title
@@ -35,21 +33,21 @@ class Lecture(models.Model):
             super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name = _("Lecture")
-        verbose_name_plural = _("Lectures")
+        verbose_name = _("Лекция")
+        verbose_name_plural = _("Лекции")
 
 
 class LectureAttendance(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_("User"))
-    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, verbose_name=_("Lecture"))
-    start_scanned = models.BooleanField(default=False, verbose_name=_("Start Scanned"))
-    end_scanned = models.BooleanField(default=False, verbose_name=_("End Scanned"))
-    start_time = models.DateTimeField(null=True, blank=True, verbose_name=_("Start Time"))
-    end_time = models.DateTimeField(null=True, blank=True, verbose_name=_("End Time"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_("Пользователь"))
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, verbose_name=_("Лекция"))
+    start_scanned = models.BooleanField(default=False, verbose_name=_("Начало отсканировано"))
+    end_scanned = models.BooleanField(default=False, verbose_name=_("Окончание отсканировано"))
+    start_time = models.DateTimeField(null=True, blank=True, verbose_name=_("Время начала"))
+    end_time = models.DateTimeField(null=True, blank=True, verbose_name=_("Время окончания"))
 
     def __str__(self):
-        return _('{user} attended {lecture}').format(user=self.user, lecture=self.lecture)
+        return _('{user} посетил {lecture}').format(user=self.user, lecture=self.lecture)
 
     class Meta:
-        verbose_name = _("Lecture Attendance")
-        verbose_name_plural = _("Lecture Attendances")
+        verbose_name = _("Посещение лекции")
+        verbose_name_plural = _("Посещения лекций")

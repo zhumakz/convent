@@ -48,7 +48,7 @@
         });
     </script>
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function () {
             const friendButtons = document.querySelectorAll(".friends__button");
 
             friendButtons.forEach(button => {
@@ -94,10 +94,9 @@
         });
 
 
-
     </script>
 {% endblock %}
-
+♀
 {% block content %}
 
     <section class="profile">
@@ -113,24 +112,22 @@
                 <div class="all-coins__wrapper">
                     <span class="all-coins__count">{{ user.doscointbalance.balance|floatformat:"-1" }}</span>
                     <span class="all-coins__value">Dos Coins</span>
-                    <p class="all-coins__text">Краткое DOS Coins описание монеты. Где можно получить и где можно
-                        потратить.</p>
+                    <p class="all-coins__text">Краткое описание DOS Coins. Где можно получить и где можно потратить.</p>
                     <img class="all-coins__icon" src="{% static 'image/coins.png' %}" width="112" height="112"
                          alt="icon"/>
                 </div>
                 <div class="history">
-                    <h5 class="history__title">История транзакции:</h5>
+                    <h5 class="history__title">История транзакций:</h5>
                     <ul class="history__list">
                         {% for transaction in transactions %}
                             <li class="history__item">
-                                <span class="history__time">{{ transaction.timestamp|date:"d.m - H:i" }}</span>|
-                                {% if transaction.amount > 0 %}
-                                    <span class="history__plus">+{{ transaction.amount|floatformat:"-1" }} DC</span>
-                                    {{ transaction.description }}
-                                {% else %}
-                                    <span class="history__minus">{{ transaction.amount|floatformat:"-1" }} DC</span>
-                                    {{ transaction.description }}
-                                {% endif %}
+                                <span class="history__time">{{ transaction.timestamp|date:"d.m - H:i" }}</span> |
+                                <span class="history__amount
+                            {% if transaction.is_positive %} history__minus  {% else %}  history__plus {% endif %}">
+                        {% if transaction.is_positive %} -{% else %} +{% endif %}
+                                    {{ transaction.amount|floatformat:"-1" }} DC
+                        </span>
+                                {{ transaction.category.display_name }}
                             </li>
                         {% endfor %}
                     </ul>
@@ -197,7 +194,8 @@
                 </div>
                 <div class="person">
                     <div class="photo-line friend__line">
-                        <img class="friends__person-img" id="friend-profile-picture" src="{% static 'image/photo.png' %}"
+                        <img class="friends__person-img" id="friend-profile-picture"
+                             src="{% static 'image/photo.png' %}"
                              alt="photo"/>
                     </div>
                     <span class="person__location" id="friend-location">Astana</span>
@@ -244,6 +242,12 @@
                         <div class="person">
                             <div class="photo-line blue-line">
                                 <img id="profile_picture_preview" src="
+
+
+
+
+
+
 
                                         {% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'image/photo.png' %}{% endif %}"
                                      alt="Profile Picture" class="blue-person-img" width="300"/>
@@ -371,7 +375,6 @@
 
 {% block extra_js %}
     <script src="{% static 'js/html5-qrcode.min.js' %}"></script>
-    {#    <script src="{% static 'js/profile/profile.js' %}"></script>#}
     {% if is_event_participant %}
         <script>
             const timer = new Timer(document.querySelector('.timer'))
@@ -379,7 +382,4 @@
             document.querySelector('.find__button-close').addEventListener('click', () => timer.closeInterval())
         </script>
     {% endif %}
-
-
-
 {% endblock %}

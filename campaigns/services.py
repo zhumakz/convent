@@ -2,10 +2,10 @@ from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _, gettext as __
+from django.db import transaction
 from .models import Campaign, Vote
 from coins.services import CoinService
 from django.core.exceptions import ValidationError
-
 
 class CampaignService:
 
@@ -22,9 +22,10 @@ class CampaignService:
         return Vote.objects.filter(user=user, campaign=campaign).exists()
 
     @staticmethod
+    @transaction.atomic
     def vote_for_campaign(user, campaign):
         if Vote.objects.filter(campaign=campaign, user=user).exists():
-            raise ValidationError(__('You have already voted for this campaign.'))
+            raise ValidationError(__('Вы уже проголосовали за эту кампанию.'))
 
         Vote.objects.create(campaign=campaign, user=user)
 
@@ -33,11 +34,11 @@ class CampaignService:
             sender=user,
             recipient=user,
             amount=reward_amount,
-            description=__('Reward for voting for campaign {campaign_name}').format(campaign_name=campaign.name),
-            is_system_transaction=True
+            description=__('Награда за голосование за кампанию {campaign_name}').format(campaign_name=campaign.name),
+            category_name='vote_bonus'
         )
 
-        return __('You have successfully voted for {campaign_name} and received {reward_amount} coins.').format(
+        return __('Вы успешно проголосовали за {campaign_name} и получили {reward_amount} монет.').format(
             campaign_name=campaign.name, reward_amount=reward_amount)
 
     @staticmethod

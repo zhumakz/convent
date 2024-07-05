@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.core.cache import cache
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
@@ -142,9 +143,15 @@ def profile_view(request):
             request.session['profile_picture_checked'] = True
             return redirect('selfie')
 
+    # Получение списка друзей
     friends = FriendService.get_friends(user)
-    transactions = CoinService.get_transactions(user).select_related('sender', 'recipient').order_by('-timestamp')
-    processed_transactions = [CoinService.process_transaction(tx, user) for tx in transactions]
+
+    # Использование кэша для транзакций
+    cache_key = f'user_transactions_{user.id}'
+    transactions = cache.get(cache_key)
+    if not transactions:
+        transactions = CoinService.get_transactions(user).select_related('sender', 'recipient').order_by('-timestamp')
+        cache.set(cache_key, transactions, timeout=300)  # Кэширование на 5 минут
 
     # Проверка текущего события
     current_event = Event.objects.filter(
@@ -154,13 +161,11 @@ def profile_view(request):
     return render(request, 'accounts/profile.html', {
         'user': user,
         'friends': friends,
-        'transactions': processed_transactions,
+        'transactions': transactions,
         'current_event': current_event,
         'is_event_participant': current_event and (
-                current_event.participant1 == user or current_event.participant2 == user)
+            current_event.participant1 == user or current_event.participant2 == user)
     })
-
-
 @login_required
 def selfie_view(request):
     if request.method == 'POST':
