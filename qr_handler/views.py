@@ -76,7 +76,6 @@ def handle_qr_data(request):
     return redirect('qr_response')
 
 
-
 @login_required
 def qr_friend_request(request):
     data = request.session.get('qr_data')
@@ -157,6 +156,7 @@ def friend_confirmation(request):
         request.session['positiveResponse'] = False
         return redirect('qr_response')
 
+
 @login_required
 def check_friend_request_status(request):
     data = request.session.get('qr_data')
@@ -173,16 +173,27 @@ def check_friend_request_status(request):
     except User.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Пользователь не найден'}, status=404)
 
+
 @login_required
 def qr_purchase_detail(request):
     data = request.session.get('qr_data')
     if not data:
-        request.session['error_message'] = 'No QR data found'
+        request.session['error_message'] = 'Данные QR не найдены'
         request.session['positiveResponse'] = False
         return redirect('qr_response')
 
     purchase_id = data.get('purchase_id')
     purchase = ShopService.get_purchase_by_id(purchase_id)
+
+    if not purchase:
+        request.session['error_message'] = 'Покупка не найдена'
+        request.session['positiveResponse'] = False
+        return redirect('qr_response')
+
+    if purchase.is_completed:
+        request.session['error_message'] = 'Этот QR-код уже использован для завершения покупки.'
+        request.session['positiveResponse'] = False
+        return redirect('qr_response')
 
     user_balance = request.user.doscointbalance.balance  # Предполагаем, что у пользователя есть атрибут баланса
 
@@ -257,6 +268,7 @@ def qr_campaign_vote(request):
         'voted': voted,
     }
     return render(request, 'qr_handler/qr_campaign_vote.html', context)
+
 
 @login_required
 def campaign_vote_confirmation(request):
@@ -340,6 +352,8 @@ def qr_lecture_end(request):
         'coins_transferred': coins_transferred
     }
     return render(request, 'qr_handler/qr_lecture_detail.html', context)
+
+
 @login_required
 def qr_response_view(request):
     positive_response = request.session.get('positiveResponse', False)

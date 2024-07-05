@@ -42,7 +42,7 @@ class ShopService:
             sender=buyer,
             recipient=purchase.seller,
             amount=purchase.amount,
-            description=__('Покупка в {shop_name}').format(shop_name=purchase.seller.shop_set.first().name),
+            description=__('Покупка'),
             category_name='vendor_purchase'
         )
         purchase.is_completed = True

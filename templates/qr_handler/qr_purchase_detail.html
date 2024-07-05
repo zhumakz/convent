@@ -5,15 +5,15 @@
 {% block title %}Purchase Detail{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'style/add/add.css' %}">
+    <link rel="stylesheet" href="{% static 'style/payment_yes/payment.css' %}">
 {% endblock %}
 
 {% block content %}
-    <section class="add-friend all-size">
+    <section class="payment all-size">
         <div class="bottom-gradient"></div>
-        <div class="container add-friend__inner flex">
+        <div class="container payment__inner flex">
             <div class="top">
-               <a href="{% url 'profile' %}" class="top__button popup-close">
+                <a href="{% url 'profile' %}" class="top__button popup-close">
                     <svg width="46" height="46">
                         <use href="{% static 'image/icons.svg' %}#back"></use>
                     </svg>
@@ -21,30 +21,36 @@
                 <span class="top__title">Подтверждение оплаты</span>
             </div>
 
-            <form class="add-friend__form" method="post">
-                {% csrf_token %}
-                <div class="final__content">
-                    <div class="final__coins-background">
-                        <div class="final__coins-item"></div>
-                        <div class="final__coins-item"></div>
-                        <div class="final__coins-item"></div>
-                        <img class="final__coins-layers" src="{% static 'image/layers.png' %}" alt="layers"/>
-                    </div>
-                    <svg class="final__coins" width="150" height="150">
-                        <use href="{% static 'image/icons.svg' %}#coins"></use>
-                    </svg>
-                    <div class="final__coins-add">
-                        <span class="count">-{{ purchase.amount }}</span>
-                        <span>Dos <br/>Coins</span>
-                    </div>
+            <div class="payment__content">
+                <div class="payment__coins-background">
+                    <div class="payment__coins-item"></div>
                 </div>
+                <svg class="payment__coins" width="120" height="120">
+                    <use href="{% static 'image/icons.svg' %}#coins"></use>
+                </svg>
+            </div>
+            <div class="payment__coins-add">
+                <span class="count">-{{ purchase.amount }}</span>
+                <span>Dos <br/>Coins</span>
+            </div>
+            <p class="payment__bottom-text">
+                Потвердите списание <br/>
+                Dos Coins за товар
+            </p>
+
+            {% if user_balance >= purchase.amount %}
+            {% else %}
+                <p>Недостаточно средств для завершения покупки.</p>
+            {% endif %}
+            <div class="payment__buttons">
                 {% if user_balance >= purchase.amount %}
-                    <button class="button add-friend__submit" type="submit">Подтвердить</button>
-                {% else %}
-                    <p>Недостаточно средств для завершения покупки.</p>
+                    <form class="payment__buttons" method="post">
+                        {% csrf_token %}
+                        <button class="button payment__button" type="submit">Подтвердить</button>
+                    </form>
                 {% endif %}
                 <a href="{% url 'profile' %}" class="button-s back">Отмена</a>
-            </form>
+            </div>
         </div>
     </section>
 {% endblock %}
