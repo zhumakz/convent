@@ -22,13 +22,6 @@ class Campaign(models.Model):
             qr_data = {"campaign_vote": self.id}
             filebuffer = generate_qr_code(qr_data, f"campaign_{self.id}_vote")
             self.qr_code.save(f"campaign_{self.id}_vote_qr.png", filebuffer, save=False)
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if not self.qr_code:
-            self.generate_qr_code()
-            super().save(*args, **kwargs)
-
     class Meta:
         verbose_name = _("Campaign")
         verbose_name_plural = _("Campaigns")
@@ -36,28 +29,33 @@ class Campaign(models.Model):
     @staticmethod
     def create_default_campaigns():
         campaigns_data = [
-            {"name": "Настоящий мужчина", "leader_name": "Ильяс", "phone": "+7 702 254 76 93"},
-            {"name": "Antitrash", "leader_name": "Бауыржан", "phone": "87761812020"},
-            {"name": "Халық қаһары", "leader_name": "Алихан", "phone": "87474645224"},
-            {"name": "Ставки на Стоп", "leader_name": "Асем", "phone": "+7 747 616 46 70"},
-            {"name": "Тілге сақтық", "leader_name": "Мади", "phone": "+7 705 201 38 70"},
-            {"name": "ЖОҚ", "leader_name": "Ғазиза", "phone": "87782787622"},
-            {"name": "Вандализм OFF", "leader_name": "Ақерке", "phone": "+7 702 826 26 15"},
-            {"name": "Заң.Дүкендер", "leader_name": "Мирас", "phone": "87769773767"},
-            {"name": "Зайцам - нет", "leader_name": "Алишер", "phone": "87082575303"},
-            {"name": "Время истекло", "leader_name": "Мадина", "phone": "+7 747 471 71 34"},
-            {"name": "Город", "leader_name": "Қуаныш", "phone": "87064227667"},
-            {"name": "Tumar", "leader_name": "Галия", "phone": "87089880954"},
+            {"id": 1, "name": "Настоящий мужчина", "leader_name": "Ильяс", "phone": "+7 702 254 76 93"},
+            {"id": 2, "name": "Antitrash", "leader_name": "Бауыржан", "phone": "87761812020"},
+            {"id": 3, "name": "Халық қаһары", "leader_name": "Алихан", "phone": "87474645224"},
+            {"id": 4, "name": "Ставки на Стоп", "leader_name": "Асем", "phone": "+7 747 616 46 70"},
+            {"id": 5, "name": "Тілге сақтық", "leader_name": "Мади", "phone": "+7 705 201 38 70"},
+            {"id": 6, "name": "ЖОҚ", "leader_name": "Ғазиза", "phone": "87782787622"},
+            {"id": 7, "name": "Вандализм OFF", "leader_name": "Ақерке", "phone": "+7 702 826 26 15"},
+            {"id": 8, "name": "Заң.Дүкендер", "leader_name": "Мирас", "phone": "87769773767"},
+            {"id": 9, "name": "Зайцам - нет", "leader_name": "Алишер", "phone": "87082575303"},
+            {"id": 10, "name": "Время истекло", "leader_name": "Мадина", "phone": "+7 747 471 71 34"},
+            {"id": 11, "name": "Город", "leader_name": "Қуаныш", "phone": "87064227667"},
+            {"id": 12, "name": "Tumar", "leader_name": "Галия", "phone": "87089880954"},
         ]
 
         for data in campaigns_data:
-            Campaign.objects.get_or_create(
-                name=data['name'],
+            campaign, created = Campaign.objects.update_or_create(
+                id=data['id'],
                 defaults={
+                    'name': data['name'],
                     'leader_name': data['leader_name'],
                     'phone': data['phone'],
                 }
             )
+            if created:
+                print(f"Created campaign with id {data['id']}: {data['name']}")
+            else:
+                print(f"Updated campaign with id {data['id']}: {data['name']}")
 
 class Vote(models.Model):
     campaign = models.ForeignKey(Campaign, related_name='votes', on_delete=models.CASCADE, verbose_name=_("Campaign"))
