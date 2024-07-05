@@ -75,6 +75,7 @@ def handle_qr_data(request):
     return redirect('qr_response')
 
 
+
 @login_required
 def qr_friend_request(request):
     data = request.session.get('qr_data')
@@ -96,7 +97,7 @@ def qr_friend_request(request):
             return redirect('qr_response')
 
         # Попытка отправить запрос дружбы
-        state, message = FriendService.send_friend_requestQR(request.user, to_user)
+        state, message, coins_transferred = FriendService.send_friend_requestQR(request.user, to_user)
 
         if state == 'new_request' or state == 'already_sent':
             # В любом случае показываем qr_friend_request
@@ -110,6 +111,7 @@ def qr_friend_request(request):
 
         elif state == 'now_friends':
             request.session['qr_data']['user_id'] = to_user.id  # Обновляем данные в сессии
+            request.session['coins_transferred'] = str(coins_transferred)  # Сохраняем количество коинов
             return redirect('friend_confirmation')
 
         elif state == 'error':
@@ -131,24 +133,45 @@ def qr_friend_request(request):
 def friend_confirmation(request):
     data = request.session.get('qr_data')
     if not data:
-        request.session['error_message'] = 'No QR data found'
+        request.session['error_message'] = 'Данные QR не найдены'
         request.session['positiveResponse'] = False
         return redirect('qr_response')
 
     user_id = data.get('user_id')
+    coins_transferred_str = request.session.get('coins_transferred')
+
+    if not coins_transferred_str:
+        return redirect('profile')
 
     try:
         to_user = User.objects.get(id=user_id)
-        coins_transferred = 2  # settings.FRIEND_REWARD_COINS  Предполагаем, что это количество коинов за дружбу
+        coins_transferred = Decimal(coins_transferred_str)  # Преобразование строки обратно в Decimal
         context = {
             'to_user': to_user,
             'coins_transferred': coins_transferred
         }
         return render(request, 'qr_handler/friend_confirmation.html', context)
     except User.DoesNotExist:
-        request.session['error_message'] = 'User not found'
+        request.session['error_message'] = 'Пользователь не найден'
         request.session['positiveResponse'] = False
         return redirect('qr_response')
+
+@login_required
+def check_friend_request_status(request):
+    data = request.session.get('qr_data')
+    if not data:
+        return JsonResponse({'status': 'error', 'message': 'Данные QR не найдены'}, status=400)
+
+    user_id = data.get('user_id')
+    try:
+        to_user = User.objects.get(id=user_id)
+        # Проверка, если уже дружат
+        if FriendService.are_friends(request.user, to_user):
+            return JsonResponse({'status': 'confirmed'})
+        return JsonResponse({'status': 'pending'})
+    except User.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Пользователь не найден'}, status=404)
+
 
 
 @login_required
@@ -321,20 +344,3 @@ def qr_response_view(request):
         'error_message': error_message,
     }
     return render(request, 'qr_handler/qr_response.html', context)
-
-
-@login_required
-def check_friend_request_status(request):
-    data = request.session.get('qr_data')
-    if not data:
-        return JsonResponse({'status': 'error', 'message': 'Данные QR не найдены'}, status=400)
-
-    user_id = data.get('user_id')
-    try:
-        to_user = User.objects.get(id=user_id)
-        # Проверка, если уже дружат
-        if FriendService.are_friends(request.user, to_user):
-            return JsonResponse({'status': 'confirmed'})
-        return JsonResponse({'status': 'pending'})
-    except User.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Пользователь не найден'}, status=404)
