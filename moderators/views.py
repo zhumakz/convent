@@ -20,7 +20,6 @@ def is_moderator(user):
     return user.groups.filter(name__in=['Главный оператор', 'Оператор', 'Продавец', 'Оператор Doscam']).exists()
 
 
-
 @login_required
 @permission_required('moderators.view_moderators', raise_exception=True)
 def moderator_dashboard(request):
@@ -31,16 +30,14 @@ def moderator_dashboard(request):
 @permission_required('moderators.add_coins', raise_exception=True)
 def operator_view(request):
     # Получаем историю переводов
-    transactions = CoinService.get_transactions(request.user).select_related('sender', 'recipient').order_by('-timestamp')
-
-    # Обрабатываем историю переводов для отображения
-    processed_transactions = [CoinService.process_transaction(tx, request.user) for tx in transactions]
+    transactions = CoinService.get_transactions(request.user).select_related('sender', 'recipient').order_by(
+        '-timestamp')
 
     # Подсчитываем общее количество выданных монет
     total_coins_issued = sum(tx.amount for tx in transactions if tx.sender == request.user)
 
     return render(request, 'moderators/operator.html', {
-        'transactions': processed_transactions,
+        'transactions': transactions,
         'operator_name': f"{request.user.name} {request.user.surname}",
         'total_coins_issued': total_coins_issued
     })
@@ -83,72 +80,97 @@ def handle_qr_data(request):
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
+
 @login_required
 @permission_required('moderators.add_coins', raise_exception=True)
 def transfer_coins(request):
     user_id = request.session.get('qr_user_id')
 
     if not user_id:
-        messages.error(request, 'User ID not found in session.')
-        return redirect('operator')
+        request.session['positiveResponse'] = False
+        request.session['error_message'] = 'ID пользователя не найден в сессии.'
+        request.session['redirect_url'] = 'operator'  # URL для перенаправления
+        return redirect('m_response')
 
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
-        messages.error(request, 'User with given ID does not exist.')
-        return redirect('operator')
+        request.session['positiveResponse'] = False
+        request.session['error_message'] = 'Пользователь с данным ID не существует.'
+        request.session['redirect_url'] = 'operator'  # URL для перенаправления
+        return redirect('m_response')
 
     if request.method == 'POST':
         form = SendCoinsForm(request.POST)
         if form.is_valid():
             amount = form.cleaned_data['amount']
-            description = form.cleaned_data['description']
             try:
                 CoinService.create_transaction(
                     sender=request.user,
                     recipient=user,
                     amount=amount,
-                    description=description
+                    category_name='moderator_transfer'  # Используем категорию транзакции moderator_transfer
                 )
                 # Сохранение данных о транзакции в сессии
-                request.session['confirmation_user_name'] = f"{user.name} {user.surname}"
+                request.session['confirmation_user'] = user_id
                 request.session['confirmation_amount'] = str(amount)  # Преобразование в строку
 
                 # Очистка user_id из сессии после успешного перевода
                 del request.session['qr_user_id']
                 return redirect('confirmation')
             except Exception as e:
-                messages.error(request, f'Error during transaction: {e}')
+                request.session['positiveResponse'] = False
+                request.session['error_message'] = f'Ошибка при проведении транзакции: {e}'
+                request.session['redirect_url'] = 'operator'  # URL для перенаправления
+                return redirect('m_response')
         else:
-            messages.error(request, 'Invalid form data.')
+            request.session['positiveResponse'] = False
+            request.session['error_message'] = 'Некорректные данные формы.'
+            request.session['redirect_url'] = 'operator'  # URL для перенаправления
+            return redirect('m_response')
     else:
         form = SendCoinsForm(initial={'user_id': user.id})
 
     return render(request, 'moderators/transfer_coins.html', {
         'form': form,
-        'user_name': f"{user.name} {user.surname}",
+        'recipient': user,
         'user_balance': user.doscointbalance.balance
     })
 
-
-
 @login_required
 def confirmation_view(request):
-    user_name = request.session.get('confirmation_user_name')
-    amount = request.session.get('confirmation_amount')
+    user_id = request.session.get('confirmation_user')
 
-    if not user_name or not amount:
-        messages.error(request, 'Transaction information not found in session.')
-        return redirect('operator')
+    if not user_id:
+        request.session['positiveResponse'] = False
+        request.session['error_message'] = 'ID пользователя не найден в сессии.'
+        request.session['redirect_url'] = 'operator'  # URL для перенаправления
+        return redirect('m_response')
+
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        request.session['positiveResponse'] = False
+        request.session['error_message'] = 'Пользователь с данным ID не существует.'
+        request.session['redirect_url'] = 'operator'  # URL для перенаправления
+        return redirect('m_response')
+
+    amount = request.session.get('confirmation_amount')
+    if not user or not amount:
+        request.session['positiveResponse'] = False
+        request.session['error_message'] = 'Информация о транзакции не найдена в сессии.'
+        request.session['redirect_url'] = 'operator'  # URL для перенаправления
+        return redirect('m_response')
 
     # Очистка данных о транзакции из сессии
-    del request.session['confirmation_user_name']
+    del request.session['confirmation_user']
     del request.session['confirmation_amount']
 
     return render(request, 'moderators/confirmation.html', {
-        'user_name': user_name,
+        'recipient': user,
         'amount': amount
     })
+
 
 @login_required
 @permission_required('moderators.add_coins', raise_exception=True)
@@ -178,6 +200,7 @@ def seller_view(request):
         'form': form,
     })
 
+
 @login_required
 @permission_required('moderators.add_coins', raise_exception=True)
 def show_purchase_qr(request, purchase_id):
@@ -186,3 +209,14 @@ def show_purchase_qr(request, purchase_id):
         'purchase': purchase,
         'qr_code_url': purchase.qr_code.url,
     })
+@login_required
+def m_response_view(request):
+    positive_response = request.session.get('positiveResponse', False)
+    error_message = request.session.get('error_message', 'Unknown error')
+    redirect_url = request.session.get('redirect_url', 'operator')
+    context = {
+        'positiveResponse': positive_response,
+        'error_message': error_message,
+        'redirect_url': redirect_url,
+    }
+    return render(request, 'moderators/m_response.html', context)

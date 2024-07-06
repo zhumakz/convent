@@ -121,7 +121,7 @@
                     <ul class="history__list">
                         {% for transaction in transactions %}
                             <li class="history__item">
-                                <span class="history__time">{{ transaction.timestamp|date:"d.m - H:i" }}</span> |
+                                <span class="history__time">{{ transaction.timestamp|date:"H:i" }}</span> |
                                 <span class="history__amount
                             {% if transaction.is_positive %} history__minus  {% else %}  history__plus {% endif %}">
                         {% if transaction.is_positive %} -{% else %} +{% endif %}

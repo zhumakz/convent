@@ -1,10 +1,42 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Moderator Dashboard</title>
-</head>
-<body>
-    <h1>Moderator Dashboard</h1>
-    <p>Welcome to the moderator dashboard!</p>
-</body>
-</html>
+{% extends "base_moderator.html" %}
+{% load static %}
+{% block title %}operator{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/entertainment/entertainment.css' %}">
+    <link rel="stylesheet" href="{% static 'style/custom.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div id="qr-popup" class="popup qr" data-index="1">
+        <div class="popup-container">
+            <div class="top">
+                <a href="{% url 'operator' %}" class="top__button popup-close" data-index="1">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span class="top__title">Moderator Dashboard</span>
+            </div>
+            <div id="my-qr-reader" class="qr__content">
+                <img class="qr__image" src="{% static 'image/qr.png' %}" alt="qr"/>
+            </div>
+        </div>
+    </div>
+    <div class="all-size flex">
+        <header class="header-second">
+            <div class="header-last"></div>
+            <div class="header-second__inner">
+                <button class="menu-button">
+                    <img class="menu-button__image" src="{% static 'image/menu-button.png' %}" alt="menu-button"/>
+                </button>
+                <h1 class="header-second__title">Moderator Dashboard</h1>
+            </div>
+        </header>
+        <section class="entertainment">
+            <div class="container entertainment__inner">
+                <p>Welcome to the moderator dashboard!</p>
+            </div>
+        </section>
+    </div>
+{% endblock %}

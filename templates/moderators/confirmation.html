@@ -1,9 +1,65 @@
-{% extends "base.html" %}
+{% extends "base_moderator.html" %}
+{% load static %}
+{% load i18n %}
+
 {% block title %}Confirmation{% endblock %}
 
-{% block content %}
-    <h2>Подтверждение перевода койнов</h2>
-    <p>Имя пользователя: {{ user_name }}</p>
-    <p>Количество переведенных койнов: {{ amount }}</p>
-    <a href="{% url 'operator' %}">Назад к оператору</a>
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/add/add.css' %}">
 {% endblock %}
+
+{% block content %}
+    <section class="add-friend all-size">
+        <div class="bottom-gradient"></div>
+        <div class="container add-friend__inner flex">
+            <div class="top">
+               <a href="{% url 'profile' %}" class="top__button popup-close">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span class="top__title">Подтверждение перевода</span>
+            </div>
+                    <div class="person">
+                <div class="photo-line blue-line">
+                    <img class="blue-person-img" src="
+                    {% if recipient.profile_picture %}
+                        {{ recipient.profile_picture.url }}
+                    {% else %}{% static 'image/photo.png' %}
+                        {% endif %}" alt="photo"/>
+                </div>
+
+                <div class="person__wrapper add-friend__wrapper mt20">
+
+                    <span class="person__location">{{ recipient.city }}</span>
+                    <br/>
+                    <span class="person__name">
+				  {{ recipient.name }} <br/>
+                        {{ recipient.surname }}</span>
+                </div>
+            </div>
+
+            <div class="final__content">
+                <div class="final__coins-background">
+                    <div class="final__coins-item"></div>
+                    <div class="final__coins-item"></div>
+                    <div class="final__coins-item"></div>
+                    <img
+                            class="final__coins-layers"
+                            src="{% static 'image/layers.png' %}"
+                            alt="layers"
+                    />
+                </div>
+                <svg class="final__coins" width="150" height="150">
+                    <use href="{% static 'image/icons.svg' %}#coins"></use>
+                </svg>
+                <div class="final__coins-add">
+                    <span class="count">-{{ amount }}</span>
+                    <span>Dos <br/>Coins</span>
+                </div>
+            </div>
+            <a href="{% url 'operator' %}" class="button-s popups-close">Закрыть</a>
+        </div>
+    </section>
+{% endblock %}
+

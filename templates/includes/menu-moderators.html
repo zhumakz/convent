@@ -1,0 +1,41 @@
+{% load static %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+<div class="menu">
+    <div class="top">
+        <button class="top__button">
+            <svg width="46" height="46">
+                <use href="{% static 'image/icons.svg' %}#back"></use>
+            </svg>
+        </button>
+        <span class="top__title">{% trans "Меню" %}</span>
+    </div>
+    <div class="menu__languages">
+        <button class="menu__languages-button{% if LANGUAGE_CODE  == 'kk' %} menu__languages-button--active{% endif %}"
+                href="{% url 'switch_language' 'kk' %}">ҚАЗ
+        </button>
+        <button class="menu__languages-button{% if LANGUAGE_CODE  == 'ru' %} menu__languages-button--active{% endif %}"
+                href="{% url 'switch_language' 'ru' %}">РУС
+        </button>
+
+    </div>
+    <nav class="menu__nav">
+        <ul class="menu__list">
+            <li class="menu__item">
+                <a class="menu__link" href="{% url 'moderator_dashboard' %}">{% trans "Панель" %}</a>
+            </li>
+            <li class="menu__item">
+                <a class="menu__link" href="{% url 'operator' %}">{% trans "Оператор" %}</a>
+            </li>
+            <li class="menu__item">
+                <a class="menu__link" href="{% url 'seller_view' %}">{% trans "Продавец" %}</a>
+            </li>
+
+            {% if user.is_authenticated %}
+                <li class="menu__item">
+                    <a class="menu__link" href="{% url 'logout' %}">{% trans "Выйти" %}</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>

@@ -1,14 +1,100 @@
-{% extends "base.html" %}
+{% extends "base_moderator.html" %}
 {% load static %}
 {% block title %}Transfer Coins{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/confirmation/confirmation.css' %}">
+    <link rel="stylesheet" href="{% static 'style/custom.css' %}">
+{% endblock %}
 {% block content %}
-    <h2>Перевод койнов</h2>
-    <p>Имя пользователя: {{ user_name }}</p>
-    <p>Баланс: {{ user_balance }}</p>
-    <form method="post" action="{% url 'transfer_coins' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Перевести</button>
-    </form>
+    <section class="add-friend all-size">
+        <div class="bottom-gradient"></div>
+        <div class="container add-friend__inner flex">
+            <div class="top">
+                <a href="{% url 'operator' %}" class="top__button popup-close" data-index="1">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span class="top__title">Перевод пользователю</span>
+            </div>
+            <div class="person">
+                <div class="photo-line blue-line">
+                    <img class="blue-person-img" src="
+                    {% if recipient.profile_picture %}
+                        {{ recipient.profile_picture.url }}
+                    {% else %}{% static 'image/photo.png' %}
+                        {% endif %}" alt="photo"/>
+                </div>
+
+                <div class="person__wrapper add-friend__wrapper mt20">
+
+                    <span class="person__location">{{ recipient.city }}</span>
+                    <br/>
+                    <span class="person__name">
+				  {{ recipient.name }} <br/>
+                        {{ recipient.surname }}</span>
+                </div>
+            </div>
+          <div class="entertainment__coins-item">
+                <span>Ваш баланс</span>
+                <span class="count-s entertainment__plus">{{ user.doscointbalance.balance|floatformat:"-1" }}</span>
+                <span class="entertainment__dos">Dos Coins</span>
+            </div>
+            <form class="add-friend__form" method="post" action="{% url 'transfer_coins' %}">
+                {% csrf_token %}
+                {{ form.user_id }}
+                <div class="add-friend__form-top">
+                    <button class="add-friend__plus-top add-friend__form-button" type="button" data-plus="10">10
+                    </button>
+                    <button class="add-friend__plus-top add-friend__form-button" type="button" data-plus="50">50
+                    </button>
+                    <button class="add-friend__plus-top add-friend__form-button" type="button" data-plus="100">100
+                    </button>
+                </div>
+                <div class="add-friend__form-content">
+                    <button class="add-friend__minus add-friend__form-button" type="button">-</button>
+                    <div class="add-friend__coins-wrapper add-friend__form-wrapper">
+                        <label>
+                            <input
+                                    class="add-friend__coins count"
+                                    type="number"
+                                    name="amount"
+                                    value="0"
+                                    readonly
+                            />
+                        </label>
+                        <span class="add-friend__name"> Dos Coins </span>
+                    </div>
+                    <button class="add-friend__plus add-friend__form-button" type="button">+</button>
+                </div>
+                <button class="button add-friend__submit" type="submit">Перевести</button>
+                <a href="{% url 'operator' %}" class="button-s back" type="button">Отмена</a>
+            </form>
+        </div>
+    </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const plusTopButtons = document.querySelectorAll('.add-friend__plus-top');
+            const plusButton = document.querySelector('.add-friend__plus');
+            const minusButton = document.querySelector('.add-friend__minus');
+            const amountInput = document.querySelector('.add-friend__coins.count');
+
+            plusTopButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const increment = parseInt(this.dataset.plus) || 0;
+                    amountInput.value = increment;
+                });
+            });
+
+            plusButton.addEventListener('click', function () {
+                amountInput.value = parseInt(amountInput.value) + 1;
+            });
+
+            minusButton.addEventListener('click', function () {
+                amountInput.value = Math.max(0, parseInt(amountInput.value) - 1);
+            });
+        });
+
+    </script>
 {% endblock %}

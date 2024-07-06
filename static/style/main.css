@@ -154,7 +154,7 @@ body {
 .top__title {
     display: block;
     color: #F8B16F;
-    margin-right: 50%;
+    margin-right: 30%;
     transform: translateX(50%);
     text-wrap: nowrap;
 }

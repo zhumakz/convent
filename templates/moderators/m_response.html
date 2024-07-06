@@ -1,0 +1,27 @@
+{% extends "base_moderator.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}QR Response{% endblock %}
+
+{% block extra_css %}
+    {% if positiveResponse %}
+        <link rel="stylesheet" href="{% static 'style/success/success.css' %}">
+    {% else %}
+        <link rel="stylesheet" href="{% static 'style/404/error.css' %}">
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'style/custom.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="error">
+        <h3 class="error__title">Внимание!</h3>
+        {% if positiveResponse %}
+            <img class="error__icon" src="{% static 'image/star.png' %}" alt="icon"/>
+        {% else %}
+            <img class="error__icon" src="{% static 'image/error.png' %}" alt="icon"/>
+        {% endif %}
+        <p class="error__text">{{ error_message }}</p>
+        <a href="{% url redirect_url %}" class="button-s error__button">Назад</a>
+    </section>
+{% endblock %}

@@ -100,3 +100,32 @@ select option {
 .selfie-edit-button {
     border-bottom: 1px dotted;
 }
+
+.mb30 {
+    margin-bottom: 30px;
+}
+
+.mt30 {
+    margin-top: 30px;
+}
+
+.mb20 {
+    margin-bottom: 20px;
+}
+
+.mt20 {
+    margin-top: 20px;
+}
+
+.add-friend__form-top {
+    margin-top: 35px;
+}
+
+.top__title {
+    margin-right: 30%;
+}
+
+.entertainment__history {
+    max-width: 350px;
+}
+
