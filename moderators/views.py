@@ -12,6 +12,7 @@ from coins.services import CoinService
 from moderators.forms import SendCoinsForm
 from shop.forms import PurchaseForm
 from shop.models import Purchase
+from shop.services import ShopService
 
 logger = logging.getLogger('moderators')
 
@@ -88,7 +89,7 @@ def transfer_coins(request):
 
     if not user_id:
         request.session['positiveResponse'] = False
-        request.session['error_message'] = 'ID пользователя не найден в сессии.'
+        request.session['error_message'] = '2ID пользователя не найден в сессии.'
         request.session['redirect_url'] = 'operator'  # URL для перенаправления
         return redirect('m_response')
 
@@ -143,7 +144,7 @@ def confirmation_view(request):
 
     if not user_id:
         request.session['positiveResponse'] = False
-        request.session['error_message'] = 'ID пользователя не найден в сессии.'
+        request.session['error_message'] = '3ID пользователя не найден в сессии.'
         request.session['redirect_url'] = 'operator'  # URL для перенаправления
         return redirect('m_response')
 
@@ -190,6 +191,11 @@ def seller_view(request):
 
             messages.success(request, 'QR код успешно сгенерирован!')
             return redirect('show_purchase_qr', purchase_id=purchase.id)
+        else:
+            request.session['positiveResponse'] = False
+            request.session['error_message'] = 'Некорректные данные формы.'
+            request.session['redirect_url'] = 'seller_view'
+            return redirect('m_response')
     else:
         form = PurchaseForm()
 
@@ -200,7 +206,6 @@ def seller_view(request):
         'form': form,
     })
 
-
 @login_required
 @permission_required('moderators.add_coins', raise_exception=True)
 def show_purchase_qr(request, purchase_id):
@@ -209,11 +214,30 @@ def show_purchase_qr(request, purchase_id):
         'purchase': purchase,
         'qr_code_url': purchase.qr_code.url,
     })
+
+
+@login_required
+@permission_required('moderators.add_coins', raise_exception=True)
+def check_purchase_status(request, purchase_id):
+    purchase = ShopService.get_purchase_by_id(purchase_id)
+
+    if purchase.is_completed:
+        request.session['positiveResponse'] = True
+        request.session['error_message'] = 'Покупка успешно завершена!'
+        request.session['redirect_url'] = 'seller_view'
+        return JsonResponse({'status': 'completed'})
+    elif purchase.is_cancelled:
+        request.session['positiveResponse'] = False
+        request.session['error_message'] = 'Покупка была отменена.'
+        request.session['redirect_url'] = 'seller_view'
+        return JsonResponse({'status': 'cancelled'})
+    else:
+        return JsonResponse({'status': 'pending'})
 @login_required
 def m_response_view(request):
     positive_response = request.session.get('positiveResponse', False)
     error_message = request.session.get('error_message', 'Unknown error')
-    redirect_url = request.session.get('redirect_url', 'operator')
+    redirect_url = request.session.get('redirect_url', 'moderator_dashboard')
     context = {
         'positiveResponse': positive_response,
         'error_message': error_message,

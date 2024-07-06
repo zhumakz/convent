@@ -1,9 +1,65 @@
 {% extends "base_moderator.html" %}
-{% block title %}QR Code{% endblock %}
+{% load static %}
+{% block title %}Generate Purchase QR{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/qr/qr.css' %}">
+{% endblock %}
 
 {% block content %}
-    <h2>Сгенерированный QR-код</h2>
-    <p>Сумма: {{ purchase.amount }}</p>
-    <img src="{{ qr_code_url }}" alt="QR Code">
-    <a href="{% url 'seller_view' %}">Назад к продавцу</a>
+    <section class="qr all-size">
+        <div class="top">
+            <a href="{% url 'seller_view' %}" class="top__button back" data-index="1">
+                <svg width="46" height="46">
+                    <use href="{% static 'image/icons.svg' %}#back"></use>
+                </svg>
+            </a>
+            <span class="top__title">Сгенерированный QR-код</span>
+        </div>
+        <div class="flex qr__inner ">
+            <img class="qr__seller-image" src="{{ qr_code_url }}" alt="qr"/>
+            <div class="qr__seller-wrapper">
+                <span>Цена</span>
+                <span class="count">{{ purchase.amount }}</span>
+                <span>Dos Coins</span>
+            </div>
+
+            <a href="{% url 'seller_view' %}" class="button-s back">Отмена</a>
+        </div>
+    </section>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var interval = 3000; // 3 seconds
+        var duration = 120000; // 2 minutes
+        var elapsed = 0;
+
+        function checkPurchaseStatus() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '{% url "check_purchase_status" purchase.id %}', true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.status !== 'pending') {
+                        window.location.href = "{% url "m_response" %}";
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function startPolling() {
+            var intervalId = setInterval(function () {
+                elapsed += interval;
+                if (elapsed >= duration) {
+                    clearInterval(intervalId);
+                }
+                checkPurchaseStatus();
+            }, interval);
+        }
+
+        startPolling();
+    });
+</script>
+
 {% endblock %}
+

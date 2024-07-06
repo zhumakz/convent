@@ -46,10 +46,13 @@
                 {% if user_balance >= purchase.amount %}
                     <form class="payment__buttons" method="post">
                         {% csrf_token %}
-                        <button class="button payment__button" type="submit">Подтвердить</button>
+                        <button class="button payment__button" type="submit" name="confirm">Подтвердить</button>
                     </form>
                 {% endif %}
-                <a href="{% url 'profile' %}" class="button-s back">Отмена</a>
+                <form class="payment__buttons" method="post">
+                    {% csrf_token %}
+                    <button class="button-s back" type="submit" name="cancel">Отмена</button>
+                </form>
             </div>
         </div>
     </section>

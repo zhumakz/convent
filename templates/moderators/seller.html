@@ -1,9 +1,9 @@
 {% extends "base_moderator.html" %}
 {% load static %}
-{% block title %}Seller Dashboard{% endblock %}
+{% block title %}Продавец{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'style/entertainment/entertainment.css' %}">
+    <link rel="stylesheet" href="{% static 'style/seller/seller.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -14,42 +14,100 @@
                 <button class="menu-button">
                     <img class="menu-button__image" src="{% static 'image/menu-button.png' %}" alt="menu-button"/>
                 </button>
-                <h1 class="header-second__title">{{ seller_name }}</h1>
+                <h1 class="header-second__title">Продавец</h1>
             </div>
         </header>
-        <section class="entertainment">
-            <div class="container entertainment__inner">
-                <div class="entertainment__coins">
-                    <span>Выручка:</span>
-                    <span class="count-s">{{ total_sales|floatformat:"-1" }}</span>
-                    <span class="entertainment__dos">Dos Coins</span>
-                </div>
-                <div class="history entertainment__history">
-                    <h5 class="history__title">История завершенных продаж:</h5>
-                    <ul class="history__list entertainment__list">
-                        {% for transaction in transactions %}
-                            <li class="history__item">
-                                <span class="history__time">{{ transaction.created_at|date:"d.m - H:i" }}</span> |
-                                <span class="history__plus">{{ transaction.amount|floatformat:"-1" }}</span>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <h2>Генерация QR-кода для продажи</h2>
-                <form method="post" action="{% url 'seller_view' %}">
+        <section class="seller">
+            <div class="container seller__inner">
+                <h4 class="seller__title">Введите в поле значение:</h4>
+                <form class="seller__form" method="post" action="{% url 'seller_view' %}">
                     {% csrf_token %}
-                    {{ form.as_p }}
-                    <button type="submit">Сгенерировать QR-код</button>
-                </form>
+                    <div class="seller__item">
+                        <label>
+                            <input type="number" class="seller__number"
+                                   name="amount" readonly/>
+                        </label>
+                        <span class="seller__coins">Dos Coins</span>
+                    </div>
 
-                {% if messages %}
-                    <ul class="messages">
-                        {% for message in messages %}
-                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
+                    <div class="seller__buttons">
+                        <input class="seller__button" type="button" value="1"/>
+                        <input class="seller__button" type="button" value="2"/>
+                        <input class="seller__button" type="button" value="3"/>
+                        <input class="seller__button" type="button" value="4"/>
+                        <input class="seller__button" type="button" value="5"/>
+                        <input class="seller__button" type="button" value="6"/>
+                        <input class="seller__button" type="button" value="7"/>
+                        <input class="seller__button" type="button" value="8"/>
+                        <input class="seller__button" type="button" value="9"/>
+                        <span class="seller__span"></span>
+                        <input class="seller__button" type="button" value="0"/>
+
+                        <button class="seller__delete" type="button">
+                            <svg width="51" height="31">
+                                <use href="{% static 'image/icons.svg' %}#seller-delete"></use>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <button class="button seller__submit" type="submit">
+                        Сгенерировать QR
+                    </button>
+                </form>
             </div>
         </section>
+{#        <section class="entertainment">#}
+{#            <div class="container entertainment__inner">#}
+{#                <div class="entertainment__coins">#}
+{#                    <span>Выручка:</span>#}
+{#                    <span class="count-s">{{ total_sales|floatformat:"-1" }}</span>#}
+{#                    <span class="entertainment__dos">Dos Coins</span>#}
+{#                </div>#}
+{#                <div class="history entertainment__history">#}
+{#                    <h5 class="history__title">История завершенных продаж:</h5>#}
+{#                    <ul class="history__list entertainment__list">#}
+{#                        {% for transaction in transactions %}#}
+{#                            <li class="history__item">#}
+{#                                <span class="history__time">{{ transaction.created_at|date:"d.m - H:i" }}</span> |#}
+{#                                <span class="history__plus">{{ transaction.amount|floatformat:"-1" }}</span>#}
+{#                            </li>#}
+{#                        {% endfor %}#}
+{#                    </ul>#}
+{#                </div>#}
+{#                <h2>Генерация QR-кода для продажи</h2>#}
+{#                <form method="post" action="{% url 'seller_view' %}">#}
+{#                    {% csrf_token %}#}
+{#                    {{ form.as_p }}#}
+{#                    <button type="submit">Сгенерировать QR-код</button>#}
+{#                </form>#}
+{##}
+{#                {% if messages %}#}
+{#                    <ul class="messages">#}
+{#                        {% for message in messages %}#}
+{#                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>#}
+{#                        {% endfor %}#}
+{#                    </ul>#}
+{#                {% endif %}#}
+{#            </div>#}
+{#        </section>#}
     </div>
+    <script>
+        const form = document.querySelector(".seller__form");
+
+        class Form {
+            constructor(form) {
+                this.input = form.querySelector(".seller__number");
+
+                form.addEventListener("click", ({target}) => {
+                    if (target.classList.contains("seller__button")) {
+                        this.input.value += target.value;
+                    } else if (target.classList.contains("seller__delete")) {
+                        this.input.value = this.input.value.slice(0, this.input.value.length - 1);
+                    }
+                });
+            }
+        }
+
+        new Form(form);
+    </script>
 {% endblock %}

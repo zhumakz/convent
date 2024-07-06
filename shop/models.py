@@ -40,6 +40,7 @@ class Purchase(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name=_("Сумма"))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Создано"))
     is_completed = models.BooleanField(default=False, verbose_name=_("Завершено"))
+    is_cancelled = models.BooleanField(default=False, verbose_name=_("Отменено"))
     qr_code = models.ImageField(upload_to='purchases/qr_codes/', blank=True, null=True, verbose_name=_("QR-код"))
 
     def __str__(self):

@@ -49,3 +49,10 @@ class ShopService:
         purchase.buyer = buyer
         purchase.save()
         return __('Покупка успешно завершена!')
+
+    @staticmethod
+    @transaction.atomic
+    def cancel_purchase(purchase):
+        purchase.is_cancelled = True
+        purchase.save()
+        return __('Покупка была отменена.')

@@ -198,23 +198,31 @@ def qr_purchase_detail(request):
     user_balance = request.user.doscointbalance.balance  # Предполагаем, что у пользователя есть атрибут баланса
 
     if request.method == 'POST':
-        try:
-            message = ShopService.complete_purchase(purchase, request.user)
-            success = True
-        except ValidationError as e:
-            message = e.messages[0]
-            success = False
+        if 'confirm' in request.POST:
+            try:
+                message = ShopService.complete_purchase(purchase, request.user)
+                success = True
+            except ValidationError as e:
+                message = e.messages[0]
+                success = False
 
-        coins_transferred = purchase.amount if success else 0
-        context = {
-            'message': message,
-            'success': success,
-            'purchase': purchase,
-            'coins_transferred': coins_transferred
-        }
-        request.session['positiveResponse'] = success
-        request.session['error_message'] = message
-        return redirect('qr_response')
+            coins_transferred = purchase.amount if success else 0
+            context = {
+                'message': message,
+                'success': success,
+                'purchase': purchase,
+                'coins_transferred': coins_transferred
+            }
+            request.session['positiveResponse'] = success
+            request.session['error_message'] = message
+            return redirect('qr_response')
+
+        elif 'cancel' in request.POST:
+            purchase.is_cancelled = True
+            purchase.save()
+            request.session['positiveResponse'] = False
+            request.session['error_message'] = 'Покупка была отменена.'
+            return redirect('profile')
 
     context = {
         'purchase': purchase,
@@ -222,6 +230,7 @@ def qr_purchase_detail(request):
         'purchase_amount': purchase.amount
     }
     return render(request, 'qr_handler/qr_purchase_detail.html', context)
+
 
 @login_required
 def qr_campaign_vote(request):
