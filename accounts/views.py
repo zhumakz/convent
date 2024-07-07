@@ -12,6 +12,7 @@ from django.utils.translation import gettext_lazy as _, gettext as __
 
 from coins.services import CoinService
 from doscam.models import Event
+from doscam.services import EventService
 from friends.services import FriendService
 from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm, ModeratorLoginForm, \
     ProfilePictureForm
@@ -154,9 +155,7 @@ def profile_view(request):
         cache.set(cache_key, transactions, timeout=300)  # Кэширование на 5 минут
 
     # Проверка текущего события
-    current_event = Event.objects.filter(
-        (Q(participant1=user) | Q(participant2=user)) & Q(is_completed=False)
-    ).first()
+    current_event = EventService.check_active_event_by_user(user)
 
     return render(request, 'accounts/profile.html', {
         'user': user,

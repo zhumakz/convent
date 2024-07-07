@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.db import transaction as db_transaction
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _, gettext as __
 from .models import Event, Location
@@ -58,6 +59,17 @@ class EventService:
     def check_active_event():
         now = timezone.now()
         active_event = Event.objects.filter(is_published=True, is_completed=False, end_time__gt=now).first()
+        return active_event
+
+    @staticmethod
+    def check_active_event_by_user(user):
+        now = timezone.now()
+        active_event = Event.objects.filter(
+            (Q(participant1=user) | Q(participant2=user)) &
+            Q(is_published=True) &
+            Q(is_completed=False) &
+            Q(end_time__gt=now)
+        ).first()
         return active_event
 
     @staticmethod

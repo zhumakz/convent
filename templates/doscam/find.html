@@ -1,0 +1,141 @@
+{% extends "base_moderator.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Doscam{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/find/find.css' %}">
+{% endblock %}
+
+{% block content %}
+    {% if is_event_participant %}
+        <div class="popup find" data-index="8">
+            <div class="bottom-gradient"></div>
+            <div class="popup-container flex find__inner">
+                <div class="top">
+                    <button class="top__button popup-close" data-index="8">
+                        <svg width="46" height="46">
+                            <use href="{% static 'image/icons.svg' %}#back"></use>
+                        </svg>
+                    </button>
+                    <span class="top__title">Dos Cam</span>
+                </div>
+                <p class="find__text">Найди этого человека за отведенное время и отсканируй его QR Code!</p>
+                <div class="person">
+                    <div class="photo-line find__line">
+                        <img class="profile__person-img" src="
+                                    {% if current_event.participant1 == user %}
+                                    {{ current_event.participant2.profile_picture.url }}
+                                    {% else %}
+                                    {{ current_event.participant1.profile_picture.url }}
+                                    {% endif %}"
+                             alt="photo"/>
+                    </div>
+                    <span class="person__location">
+                                  {% if current_event.participant1 == user %}
+                                      {{ current_event.participant2.city.name }}
+                                  {% else %}
+                                      {{ current_event.participant1.city.name }}
+                                  {% endif %}</span>
+                    <span class="person__name">{{ current_event.participant2.name }}<br/>{{ current_event.participant2.surname }}</span>
+                </div>
+                <div class="timer"></div>
+                <button class="button-s popup-close find__button-close" data-index="8">Свернуть</button>
+            </div>
+        </div>
+    {% endif %}
+    <section class="find all-size">
+        <div class="bottom-gradient"></div>
+        <div class="container flex find__inner">
+
+            <div class="top">
+                <a href="{% url 'profile' %}" class="top__button back" data-index="1">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span class="top__title">Dos Cam</span>
+            </div>
+            {% if error_message %}
+                <h3 class="error find__text">{{ error_message }}</h3>
+            {% endif %}
+            <p class="find__text">
+                Найди этого человека за отведенное время и отсканируй его QR Code!
+            </p>
+            <div class="person">
+                <div class="photo-line find__line">
+                    <img class="find__person-img" src="
+                        {% if current_event.participant1 == user %}
+                            {{ current_event.participant2.profile_picture.url }}
+                        {% else %}
+                            {{ current_event.participant1.profile_picture.url }}
+                        {% endif %}" alt="photo"/>
+                </div>
+                <span class="person__location">{{ current_event.location }}
+                </span>
+                <span class="person__location">
+                    {% if current_event.participant1 == user %}
+                        {{ current_event.participant2.city }}
+                    {% else %}
+                        {{ current_event.participant1.city }}
+                    {% endif %}
+                </span>
+                <span class="person__name">
+                      {% if current_event.participant1 == user %}
+                          {{ current_event.participant2.name }}  <br/>  {{ current_event.participant2.surname }}
+                      {% else %}
+                          {{ current_event.participant1.name }}  <br/>  {{ current_event.participant1.surname }}
+                      {% endif %}
+                </span>
+            </div>
+            <div class="timer">
+                <div class="timer-minutes" id="time_remaining">0:00</div>
+                <div class="timer-line" style="display: block;">
+                    <div class="timer-progress-line" id="timer_progress" style="width: 0%;"></div>
+                </div>
+            </div>
+            <p class="display-none">Start Time: {{ current_event.start_time }}</p>
+            <p class="display-none">End Time: <span id="end_time">{{ current_event.end_time|date:"c" }}</span></p>
+            <button class="button-s back find__button-close">Свернуть</button>
+
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var endTimeElement = document.getElementById("end_time");
+            if (!endTimeElement) {
+                return;
+            }
+
+            var endTime = new Date(endTimeElement.textContent);
+            var now = new Date();
+            var totalDuration = (endTime - now) / 1000;
+            var timeRemaining = endTime - now;
+
+            function updateTimer() {
+                now = new Date();
+                timeRemaining = endTime - now;
+
+                if (timeRemaining > 0) {
+                    var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                    document.getElementById("time_remaining").textContent = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+
+                    var progressPercent = ((totalDuration - timeRemaining / 1000) / totalDuration) * 100;
+                    document.getElementById("timer_progress").style.width = progressPercent + "%";
+                } else {
+                    document.getElementById("time_remaining").textContent = "Событие завершено!";
+                    document.getElementById("timer_progress").style.width = "100%";
+                }
+            }
+
+            setInterval(updateTimer, 1000);
+            updateTimer();  // Initial call to display time immediately
+        });
+    </script>
+{% endblock %}
+

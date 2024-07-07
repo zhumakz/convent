@@ -249,6 +249,8 @@
 
 
 
+
+
                                         {% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'image/photo.png' %}{% endif %}"
                                      alt="Profile Picture" class="blue-person-img" width="300"/>
                             </div>
@@ -326,12 +328,13 @@
                         </svg>
                     </button>
                     {% if is_event_participant %}
-                        <button class="popup-button find-button" data-index="8">
+                        <a class="profile__find-link" href="{% url 'doscam_find' %}">
                             <svg width="46" height="46">
                                 <use href="{% static 'image/icons.svg' %}#yang"></use>
                             </svg>
-                        </button>
+                        </a>
                     {% endif %}
+                    <img class="art" src="{% static 'image/art.png' %}" width="46" height="46" alt="icon"/>
                 </div>
                 <div class="person">
                     <div class="photo-line profile__line">

@@ -165,3 +165,18 @@ def stop_event(request, event_id):
         logger.error(str(e))
         messages.error(request, _("An unexpected error occurred while stopping the event."))
     return redirect('operator_view')
+
+
+@login_required
+def find_view(request):
+    user = request.user
+    # Проверка текущего события
+
+    current_event = EventService.check_active_event_by_user(user)
+
+    return render(request, 'doscam/find.html', {
+        'user': user,
+        'current_event': current_event,
+        'is_event_participant': current_event and (
+                current_event.participant1 == user or current_event.participant2 == user)
+    })
