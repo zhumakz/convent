@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}Attraction List{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/points/points.css' %}">
+{% endblock %}
+
+{% block content %}
+    <header class="header">
+        <div class="container header__inner">
+            <a class="back" href="{% url 'home' %}">
+                <img class="back-image" src="{% static 'image/back.png' %}" alt="back"/>
+            </a>
+            <svg class="header__icon" width="138" height="151" fill="none">
+                <use href="{% static 'image/icons.svg' %}#points"></use>
+            </svg>
+            <h2 class="header__title">Точки интереса</h2>
+        </div>
+    </header>
+
+    <section class="points">
+        <div class="container points__inner">
+            {% for point in points %}
+                <div class="points__list">
+                    <svg
+                            width="40"
+                            height="40"
+                            viewBox="0 0 40 40"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                    >
+                        {{ point.icon_id|safe }}
+                    </svg>
+                    <h3 class="points__title">{{ point.title }}</h3>
+                    <p class="points__text">
+                        {{ point.description}}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

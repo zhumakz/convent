@@ -24,6 +24,7 @@ urlpatterns += i18n_patterns(
     path('events/', include('attractions.urls')),
     path('static_pages/', include('static_pages.urls')),
     path('moderators/', include('moderators.urls')),
+    path('points', include('points.urls')),
 )
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

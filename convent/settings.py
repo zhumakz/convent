@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'attractions',
     'static_pages',
     'moderators',
+    'points',
     # 'debug_toolbar',
 ]
 

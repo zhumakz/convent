@@ -28,8 +28,8 @@
             <nav class="homepage__nav">
                 <ul class="homepage__list">
                     <li class="homepage__item">
-                        <a class="homepage__link" href="{% url 'attraction_list' %}">
-                            <span class="homepage__link-name">{% trans "Точки притяжения" %}</span>
+                        <a class="homepage__link" href="{% url 'point_list' %}">
+                            <span class="homepage__link-name">{% trans "Точки интереса" %}</span>
                         </a>
                         <svg class="homepage__item-icon" width="138" height="151" fill="none">
                             <use href="{% static 'image/icons.svg' %}#points"></use>
@@ -41,6 +41,14 @@
                         </a>
                         <svg class="homepage__item-icon" width="148" height="148" fill="none">
                             <use href="{% static 'image/icons.svg' %}#coins"></use>
+                        </svg>
+                    </li>
+                    <li class="homepage__item">
+                        <a class="homepage__link" href="{% url 'attraction_list' %}">
+                            <span class="homepage__link-name">{% trans "Расписание" %}</span>
+                        </a>
+                        <svg class="homepage__item-icon" width="138" height="151" fill="none">
+                            <use href="{% static 'image/icons.svg' %}#list"></use>
                         </svg>
                     </li>
                     <li class="homepage__item">
