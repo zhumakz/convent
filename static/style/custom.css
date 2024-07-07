@@ -132,7 +132,54 @@ select option {
 .text-center {
     text-align: center;
 }
+
 .display-none {
     display: none;
 }
 
+/* Для больших экранов */
+.qr-code__qr {
+    min-height: 550px;
+    min-width: 550px;
+}
+
+.qr-code__qr-btn {
+    max-width: 450px;
+}
+
+/* Для средних экранов */
+@media (max-width: 1200px) {
+    .qr-code__qr {
+        min-height: 300px;
+        min-width: 300px;
+    }
+
+    .qr-code__qr-btn {
+        max-width: 250px;
+    }
+
+}
+
+/* Для маленьких экранов */
+@media (max-width: 768px) {
+    .qr-code__qr {
+        min-height: 250px;
+        min-width: 250px;
+    }
+
+    .qr-code__qr-btn {
+        max-width: 200px;
+    }
+}
+
+/* Для очень маленьких экранов */
+@media (max-width: 480px) {
+    .qr-code__qr {
+        min-height: 200px;
+        min-width: 200px;
+    }
+
+    .qr-code__qr-btn {
+        max-width: 150px;
+    }
+}

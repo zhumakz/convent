@@ -1,44 +1,46 @@
-{% extends "base.html" %}
+{% extends "base_moderator.html" %}
 {% load static %}
 {% load i18n %}
 
 {% block title %}{% trans "Start QR Code" %}{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'style/top/top.css' %}"/>
+    <link rel="stylesheet" href="{% static 'style/qr-code-desktop/qr-code.css' %}"/>
 {% endblock %}
 
 {% block content %}
-    <section class="top background-page">
+    <section class="qr-code  background-page">
         <div class="background-page__item background-page__first">
             <svg width="639" height="639" fill="none">
-                <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+                <use href="{% static 'image/icons.svg' %}#first-icon-white"></use>
             </svg>
         </div>
         <div class="background-page__item background-page__second">
             <svg width="639" height="639" fill="none">
-                <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+                <use href="{% static 'image/icons.svg' %}#first-icon-white"></use>
             </svg>
         </div>
         <div class="background-page__item background-page__three">
             <svg width="639" height="639" fill="none">
-                <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+                <use href="{% static 'image/icons.svg' %}#first-icon-dark"></use>
             </svg>
         </div>
         <div class="background-page__item background-page__fourth">
             <svg width="639" height="639" fill="none">
-                <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+                <use href="{% static 'image/icons.svg' %}#first-icon-dark"></use>
             </svg>
         </div>
-        <div class="top__content">
-            <h2>{% trans "Start QR Code for Lecture" %} {{ lecture.title }}</h2>
+
+        <div class="qr-code__content qr-code__content--qr container">
+            <h1 class="qr-code__title">{{ lecture.title }}</h1>
+
+            <span>Начало</span>
             {% if lecture.qr_code_start %}
-                <img src="{{ lecture.qr_code_start.url }}" alt="Start QR Code">
+                <img class="qr-code__qr" src="{{ lecture.qr_code_start.url }}" alt="End QR Code">
             {% else %}
-                <p>{% trans "No start QR code available." %}</p>
+                <p>{% trans "No end QR code available." %}</p>
             {% endif %}
-            <br>
-            <a href="{% url 'lecture_detail' lecture.id %}">{% trans "Back to Lecture Details" %}</a>
+            <a class="button qr-code__button qr-code__qr-btn" href="{% url 'lecture_detail' lecture.id %}">{% trans "Назад" %}</a>
         </div>
     </section>
 {% endblock %}
