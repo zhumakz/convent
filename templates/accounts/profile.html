@@ -251,6 +251,7 @@
 
 
 
+
                                         {% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'image/photo.png' %}{% endif %}"
                                      alt="Profile Picture" class="blue-person-img" width="300"/>
                             </div>
@@ -334,7 +335,13 @@
                             </svg>
                         </a>
                     {% endif %}
-                    <img class="art" src="{% static 'image/art.png' %}" width="46" height="46" alt="icon"/>
+
+                    {% if has_voted %}
+                        <a class="profile__find-link" href="{% url 'voted_campaign' %}">
+                     <img class="art" src="{% static 'image/art.png' %}" width="46" height="46" alt="icon"/>
+                        </a>
+                    {% endif %}
+
                 </div>
                 <div class="person">
                     <div class="photo-line profile__line">

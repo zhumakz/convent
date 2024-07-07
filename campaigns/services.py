@@ -47,3 +47,10 @@ class CampaignService:
     @staticmethod
     def get_voters_for_campaign(campaign):
         return Vote.objects.filter(campaign=campaign).select_related('user')
+    @staticmethod
+    def get_voted_campaign(user):
+        vote = Vote.objects.filter(user=user).select_related('campaign').first()
+        return vote.campaign if vote else None
+    @staticmethod
+    def has_voted(user):
+        return Vote.objects.filter(user=user).exists()

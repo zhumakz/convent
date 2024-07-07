@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.utils.translation import gettext_lazy as _, gettext as __
 
+from campaigns.services import CampaignService
 from coins.services import CoinService
 from doscam.models import Event
 from doscam.services import EventService
@@ -157,10 +158,12 @@ def profile_view(request):
     # Проверка текущего события
     current_event = EventService.check_active_event_by_user(user)
 
+    has_voted = CampaignService.has_voted(user)
     return render(request, 'accounts/profile.html', {
         'user': user,
         'friends': friends,
         'transactions': transactions,
+        'has_voted': has_voted,
         'current_event': current_event,
         'is_event_participant': current_event and (
             current_event.participant1 == user or current_event.participant2 == user)

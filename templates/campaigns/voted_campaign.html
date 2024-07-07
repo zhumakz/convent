@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Campaign Vote{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/art/art.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="art all-size">
+        <div class="art__top"
+                {% if campaign and campaign.main_photo %}
+             style="background-image: url('{{ campaign.main_photo.url }}');
+                     background-repeat: no-repeat;
+                     background-size: contain;
+                     background-position: center;"
+                {% endif %}>
+            <div class="top">
+                <a href="{% url 'profile' %}" class="top__button popup-close">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back"></use>
+                    </svg>
+                </a>
+                <span class="top__title">Campaign Vote</span>
+            </div>
+        </div>
+
+        {% if has_voted %}
+            <div class="popup-container art__inner">
+                <span class="art__name">{{ campaign.name }}</span>
+                <div class="person art__person">
+                    <div class="photo-line art__line">
+                        {% if campaign.leader_photo %}
+                            <img class="art__person-img" src="{{ campaign.leader_photo.url }}" alt="photo"/>
+                        {% else %}
+                            <img class="art__person-img" src="{% static 'image/photo.png' %}"
+                                 alt="default photo"/>
+                        {% endif %}
+                    </div>
+                    <span class="art__name">{{ campaign.leader_name }} <br/>(лидер гражданской компании)</span>
+                </div>
+                <ul class="art__points">
+                    {% if campaign.city %}
+                        <li class="art__item">Города где работает проект: {{ campaign.city }}</li>
+                    {% endif %}
+                    {% if campaign.description %}
+                        <li class="art__item">{{ campaign.description }}</li>
+                    {% endif %}
+                </ul>
+                <p class="art__warn">Теперь ты член этого движения!</p>
+                <a href="{% url 'profile' %}" class="button-s popup-close art__button-close">Свернуть</a>
+            </div>
+        {% else %}
+            <p class="art__warn">Вы ещё не голосовали за кампанию.</p>
+        {% endif %}
+    </section>
+{% endblock %}
