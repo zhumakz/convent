@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import create_event, event_detail, operator_view, confirm_participation, randomize_participants, publish_event
+from .views import create_event, event_detail, operator_view, confirm_participation, randomize_participants, \
+    publish_event, stop_event
 
 urlpatterns = [
     path('create/', create_event, name='create_event'),
@@ -8,4 +9,5 @@ urlpatterns = [
     path('confirm/<int:user_id>/', confirm_participation, name='confirm_participation'),
     path('randomize/', randomize_participants, name='randomize_participants'),
     path('publish/<int:event_id>/', publish_event, name='publish_event'),
+    path('stop/<int:event_id>/', stop_event, name='stop_event'),
 ]

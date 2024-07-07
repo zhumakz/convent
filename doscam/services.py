@@ -1,8 +1,9 @@
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.db import transaction as db_transaction
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _, gettext as __
-from .models import Event
+from .models import Event, Location
 from accounts.models import User
 from coins.services import CoinService
 from friends.services import FriendService
@@ -12,19 +13,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 class EventService:
-
     @staticmethod
-    def create_event(location, duration_minutes, min_friends, has_profile_picture, publish=False):
-        filters = {
-            'min_friends': min_friends,
-            'has_profile_picture': has_profile_picture
-        }
-        participant1, participant2 = Event.get_random_participants(filters)
-
-        if not participant1 or not participant2:
-            logger.warning("Not enough participants meet the criteria.")
-            return None, __("Not enough participants meet the criteria.")
-
+    def create_event_with_params(participant1, participant2, location, duration_minutes, has_profile_picture, publish=False):
         if publish:
             Event.objects.filter(is_published=True, is_completed=False).update(is_published=False)
 
@@ -37,6 +27,43 @@ class EventService:
             is_draft=not publish
         )
         return event, None
+
+    @staticmethod
+    def get_random_participants_and_location(has_profile_picture=False):
+        users = User.objects.filter(is_active=True, is_moderator=False, is_superuser=False)
+
+        if has_profile_picture:
+            users = users.exclude(profile_picture='')
+
+        users = list(users)
+        if len(users) < 2:
+            return None, None, None
+
+        participants = random.sample(users, 2)
+        location = EventService.get_random_location()
+
+        if not location:
+            return None, None, None
+
+        return participants[0], participants[1], location
+
+    @staticmethod
+    def get_random_location():
+        locations = list(Location.objects.all())
+        if not locations:
+            return None
+        return random.choice(locations)
+
+    @staticmethod
+    def check_active_event():
+        now = timezone.now()
+        active_event = Event.objects.filter(is_published=True, is_completed=False, end_time__gt=now).first()
+        return active_event
+
+    @staticmethod
+    def get_ready_participants_count():
+        return User.objects.filter(is_active=True, is_moderator=False, is_superuser=False).exclude(
+            profile_picture='').count()
 
     @staticmethod
     def confirm_participation(user, event):
@@ -63,7 +90,6 @@ class EventService:
         event.save()
         reward_amount = settings.DOSCAM_EVENT_REWARD
 
-        # Создаем транзакции с использованием CoinService
         CoinService.create_transaction(
             sender=event.participant1,
             recipient=event.participant1,
@@ -79,10 +105,8 @@ class EventService:
             is_system_transaction=True
         )
 
-        # Добавляем пользователей в друзья через приложение friends
         if not FriendService.are_friends(event.participant1, event.participant2):
             FriendService.create_friendship(event.participant1, event.participant2)
 
-        # Снимаем публикацию события после завершения
         event.is_published = False
         event.save()

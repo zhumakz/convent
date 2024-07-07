@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _, gettext as __
+from django.utils.translation import gettext_lazy as _
 import random
 from accounts.models import User
 
@@ -48,21 +48,6 @@ class Event(models.Model):
         if self.end_time < timezone.now():
             self.is_published = False
             self.save()
-
-    @staticmethod
-    def get_random_participants(filters):
-        users = User.objects.filter(is_active=True, is_moderator=False, is_superuser=False)
-        if filters.get('min_friends'):
-            users = users.annotate(friends_count=models.Count('friends')).filter(
-                friends_count__gte=filters['min_friends'])
-        if filters.get('has_profile_picture'):
-            users = users.exclude(profile_picture='')
-
-        if users.count() < 2:
-            return None, None
-
-        participants = random.sample(list(users), 2)
-        return participants[0], participants[1]
 
     class Meta:
         verbose_name = _("Event")

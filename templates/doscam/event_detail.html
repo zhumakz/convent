@@ -1,17 +1,14 @@
-{% extends "base.html" %}
-
+{% extends "base_moderator.html" %}
 {% block content %}
-  <h1>{{ event.location.name }}</h1>
-  <p>{{ event.location.address }}</p>
-  <p>{{ event.start_time }} - {{ event.end_time }}</p>
-  <p>{{ event.duration_minutes }} minutes</p>
-  <p>Participant 1: {{ event.participant1 }}</p>
-  <p>Participant 2: {{ event.participant2 }}</p>
-  {% if not event.is_completed %}
-    {% if event.participant1 == user and not event.participant1_confirmed %}
-      <a href="{% url 'confirm_participation' event.participant1.id %}">Confirm Participation</a>
-    {% elif event.participant2 == user and not event.participant2_confirmed %}
-      <a href="{% url 'confirm_participation' event.participant2.id %}">Confirm Participation</a>
-    {% endif %}
-  {% endif %}
+  <h1>Event Detail</h1>
+  <p><strong>Participant 1:</strong> {{ participants.participant1.name }}</p>
+  <p><strong>Participant 2:</strong> {{ participants.participant2.name }}</p>
+  <p><strong>Location:</strong> {{ event.location.name }}</p>
+  <p><strong>Start Time:</strong> {{ event.start_time }}</p>
+  <p><strong>End Time:</strong> {{ event.end_time }}</p>
+  <p><strong>Duration (minutes):</strong> {{ event.duration_minutes }}</p>
+  <p><strong>Completed:</strong> {{ event.is_completed }}</p>
+  <p><strong>Published:</strong> {{ event.is_published }}</p>
 {% endblock %}
+
+

@@ -1,30 +1,151 @@
-{% extends "base.html" %}
-{% block content %}
-<h2>Operator View</h2>
-{% if event %}
-    <p>Participants: {{ event.participant1 }} and {{ event.participant2 }}</p>
-    <p>Location: {{ event.location }}</p>
-    <p>Start Time: {{ event.start_time }}</p>
-    <p>End Time: {{ event.end_time }}</p>
+{% extends "base_moderator.html" %}
+{% load static %}
+{% load i18n %}
 
-    {% if event.participant1_confirmed %}
-        <p>Participant {{ event.participant1 }} confirmed</p>
-    {% else %}
-        <form method="post" action="{% url 'confirm_participation' user_id=event.participant1.id %}">
-            {% csrf_token %}
-            <button type="submit">Confirm {{ event.participant1 }}</button>
-        </form>
-    {% endif %}
-
-    {% if event.participant2_confirmed %}
-        <p>Participant {{ event.participant2 }} confirmed</p>
-    {% else %}
-        <form method="post" action="{% url 'confirm_participation' user_id=event.participant2.id %}">
-            {% csrf_token %}
-            <button type="submit">Confirm {{ event.participant2 }}</button>
-        </form>
-    {% endif %}
-{% else %}
-    <p>No ongoing events.</p>
-{% endif %}
+{% block title %}Doscam{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/dos/dos.css' %}">
 {% endblock %}
+
+{% block content %}
+
+    <div class="all-size flex">
+        <header class="header-second">
+            <div class="header-last"></div>
+            <div class="header-second__inner header-second__flex">
+                <button class="menu-button">
+                    <img
+                            class="menu-button__image"
+                            src="{% static 'image/menu-button.png' %}"
+                            alt="menu-button"
+                    />
+                </button>
+                <h1 class="header-second__flex">DOS Cam</h1>
+            </div>
+        </header>
+
+        <section class="dos">
+            <div class="container dos__inner">
+                {% if error_message %}
+                    <h3 class="error dos__title">{{ error_message }}</h3>
+                {% endif %}
+                {% if event %}
+                    <div class="dos__items" id="random_results">
+                        <div class="dos__item">
+                            <div class="person">
+                                <div class="person friends__person">
+                                    <div class="photo-line dos__line">
+                                        <img
+                                                id="participant1_profile_photo"
+                                                class="dos__person-img"
+                                                src="{{ event.participant1.profile_picture.url }}"
+                                                alt="photo"
+                                        />
+                                    </div>
+                                    <div class="person__wrapper dos__wrapper">
+                                    <span class="dos__name">
+                                        <span id="participant1_name">{{ event.participant1.name }}</span>
+                                        <br/>
+                                        <span id="participant1_surname">{{ event.participant1.surname }}</span>
+                                    </span>
+                                        <span class="dos__location" id="participant1_city">
+                                            {{ event.participant1.city }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dos__vectors">
+                            <svg width="33" height="43">
+                                <use href="{% static 'image/icons.svg' %}#dos-vector-left"></use>
+                            </svg>
+                            <svg width="33" height="43">
+                                <use href="{% static 'image/icons.svg' %}#dos-vector-right"></use>
+                            </svg>
+                        </div>
+                        <div class="dos__item">
+                            <div class="person">
+                                <div class="person friends__person">
+                                    <div class="photo-line dos__line">
+                                        <img
+                                                id="participant2_profile_photo"
+                                                class="dos__person-img"
+                                                src="{{ event.participant2.profile_picture.url }}"
+                                                alt="photo"
+                                        />
+                                    </div>
+                                    <div class="person__wrapper dos__wrapper">
+                                    <span class="dos__name">
+                                        <span id="participant2_name">{{ event.participant2.name }}</span>
+                                        <br/>
+                                        <span id="participant2_surname">{{ event.participant2.surname }}</span>
+                                    </span>
+                                        <span class="dos__location" id="participant2_city">
+                                            {{ event.participant2.city }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span id="location_name" class="text-center ">{{ event.location.name }}</span>
+                    <div class="timer">
+                        <div class="timer-minutes" id="time_remaining">0:00</div>
+                        <div class="timer-line" style="display: block;">
+                            <div class="timer-progress-line" id="timer_progress" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                    <p class="display-none">Start Time: {{ event.start_time }}</p>
+                    <p class="display-none">End Time: <span id="end_time">{{ event.end_time|date:"c" }}</span></p>
+
+                    <form class="mt30" method="post" action="{% url 'stop_event' event.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="button dos__button-start ">Остановить</button>
+                    </form>
+                {% else %}
+                    <p>Нет текущего события.</p>
+                      <a href="{% url 'create_event' %}" class="button dos__button-start "> Создать </a>
+                {% endif %}
+            </div>
+        </section>
+
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var endTimeElement = document.getElementById("end_time");
+        if (!endTimeElement) {
+            return;
+        }
+
+        var endTime = new Date(endTimeElement.textContent);
+        var now = new Date();
+        var totalDuration = (endTime - now) / 1000;
+        var timeRemaining = endTime - now;
+
+        function updateTimer() {
+            now = new Date();
+            timeRemaining = endTime - now;
+
+            if (timeRemaining > 0) {
+                var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                document.getElementById("time_remaining").textContent = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+
+                var progressPercent = ((totalDuration - timeRemaining / 1000) / totalDuration) * 100;
+                document.getElementById("timer_progress").style.width = progressPercent + "%";
+            } else {
+                document.getElementById("time_remaining").textContent = "Событие завершено!";
+                document.getElementById("timer_progress").style.width = "100%";
+            }
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();  // Initial call to display time immediately
+    });
+  </script>
+{% endblock %}
+
