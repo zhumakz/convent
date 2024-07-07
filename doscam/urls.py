@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import create_event, event_detail, operator_view, confirm_participation, randomize_participants, \
-    publish_event, stop_event,find_view
+    publish_event, stop_event, find_view, dos_desktop_view
 
 urlpatterns = [
     path('create/', create_event, name='create_event'),
@@ -11,4 +11,5 @@ urlpatterns = [
     path('publish/<int:event_id>/', publish_event, name='publish_event'),
     path('stop/<int:event_id>/', stop_event, name='stop_event'),
     path('find/', find_view, name='doscam_find'),
+    path('panel/', dos_desktop_view, name='dos_desktop_view'),
 ]

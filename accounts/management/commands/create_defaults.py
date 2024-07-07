@@ -22,6 +22,10 @@ class Command(BaseCommand):
             call_command('create_static_pages')
             self.stdout.write(self.style.SUCCESS('Default static_pages created successfully.'))
 
+            self.stdout.write(self.style.NOTICE('Creating default locations doscam...'))
+            call_command('add_default_locations')
+            self.stdout.write(self.style.SUCCESS('Default doscam created successfully.'))
+
             # Добавьте дополнительные команды здесь
             # self.stdout.write(self.style.NOTICE('Creating default XYZ...'))
             # call_command('create_default_xyz')

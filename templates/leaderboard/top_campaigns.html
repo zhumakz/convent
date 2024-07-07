@@ -4,69 +4,86 @@
 {% block title %}Top Campaigns{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'style/top/top.css' %}">
+    <link rel="stylesheet" href="{% static 'style/top/top.css' %}">
 {% endblock %}
 
 {% block content %}
-<section class="top background-page">
-  <div class="background-page__item background-page__first">
-    <svg width="639" height="639" fill="none">
-      <use href="{% static 'image/icons.svg' %}#first-icon"></use>
-    </svg>
-  </div>
-  <div class="background-page__item background-page__second">
-    <svg width="639" height="639" fill="none">
-      <use href="{% static 'image/icons.svg' %}#first-icon"></use>
-    </svg>
-  </div>
-  <div class="background-page__item background-page__three">
-    <svg width="639" height="639" fill="none">
-      <use href="{% static 'image/icons.svg' %}#first-icon"></use>
-    </svg>
-  </div>
-  <div class="background-page__item background-page__fourth">
-    <svg width="639" height="639" fill="none">
-      <use href="{% static 'image/icons.svg' %}#first-icon"></use>
-    </svg>
-  </div>
-  <div class="top__content">
-    <ul class="top__list">
-      {% for campaign in top_campaigns %}
-      <li class="top__item">
-        <div class="top__image-wrapper">
-          {% if forloop.first %}
-          <svg class="top__position" width="125" height="125">
-            <use href="{% static 'image/icons.svg' %}#position-1"></use>
-          </svg>
-          <img class="top__image" src="{{ campaign.main_photo.url  }}" alt="image" />
-          {% elif forloop.counter == 2 %}
-          <svg class="top__position" width="102" height="102">
-            <use href="{% static 'image/icons.svg' %}#position-2"></use>
-          </svg>
-          <img class="top__image" src="{{ campaign.main_photo.url  }}" alt="image" />
-          {% elif forloop.counter == 3 %}
-          <svg class="top__position" width="102" height="102">
-            <use href="{% static 'image/icons.svg' %}#position-3"></use>
-          </svg>
-          <img class="top__image" src="{{ campaign.main_photo.url  }}" alt="image" />
-          {% elif forloop.counter == 4 %}
-          <svg class="top__position" width="84" height="84">
-            <use href="{% static 'image/icons.svg' %}#position-4"></use>
-          </svg>
-          <img class="top__image" src="{{ campaign.main_photo.url  }}" alt="image" />
-          {% elif forloop.counter == 5 %}
-          <svg class="top__position" width="75" height="75">
-            <use href="{% static 'image/icons.svg' %}#position-5"></use>
-          </svg>
-          <img class="top__image" src="{{ campaign.main_photo.url  }}" alt="image" />
-          {% endif %}
+    <section class="top background-page">
+        <div class="background-page__item background-page__first">
+            <svg width="639" height="639" fill="none">
+                <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+            </svg>
         </div>
-        <span class="top__name">{{ campaign.name }}</span>
-        <span class="top__location">{{ campaign.city }}</span>
-        <span>{{ campaign.num_votes }} голосов</span>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-</section>
+        <div class="background-page__item background-page__second">
+            <svg width="639" height="639" fill="none">
+                <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+            </svg>
+        </div>
+        <div class="background-page__item background-page__three">
+            <svg width="639" height="639" fill="none">
+                <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+            </svg>
+        </div>
+        <div class="background-page__item background-page__fourth">
+            <svg width="639" height="639" fill="none">
+                <use href="{% static 'image/icons.svg' %}#first-icon"></use>
+            </svg>
+        </div>
+        <div class="top__content">
+            <ul class="top__list">
+                {% for campaign in top_campaigns %}
+                    {% if forloop.counter <= 3 %}
+                        <li class="top__item">
+                            <div class="top__image-wrapper">
+                                {% if forloop.counter == 1 %}
+                                    <svg class="top__position" width="125" height="125">
+                                        <use href="{% static 'image/icons.svg' %}#position-1"></use>
+                                    </svg>
+                                {% elif forloop.counter == 2 %}
+                                    <svg class="top__position" width="102" height="102">
+                                        <use href="{% static 'image/icons.svg' %}#position-2"></use>
+                                    </svg>
+                                {% elif forloop.counter == 3 %}
+                                    <svg class="top__position" width="102" height="102">
+                                        <use href="{% static 'image/icons.svg' %}#position-3"></use>
+                                    </svg>
+                                {% endif %}
+                                <img class="top__image" src="
+                                        {% if campaign.main_photo %}{{ campaign.main_photo.url }}{% else %}{% static 'image/image1.png' %}{% endif %}"
+                                     alt="image"/>
+                            </div>
+                            <span class="top__name">{{ campaign.name }}</span>
+                            <span class="top__location">{{ campaign.city }}</span>
+                            <span>{{ campaign.num_votes }} голосов</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            <ul class="top__list">
+                {% for campaign in top_campaigns %}
+                    {% if forloop.counter > 3 and forloop.counter <= 5 %}
+                        <li class="top__item">
+                            <div class="top__image-wrapper">
+                                {% if forloop.counter == 4 %}
+                                    <svg class="top__position" width="84" height="84">
+                                        <use href="{% static 'image/icons.svg' %}#position-4"></use>
+                                    </svg>
+                                {% elif forloop.counter == 5 %}
+                                    <svg class="top__position" width="75" height="75">
+                                        <use href="{% static 'image/icons.svg' %}#position-5"></use>
+                                    </svg>
+                                {% endif %}
+                                <img class="top__image" src="
+                                        {% if campaign.main_photo %}{{ campaign.main_photo.url }}{% else %}{% static 'image/image1.png' %}{% endif %}"
+                                     alt="image"/>
+                            </div>
+                            <span class="top__name">{{ campaign.name }}</span>
+                            <span class="top__location">{{ campaign.city }}</span>
+                            <span>{{ campaign.num_votes }} голосов</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
 {% endblock %}

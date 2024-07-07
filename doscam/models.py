@@ -17,7 +17,19 @@ class Location(models.Model):
         verbose_name = _("Location")
         verbose_name_plural = _("Locations")
 
+    @staticmethod
+    def create_default_locations():
+        locations_data = [
+            {"id": 1, "name": "DosCam «Креатив»", "address": "DosCam «Креатив»"},
+            {"id": 2, "name": "DosCam «Энергия»", "address": "DosCam «Қуат»"},
+            {"id": 3, "name": "DosCam «Мышление»", "address": "DosCam «Сана»"}
+        ]
 
+        for data in locations_data:
+            Location.objects.update_or_create(
+                id=data['id'],
+                defaults={'name': data['name'], 'address': data['address']}
+            )
 class Event(models.Model):
     participant1 = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='participant1_events',
                                      on_delete=models.CASCADE, verbose_name=_("Participant 1"))

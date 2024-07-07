@@ -33,6 +33,15 @@
             <li class="menu__item">
                 <a class="menu__link" href="{% url 'operator_view' %}">{% trans "Оператор DosCam" %}</a>
             </li>
+            <li class="menu__item">
+                <a class="menu__link" href="{% url 'dos_desktop_view' %}">{% trans "DosCam Экран" %}</a>
+            </li>
+            <li class="menu__item">
+                <a class="menu__link" href="{% url 'top_users' %}">{% trans "ТОП Участники Экран" %}</a>
+            </li>
+            <li class="menu__item">
+                <a class="menu__link" href="{% url 'top_campaigns' %}">{% trans "ТОП Кампании Экран" %}</a>
+            </li>
 
             {% if user.is_authenticated %}
                 <li class="menu__item">

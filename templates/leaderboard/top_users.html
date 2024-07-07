@@ -38,8 +38,8 @@
         <img class="rating__top-icon" src="{% static 'image/top.png' %}" alt="top" />
         <div class="rating__bg"></div>
         {% endif %}
-        {% if user.profile_image_url %}
-        <img class="rating__image" src="{{ user.profile_image_url }}" alt="photo" />
+        {% if user.profile_picture %}
+        <img class="rating__image" src="{{ user.profile_picture.url }}" alt="photo" />
         {% else %}
         <img class="rating__image" src="{% static 'image/photo.png' %}" alt="default photo" />
         {% endif %}

@@ -78,6 +78,13 @@ def operator_view(request):
         'server_time': timezone.now().isoformat() if active_event else None
     })
 
+@login_required
+def dos_desktop_view(request):
+    active_event = EventService.check_active_event()
+    return render(request, 'doscam/dos_desktop.html', {
+        'event': active_event,
+        'server_time': timezone.now().isoformat() if active_event else None
+    })
 
 @login_required
 def event_detail(request, event_id):
@@ -122,12 +129,12 @@ def randomize_participants(request):
             'participant1_id': participant1.id,
             'participant1_name': participant1.name,
             'participant1_surname': participant1.surname,
-            'participant1_city': participant1.city,
+            'participant1_city': participant1.city.name,
             'participant1_profile_photo': participant1.profile_picture.url,
             'participant2_id': participant2.id,
             'participant2_name': participant2.name,
             'participant2_surname': participant2.surname,
-            'participant2_city': participant2.city,
+            'participant2_city': participant2.city.name,
             'participant2_profile_photo': participant2.profile_picture.url,
             'location_id': location.id,
             'location_name': location.name
