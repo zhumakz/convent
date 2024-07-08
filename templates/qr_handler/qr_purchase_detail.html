@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Purchase Detail{% endblock %}
+{% block title %}{% trans "Подтверждение оплаты" %}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/payment_yes/payment.css' %}">
@@ -18,7 +18,7 @@
                         <use href="{% static 'image/icons.svg' %}#back"></use>
                     </svg>
                 </a>
-                <span class="top__title">Подтверждение оплаты</span>
+                <span class="top__title">{% trans "Подтверждение оплаты" %}</span>
             </div>
 
             <div class="payment__content">
@@ -34,24 +34,23 @@
                 <span>Dos <br/>Coins</span>
             </div>
             <p class="payment__bottom-text">
-                Потвердите списание <br/>
-                Dos Coins за товар
+                {% trans "Потвердите списание Dos Coins за товар" %}
             </p>
 
             {% if user_balance >= purchase.amount %}
             {% else %}
-                <p>Недостаточно средств для завершения покупки.</p>
+                <p>{% trans "Недостаточно средств для завершения покупки." %}</p>
             {% endif %}
             <div class="payment__buttons">
                 {% if user_balance >= purchase.amount %}
                     <form class="payment__buttons" method="post">
                         {% csrf_token %}
-                        <button class="button payment__button" type="submit" name="confirm">Подтвердить</button>
+                        <button class="button payment__button" type="submit" name="confirm">{% trans "Подтвердить" %}</button>
                     </form>
                 {% endif %}
                 <form class="payment__buttons" method="post">
                     {% csrf_token %}
-                    <button class="button-s back" type="submit" name="cancel">Отмена</button>
+                    <button class="button-s back" type="submit" name="cancel">{% trans "Отмена" %}</button>
                 </form>
             </div>
         </div>

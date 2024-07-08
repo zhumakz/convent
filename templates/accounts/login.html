@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Login{% endblock %}
+{% block title %}{% trans "Вход" %}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/sign/sign.css' %}">
@@ -16,19 +16,20 @@
                 <button class="popup-close">
                     <img class="popup-close__image" src="{% static 'image/back.png' %}"/>
                 </button>
-                <span class="top__title">Вход в профиль</span>
+                <span class="top__title">{% trans "Вход в профиль" %}</span>
             </div>
 
             <p class="sign__text">
-                Введите код, который мы отправили на номер <span id="phoneNumberDisplay">+7 707 777-77-10</span>
+                {% trans "Введите код, который мы отправили на номер" %} <span
+                    id="phoneNumberDisplay">+7 707 777-77-10</span>
             </p>
 
-            <button class="sign__new-number">Другой номер</button>
+            <button class="sign__new-number">{% trans "Другой номер" %}</button>
             <form class="sign__popup-form" id="verifyForm">
                 <input class="sign__popup-item login-sms" inputmode="numeric" name="sms_code" value="" maxlength="4"/>
             </form>
             <span class="error-message-popup"></span>
-            <button class="sign__send-code" disabled>Выслать снова, 0:59</button>
+            <button class="sign__send-code" disabled>{% trans "Выслать снова" %}, 0:59</button>
         </div>
     </div>
 
@@ -40,28 +41,41 @@
                         <use href="{% static 'image/icons.svg' %}#back"></use>
                     </svg>
                 </a>
-                <span class="top__title">Вход в профиль</span>
+                <span class="top__title">{% trans "Вход в профиль" %}</span>
             </div>
             <p class="sign__text">
-                Введите ваш номер телефона. На него мы отправим SMS - сообщения с кодом для входа в профиль
+                {% trans "Введите ваш номер телефона. На него мы отправим SMS - сообщения с кодом для входа в профиль" %}
             </p>
             <form class="sign__form" id="loginForm">
                 <div class="sign__item">
-                    <label class="sign__label">Номер телефона</label>
+                    <label class="sign__label">{% trans "Номер телефона" %}</label>
                     <input class="sign__input" inputmode="tel" id="phoneNumber" name="number" type="text"
                            placeholder="+7 (777) 000-00-00" value=""/>
                     <span class="error-message"></span>
                 </div>
 
                 <div class="sign__bottom">
-                    <button class="button" type="submit">Продолжить</button>
-                    <p class="sign__bottom-text">
-                        Продолжая, я даю согласие на
-                        <a class="sign__text-link" href="{% url 'policy' %}">обработку и передачу персональных данных</a> и
-                        <a class="sign__text-link" href="{% url 'user_agreement' %}">принимаю условия пользовательского соглашения.</a>
-                    </p>
+                    <button class="button" type="submit">{% trans "Продолжить" %}</button>
+                    {% if LANGUAGE_CODE  == 'kk' %}
+                        <p class="sign__bottom-text">
+                            Жалғастыра отырып, мен <a class="sign__text-link" href="{% url 'policy' %}">жеке деректерді
+                            өңдеуге келісімімді беремін</a> және
+                            <a class="sign__text-link" href="{% url 'user_agreement' %}">және пайдаланушы келісімінің
+                                шарттарын</a>
+                            қабылдаймын.
+                        </p>
+                    {% endif %}
+                    {% if LANGUAGE_CODE  == 'ru' %}
+                        <p class="sign__bottom-text">
+                            Продолжая, я даю согласие на
+                            <a class="sign__text-link" href="{% url 'policy' %}">обработку и передачу персональных
+                                данных</a> и
+                            <a class="sign__text-link" href="{% url 'user_agreement' %}">принимаю условия
+                                пользовательского
+                                соглашения.</a>
+                        </p>
+                    {% endif %}
                 </div>
-
             </form>
         </div>
     </section>
@@ -89,14 +103,14 @@
 
             // Текстовые сообщения
             const messages = {
-                invalidPhoneNumber: 'Пожалуйста, введите корректный номер телефона.',
-                serverConnectionError: 'Ошибка подключения к серверу.',
-                resendTimerText: 'Отправить снова через: ',
-                resendButtonText: 'Отправить SMS-код снова',
+                invalidPhoneNumber: '{% trans "Пожалуйста, введите корректный номер телефона." %}',
+                serverConnectionError: '{% trans "Ошибка подключения к серверу." %}',
+                resendTimerText: '{% trans "Отправить снова через:" %} ',
+                resendButtonText: '{% trans "Отправить SMS-код снова" %}',
                 sendSMSAction: 'send_sms',
                 verifyLoginAction: 'verify_login',
                 resendSMSAction: 'resend_sms',
-                popupErrorText: 'Ошибка подключения к серверу.'
+                popupErrorText: '{% trans "Ошибка подключения к серверу." %}'
             };
 
             function showError(element, message) {

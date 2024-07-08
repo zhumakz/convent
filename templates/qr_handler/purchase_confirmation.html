@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Purchase Confirmation{% endblock %}
+{% block title %}{% trans "Подтверждение оплаты" %}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/add/add.css' %}">
@@ -18,7 +18,7 @@
                         <use href="{% static 'image/icons.svg' %}#back"></use>
                     </svg>
                 </a>
-                <span class="top__title">Подтверждение оплаты</span>
+                <span class="top__title"> {% trans "Подтверждение оплаты" %}</span>
             </div>
 
             <div class="final__content">
@@ -42,12 +42,12 @@
             </div>
             <p class="final__bottom-text">
                 {% if success %}
-                    Поздравляем с покупкой! <br/>{{ coins_transferred }} Dos Coins переведены.
+                     {% trans "Поздравляем с покупкой!" %}<br/>{{ coins_transferred }}  {% trans "Dos Coins переведены" %}.
                 {% else %}
-                    Ошибка: {{ message }}
+                    {% trans "Ошибка" %}: {{ message }}
                 {% endif %}
             </p>
-            <a href="{% url 'profile' %}" class="button-s popups-close">Закрыть</a>
+            <a href="{% url 'profile' %}" class="button-s popups-close">{% trans "Закрыть" %}</a>
         </div>
     </section>
 {% endblock %}

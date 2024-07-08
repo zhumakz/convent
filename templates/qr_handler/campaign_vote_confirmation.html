@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Vote Confirmation{% endblock %}
+{% block title %}{% trans "Голосование" %}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/final/final.css' %}">
@@ -18,7 +18,7 @@
                         <use href="{% static 'image/icons.svg' %}#back"></use>
                     </svg>
                 </a>
-                <span class="top__title">Vote Confirmation</span>
+                <span class="top__title">{% trans "Голосование" %}</span>
             </div>
             <div class="person">
                 <div class="photo-line final__line">
@@ -57,9 +57,9 @@
             <span>Dos <br/>Coins</span>
         </div>
         <p class="final__bottom-text">
-            Поздравляем! <br/>Dos Coins переведены
+            {% trans "Поздравляем!" %} <br/>{% trans "Dos Coins переведены" %}
         </p>
-        <a href="{% url 'profile' %}" class="button final__button">Свернуть</a>
+        <a href="{% url 'profile' %}" class="button final__button">{% trans "Свернуть" %}</a>
         </div>
     </section>
 {% endblock %}

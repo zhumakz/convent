@@ -8,42 +8,6 @@
 {% endblock %}
 
 {% block content %}
-    {% if is_event_participant %}
-        <div class="popup find" data-index="8">
-            <div class="bottom-gradient"></div>
-            <div class="popup-container flex find__inner">
-                <div class="top">
-                    <button class="top__button popup-close" data-index="8">
-                        <svg width="46" height="46">
-                            <use href="{% static 'image/icons.svg' %}#back"></use>
-                        </svg>
-                    </button>
-                    <span class="top__title">Dos Cam</span>
-                </div>
-                <p class="find__text">Найди этого человека за отведенное время и отсканируй его QR Code!</p>
-                <div class="person">
-                    <div class="photo-line find__line">
-                        <img class="profile__person-img" src="
-                                    {% if current_event.participant1 == user %}
-                                    {{ current_event.participant2.profile_picture.url }}
-                                    {% else %}
-                                    {{ current_event.participant1.profile_picture.url }}
-                                    {% endif %}"
-                             alt="photo"/>
-                    </div>
-                    <span class="person__location">
-                                  {% if current_event.participant1 == user %}
-                                      {{ current_event.participant2.city.name }}
-                                  {% else %}
-                                      {{ current_event.participant1.city.name }}
-                                  {% endif %}</span>
-                    <span class="person__name">{{ current_event.participant2.name }}<br/>{{ current_event.participant2.surname }}</span>
-                </div>
-                <div class="timer"></div>
-                <button class="button-s popup-close find__button-close" data-index="8">Свернуть</button>
-            </div>
-        </div>
-    {% endif %}
     <section class="find all-size">
         <div class="bottom-gradient"></div>
         <div class="container flex find__inner">
@@ -59,8 +23,7 @@
             {% if error_message %}
                 <h3 class="error find__text">{{ error_message }}</h3>
             {% endif %}
-            <p class="find__text">
-                Найди этого человека за отведенное время и отсканируй его QR Code!
+            <p class="find__text">{% trans "Найдите этого человека в установленное время и предоставьте оператору на месте отсканировать ваши QR-коды!" %}
             </p>
             <div class="person">
                 <div class="photo-line find__line">
@@ -96,7 +59,7 @@
             </div>
             <p class="display-none">Start Time: {{ current_event.start_time }}</p>
             <p class="display-none">End Time: <span id="end_time">{{ current_event.end_time|date:"c" }}</span></p>
-            <button class="button-s back find__button-close">Свернуть</button>
+            <button class="button-s back find__button-close">{% trans "Свернуть" %}</button>
 
         </div>
     </section>
@@ -128,7 +91,7 @@
                     var progressPercent = ((totalDuration - timeRemaining / 1000) / totalDuration) * 100;
                     document.getElementById("timer_progress").style.width = progressPercent + "%";
                 } else {
-                    document.getElementById("time_remaining").textContent = "Событие завершено!";
+                    document.getElementById("time_remaining").textContent = "{% trans "Событие завершено!" %}";
                     document.getElementById("timer_progress").style.width = "100%";
                 }
             }

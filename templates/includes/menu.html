@@ -22,18 +22,27 @@
     <nav class="menu__nav">
         <ul class="menu__list">
             <li class="menu__item">
-                <a class="menu__link" href="{% url 'profile' %}">{% trans "Профиль" %}</a>
+                <a class="menu__link" href="{% url 'home' %}">{% trans "ТГлавная" %}</a>
             </li>
             <li class="menu__item">
-                <a class="menu__link" href="{% url 'home' %}">{% trans "Точки интереса" %}</a>
+                <a class="menu__link" href="{% url 'point_list' %}">{% trans "Точки интереса" %}</a>
+            </li>
+            <li class="menu__item">
+                <a class="menu__link" href="{% url 'attraction_list' %}">{% trans "Расписание" %}</a>
             </li>
             {% if user.is_authenticated %}
+                <li class="menu__item">
+                    <a class="menu__link" href="{% url 'profile' %}">{% trans "Профиль" %}</a>
+                </li>
                 <li class="menu__item">
                     <a class="menu__link" href="{% url 'logout' %}">{% trans "Выйти" %}</a>
                 </li>
             {% else %}
                 <li class="menu__item">
                     <a class="menu__link" href="{% url 'register' %}">{% trans "Регистация" %}</a>
+                </li>
+                <li class="menu__item">
+                    <a class="menu__link" href="{% url 'register' %}">{% trans "Вход" %}</a>
                 </li>
             {% endif %}
         </ul>

@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Friend Request{% endblock %}
+{% block title %}{% trans "Добавление друга" %}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/add/add.css' %}">
@@ -19,7 +19,7 @@
                         <use href="{% static 'image/icons.svg' %}#back"></use>
                     </svg>
                 </a>
-                <span class="top__title">Добавление друга</span>
+                <span class="top__title">{% trans "Добавление друга" %}</span>
             </div>
             <div class="add__person">
                 <div class="photo-line add__line">
@@ -32,15 +32,14 @@
                     <span class="person__location">{{ to_user.city }}</span>
                 </div>
             </div>
-            <p class="add__text">Дай отсканировать QR code новому другу, чтобы он добавился к тебе в друзья и вы
-                получите Dos Сoins</p>
+            <p class="add__text">{% trans "Дай отсканировать QR code новому другу, чтобы он добавился к тебе в друзья и вы получите Dos Сoins" %}</p>
 
             {% if message %}
                 <p class="add__text">{{ message }}</p>
             {% endif %}
 
             <img class="add__qr" src="{% if qr_code_url %}{{ qr_code_url.url }} {% endif %}" alt="qr"/>
-            <a href="{% url 'profile' %}" class="button-s popups-close">Отмена</a>
+            <a href="{% url 'profile' %}" class="button-s popups-close">{% trans "Отмена" %}</a>
         </div>
     </section>
     <script>

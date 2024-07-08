@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
-{% block title %}Attraction List{% endblock %}
+{% block title %}{% trans "Точки интереса" %}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/points/points.css' %}">
@@ -16,7 +16,7 @@
             <svg class="header__icon" width="138" height="151" fill="none">
                 <use href="{% static 'image/icons.svg' %}#points"></use>
             </svg>
-            <h2 class="header__title">Точки интереса</h2>
+            <h2 class="header__title">{% trans "Точки интереса" %}</h2>
         </div>
     </header>
 

@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Campaign Vote{% endblock %}
+{% block title %}{% trans "Гражданская кампания" %}{% endblock %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/art/art.css' %}">
 {% endblock %}
@@ -22,7 +22,7 @@
                         <use href="{% static 'image/icons.svg' %}#back"></use>
                     </svg>
                 </a>
-                <span class="top__title">Campaign Vote</span>
+                <span class="top__title">{% trans "Гражданская кампания" %}</span>
             </div>
         </div>
 
@@ -38,21 +38,21 @@
                                  alt="default photo"/>
                         {% endif %}
                     </div>
-                    <span class="art__name">{{ campaign.leader_name }} <br/>(лидер гражданской компании)</span>
+                    <span class="art__name">{{ campaign.leader_name }} <br/>{% trans "(лидер гражданской компании)" %}</span>
                 </div>
                 <ul class="art__points">
                     {% if campaign.city %}
-                        <li class="art__item">Города где работает проект: {{ campaign.city }}</li>
+                        <li class="art__item">{% trans "Города где работает проект" %}: {{ campaign.city }}</li>
                     {% endif %}
                     {% if campaign.description %}
                         <li class="art__item">{{ campaign.description }}</li>
                     {% endif %}
                 </ul>
-                <p class="art__warn">Теперь ты член этого движения!</p>
-                <a href="{% url 'profile' %}" class="button-s popup-close art__button-close">Свернуть</a>
+                <p class="art__warn">{% trans "Теперь ты член этого движения!" %}</p>
+                <a href="{% url 'profile' %}" class="button-s popup-close art__button-close">{% trans "Свернуть" %}</a>
             </div>
         {% else %}
-            <p class="art__warn">Вы ещё не голосовали за кампанию.</p>
+            <p class="art__warn">{% trans "Вы ещё не голосовали за кампанию." %}</p>
         {% endif %}
     </section>
 {% endblock %}

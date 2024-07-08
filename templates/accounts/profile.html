@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}{% trans "Профиль" %}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/profile/profile.css' %}">
@@ -112,12 +112,12 @@
                 <div class="all-coins__wrapper">
                     <span class="all-coins__count">{{ user.doscointbalance.balance|floatformat:"-1" }}</span>
                     <span class="all-coins__value">Dos Coins</span>
-                    <p class="all-coins__text">Краткое описание DOS Coins. Где можно получить и где можно потратить.</p>
+                    <p class="all-coins__text">{% trans "Краткое описание DOS Coins. Где можно получить и где можно потратить." %}</p>
                     <img class="all-coins__icon" src="{% static 'image/coins.png' %}" width="112" height="112"
                          alt="icon"/>
                 </div>
                 <div class="history">
-                    <h5 class="history__title">История транзакций:</h5>
+                    <h5 class="history__title">{% trans "История транзакций:" %}</h5>
                     <ul class="history__list">
                         {% for transaction in transactions %}
                             <li class="history__item">
@@ -132,7 +132,7 @@
                         {% endfor %}
                     </ul>
                 </div>
-                <button class="button popups-close">Закрыть</button>
+                <button class="button popups-close">{% trans "Закрыть" %}</button>
             </div>
         </div>
         <div class="popup popup--black friends" data-index="5">
@@ -145,7 +145,7 @@
                     </button>
                 </div>
                 <div class="friends__list-wrapper">
-                    <h5 class="friends__title">Список друзей: {{ friends|length }}</h5>
+                    <h5 class="friends__title">{% trans "Список друзей:" %} {{ friends|length }}</h5>
                     <ul class="friends__list">
                         {% for friend in friends %}
                             <li class="friends__item">
@@ -178,7 +178,7 @@
                         {% endfor %}
                     </ul>
                 </div>
-                <button class="button popups-close">Закрыть</button>
+                <button class="button popups-close">{% trans "Закрыть" %}</button>
             </div>
         </div>
         <div class="popup friend" data-index="6">
@@ -190,7 +190,7 @@
                             <use href="{% static 'image/icons.svg' %}#back"></use>
                         </svg>
                     </button>
-                    <span class="top__title">Профиль друга</span>
+                    <span class="top__title">{% trans "Профиль друга" %}</span>
                 </div>
                 <div class="person">
                     <div class="photo-line friend__line">
@@ -221,7 +221,7 @@
                         <span>+7 700 100 01 10</span>
                     </a>
                 </div>
-                <button class="button popups-close">Закрыть</button>
+                <button class="button popups-close">{% trans "Закрыть" %}</button>
             </div>
         </div>
         <div class="popup edit" data-index="7">
@@ -233,7 +233,7 @@
                             <use href="{% static 'image/icons.svg' %}#back"></use>
                         </svg>
                     </button>
-                    <span class="top__title">Профиль</span>
+                    <span class="top__title">{% trans "Профиль" %}</span>
                 </div>
                 <form class="edit__form" id="profileEditForm" method="post" enctype="multipart/form-data"
                       action="{% url 'profile_edit' %}">
@@ -242,22 +242,12 @@
                         <div class="person">
                             <div class="photo-line blue-line">
                                 <img id="profile_picture_preview" src="
-
-
-
-
-
-
-
-
-
-
                                         {% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'image/photo.png' %}{% endif %}"
                                      alt="Profile Picture" class="blue-person-img" width="300"/>
                             </div>
                         </div>
 
-                        <label class="edit__label" for="id_profile_picture">Изменить фото</label>
+                        <label class="edit__label" for="id_profile_picture">{% trans "Изменить фото" %}</label>
                         <input type="file" class="edit__file-input" id="id_profile_picture" name="profile_picture"
                                onchange="previewImage()"/>
                     </div>
@@ -270,56 +260,20 @@
                                 <use href="{% static 'image/icons.svg' %}#inst"></use>
                             </svg>
                             <input class="edit__contacts-input" type="text" name="instagram"
-                                   value="{{ user.instagram }}" placeholder="Instagram профиль"/>
+                                   value="{{ user.instagram }}" placeholder="{% trans "Instagram профиль" %}"/>
                         </div>
                         <div class="edit__contacts-item">
                             <svg width="40" height="40">
                                 <use href="{% static 'image/icons.svg' %}#tiktok"></use>
                             </svg>
                             <input class="edit__contacts-input" type="text" name="tiktok" value="{{ user.tiktok }}"
-                                   placeholder="Tiktok профиль"/>
+                                   placeholder="{% trans "Tiktok профиль" %}"/>
                         </div>
                     </div>
-                    <button type="submit" class="button edit_save-button">Сохранить</button>
+                    <button type="submit" class="button edit_save-button">{% trans "Сохранить" %}</button>
                 </form>
             </div>
         </div>
-        {% if is_event_participant %}
-            <div class="popup find" data-index="8">
-                <div class="bottom-gradient"></div>
-                <div class="popup-container flex find__inner">
-                    <div class="top">
-                        <button class="top__button popup-close" data-index="8">
-                            <svg width="46" height="46">
-                                <use href="{% static 'image/icons.svg' %}#back"></use>
-                            </svg>
-                        </button>
-                        <span class="top__title">Dos Cam</span>
-                    </div>
-                    <p class="find__text">Найди этого человека за отведенное время и отсканируй его QR Code!</p>
-                    <div class="person">
-                        <div class="photo-line find__line">
-                            <img class="profile__person-img" src="
-                                    {% if current_event.participant1 == user %}
-                                    {{ current_event.participant2.profile_picture.url }}
-                                    {% else %}
-                                    {{ current_event.participant1.profile_picture.url }}
-                                    {% endif %}"
-                                 alt="photo"/>
-                        </div>
-                        <span class="person__location">
-                                  {% if current_event.participant1 == user %}
-                                      {{ current_event.participant2.city.name }}
-                                  {% else %}
-                                      {{ current_event.participant1.city.name }}
-                                  {% endif %}"</span>
-                        <span class="person__name">{{ current_event.participant2.name }}<br/>{{ current_event.participant2.surname }}</span>
-                    </div>
-                    <div class="timer"></div>
-                    <button class="button-s popup-close find__button-close" data-index="8">Свернуть</button>
-                </div>
-            </div>
-        {% endif %}
         <div class="container flex profile__inner">
             <div class="profile__top">
                 <div class="profile__wrapper">
@@ -366,7 +320,7 @@
             <div class="profile__info">
                 <button class="profile__item popup-button" data-index="5">
                     <span class="profile__friends">{{ friends|length }}</span>
-                    <span class="profile__item-name">Список<br/>друзей</span>
+                    <span class="profile__item-name">{% trans "Список" %}<br/> {% trans "друзей" %}</span>
                 </button>
                 <button class="profile__item popup-button" data-index="4">
                     <span class="profile__coins">{{ user.doscointbalance.balance|floatformat:"-1" }}</span>
@@ -377,7 +331,7 @@
                     </div>
                 </button>
             </div>
-            <a class="button popup-button profile__button" href="{% url 'qr_scan' %}">Scan QR code</a>
+            <a class="button popup-button profile__button" href="{% url 'qr_scan' %}">{% trans "Отсканировать QR" %}</a>
         </div>
     </section>
 {% endblock %}

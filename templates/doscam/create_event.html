@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Создать Doscam{% endblock %}
+{% block title %}{% trans "Создать Doscam" %}{% endblock %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/dos/dos.css' %}">
 {% endblock %}
@@ -28,7 +28,7 @@
             <div class="container dos__inner">
                 <h3 class="dos__title">
                     {{ ready_participants_count }} <br/>
-                    человек готовы участвовать
+                    {% trans "человек готовы участвовать" %}
                 </h3>
                 {% if error_message %}
                     <h3 class="error dos__title">{{ error_message }}</h3>
@@ -95,7 +95,7 @@
                 </div>
                 <span id="location_name" class="text-center ">{{ location.name }}</span>
                 <div class="timer"></div>
-                <button id="generate_btn" class="button dos__button-start">Сгенерировать</button>
+                <button id="generate_btn" class="button dos__button-start">{% trans "Сгенерировать" %}</button>
                 <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="duration_minutes" required="" id="id_duration_minutes">
@@ -105,7 +105,7 @@
                            value="{{ participants.participant2.id }}">
                     <input type="hidden" name="location_id" id="location_id" value="{{ location.id }}">
 
-                    <button class="button dos__button" type="submit" name="publish" value="true">Старт
+                    <button class="button dos__button" type="submit" name="publish" value="true">{% trans "Старт" %}
                     </button>
                 </form>
             </div>

@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}QR Response{% endblock %}
+{% block title %}{% trans "Внимание!" %}<{% endblock %}
 
 {% block extra_css %}
     {% if positiveResponse %}
@@ -15,13 +15,13 @@
 
 {% block content %}
     <section class="error">
-        <h3 class="error__title">Внимание!</h3>
+        <h3 class="error__title">{% trans "Внимание!" %}</h3>
         {% if positiveResponse %}
             <img class="error__icon" src="{% static 'image/star.png' %}" alt="icon"/>
         {% else %}
             <img class="error__icon" src="{% static 'image/error.png' %}" alt="icon"/>
         {% endif %}
         <p class="error__text">{{ error_message }}</p>
-        <a href="{% url 'qr_scan' %}" class="button-s error__button">Назад</a>
+        <a href="{% url 'qr_scan' %}" class="button-s error__button">{% trans "Назад" %}</a>
     </section>
 {% endblock %}

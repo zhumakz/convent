@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Scan QR code{% endblock %}
+{% block title %}{% trans "Отсканировать QR-код" %}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/qr/qr.css' %}">
@@ -18,7 +18,7 @@
                         <use href="{% static 'image/icons.svg' %}#back "></use>
                     </svg>
                 </a>
-                <span class="top__title">Scan QR code</span>
+                <span class="top__title">{% trans "Отсканировать QR-код" %}</span>
             </div>
             <form id="qr-form" action="{% url 'handle_qr_data' %}" method="post">
                 {% csrf_token %}

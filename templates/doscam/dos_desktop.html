@@ -95,7 +95,7 @@
                 <p class="display-none">End Time: <span id="end_time">{{ event.end_time|date:"c" }}</span></p>
                             <h3 class="dos__title">{{ event.location.name }}</h3>
             {% else %}
-                <p>Нет текущего события.</p>
+                <p>{% trans "Нет текущего события." %}</p>
             {% endif %}
         </div>
     </section>
@@ -127,7 +127,7 @@
                     var progressPercent = ((totalDuration - timeRemaining / 1000) / totalDuration) * 100;
                     document.getElementById("timer_progress").style.width = progressPercent + "%";
                 } else {
-                    document.getElementById("time_remaining").textContent = "Событие завершено!";
+                    document.getElementById("time_remaining").textContent = "{% trans "Событие завершено!" %}";
                     document.getElementById("timer_progress").style.width = "100%";
                 }
             }

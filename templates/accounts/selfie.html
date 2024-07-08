@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Selfie{% endblock %}
+{% block title %}{% trans "Добавить селфи" %}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/selfie/selfie.css' %}">
@@ -17,7 +17,7 @@
                         <use href="{% static 'image/icons.svg' %}#back"></use>
                     </svg>
                 </a>
-                <span class="top__title">Добавить селфи</span>
+                <span class="top__title">{% trans "Добавить селфи" %}</span>
             </div>
             <form class="selfie__form" method="post" enctype="multipart/form-data" id="selfieForm">
                 {% csrf_token %}
@@ -32,20 +32,18 @@
                     <div class="error">{{ form.profile_picture.errors }}</div>
                 {% endif %}
                 <p class="selfie__text">
-                    Добавьте селфи аватар, он понадобиться для прохождения уникальных
-                    квестов и получения призов!
+                   {% trans "Добавьте селфи аватар, он понадобиться для прохождения уникальных квестов и получения призов!" %}
                 </p>
                 <p class="selfie__bottom-text">
-                    Ты не сможешь участвовать в Квестах если не сделаешь фото, Изменить
-                    можно будет в профиле.
+                    {% trans "Ты не сможешь участвовать в Квестах если не сделаешь фото, Изменить можно будет в профиле." %}
                 </p>
                 <div class="selfie__buttons">
                     <label class="selfie__label button" id="upload_label">
                         <input class="selfie__file" type="file" name="profile_picture" id="id_profile_picture_2"/>
-                        Добавить селфи
+                        {% trans "Добавить селфи" %}
                     </label>
-                    <button type="submit" class="button" id="save_button">Сохранить</button>
-                    <a class="button-s selfie__link" href="{% url 'profile' %}">Пропустить</a>
+                    <button type="submit" class="button" id="save_button">{% trans "Сохранить" %}</button>
+                    <a class="button-s selfie__link" href="{% url 'profile' %}">{% trans "Пропустить" %}</a>
                 </div>
             </form>
         </div>

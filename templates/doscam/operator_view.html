@@ -100,11 +100,11 @@
 
                     <form class="mt30" method="post" action="{% url 'stop_event' event.id %}">
                         {% csrf_token %}
-                        <button type="submit" class="button dos__button-start ">Остановить</button>
+                        <button type="submit" class="button dos__button-start ">{% trans "Остановить" %}</button>
                     </form>
                 {% else %}
-                    <p>Нет текущего события.</p>
-                      <a href="{% url 'create_event' %}" class="button dos__button-start "> Создать </a>
+                    <p>{% trans "Нет текущего события." %}</p>
+                      <a href="{% url 'create_event' %}" class="button dos__button-start "> {% trans "Создать" %} </a>
                 {% endif %}
             </div>
         </section>
@@ -138,7 +138,7 @@
                 var progressPercent = ((totalDuration - timeRemaining / 1000) / totalDuration) * 100;
                 document.getElementById("timer_progress").style.width = progressPercent + "%";
             } else {
-                document.getElementById("time_remaining").textContent = "Событие завершено!";
+                document.getElementById("time_remaining").textContent = "{% trans "Событие завершено!" %}";
                 document.getElementById("timer_progress").style.width = "100%";
             }
         }

@@ -2,7 +2,7 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}Register{% endblock %}
+{% block title %}{% trans "Страница регистрации" %}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/register/register.css' %}">
@@ -17,11 +17,10 @@
                         <use href="{% static 'image/icons.svg' %}#back"></use>
                     </svg>
                 </a>
-                <span class="top__title">Страница регистрации</span>
+                <span class="top__title">{% trans "Страница регистрации" %}</span>
             </div>
             <p class="register__text">
-                Введите ваш номер телефона. На него мы отправим SMS - сообщения с
-                кодом для входа в профиль
+                {% trans "Введите ваш номер телефона." %}
             </p>
             <form class="register__form" method="post">
                 {% csrf_token %}
@@ -107,14 +106,27 @@
 
                 <div class="register__bottom">
                     <button class="button" type="submit">{% trans "Зарегистрироваться" %}</button>
-                    <p class="register__bottom-text">
-                        {% trans "Продолжая, я даю согласие на" %}
-                        <a class="register__text-link"
-                           href="{% url 'policy' %}">{% trans "обработку и передачу персональных данных" %}</a>
-                        {% trans "и" %}
-                        <a class="register__text-link"
-                           href="{% url 'user_agreement' %}">{% trans "принимаю условия пользовательского соглашения." %}</a>
-                    </p>
+                    {% if LANGUAGE_CODE  == 'kk' %}
+                        <p class="register__bottom-text">
+                            Жалғастыра отырып, мен <a class="register__text-link" href="{% url 'policy' %}">жеке
+                            деректерді
+                            өңдеуге келісімімді беремін</a> және
+                            <a class="register__text-link" href="{% url 'user_agreement' %}">және пайдаланушы
+                                келісімінің
+                                шарттарын</a>
+                            қабылдаймын.
+                        </p>
+                    {% endif %}
+                    {% if LANGUAGE_CODE  == 'ru' %}
+                        <p class="register__bottom-text">
+                            Продолжая, я даю согласие на
+                            <a class="register__text-link" href="{% url 'policy' %}">обработку и передачу персональных
+                                данных</a> и
+                            <a class="register__text-link" href="{% url 'user_agreement' %}">принимаю условия
+                                пользовательского
+                                соглашения.</a>
+                        </p>
+                    {% endif %}
                 </div>
             </form>
         </div>
