@@ -18,7 +18,7 @@
                         <use href="{% static 'image/icons.svg' %}#back"></use>
                     </svg>
                 </a>
-                <span class="top__title">Подтверждение перевода</span>
+                <span class="top__title">{% trans 'Начисление Dos_Coins' %}</span>
             </div>
                     <div class="person">
                 <div class="photo-line blue-line">
@@ -55,10 +55,10 @@
                 </svg>
                 <div class="final__coins-add">
                     <span class="count">-{{ amount }}</span>
-                    <span>Dos <br/>Coins</span>
+                    <span>{% trans 'Участнику (такому-то) было успешно переведено (количество) Dos_Coins' %}</span>
                 </div>
             </div>
-            <a href="{% url 'operator' %}" class="button-s popups-close">Закрыть</a>
+            <a href="{% url 'operator' %}" class="button-s popups-close"> {% trans 'Закрыть'%}</a>
         </div>
     </section>
 {% endblock %}

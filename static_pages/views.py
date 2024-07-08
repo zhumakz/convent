@@ -13,20 +13,20 @@ def static_page_detail(request, page_id):
 
 
 def about_coins_view(request):
-    about_coins_page = get_object_or_404(StaticPage, title='about-coins')
+    about_coins_page = get_object_or_404(StaticPage, id=1)
     return render(request, 'static_pages/about_coins.html', {'page': about_coins_page})
 
 
 def map_view(request):
-    map_page = get_object_or_404(StaticPage, title='map')
+    map_page = get_object_or_404(StaticPage, id=2)
     return render(request, 'static_pages/map.html', {'page': map_page})
 
 
 def policy_view(request):
-    policy_page = get_object_or_404(StaticPage, title='policy')
+    policy_page = get_object_or_404(StaticPage, id=3)
     return render(request, 'static_pages/policy.html', {'page': policy_page})
 
 
 def user_agreement_view(request):
-    user_agreement_page = get_object_or_404(StaticPage, title='user_agreement')
+    user_agreement_page = get_object_or_404(StaticPage, id=4)
     return render(request, 'static_pages/useragreement.html', {'page': user_agreement_page})

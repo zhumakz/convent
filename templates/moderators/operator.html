@@ -1,4 +1,5 @@
 {% extends "base_moderator.html" %}
+{% load i18n %}
 {% load static %}
 {% block title %}operator{% endblock %}
 
@@ -67,7 +68,7 @@
                 </div>
                 <button id="qr-Button"
                         class="button entertainment__button popup-button"
-                        data-index="1">Scan QR code
+                        data-index="1">{% trans 'Отсканировать QR' %}
                 </button>
             </div>
         </section>

@@ -111,8 +111,8 @@
                 </div>
                 <div class="all-coins__wrapper">
                     <span class="all-coins__count">{{ user.doscointbalance.balance|floatformat:"-1" }}</span>
-                    <span class="all-coins__value">Dos Coins</span>
-                    <p class="all-coins__text">{% trans "Краткое описание DOS Coins. Где можно получить и где можно потратить." %}</p>
+                    <span class="all-coins__value">{% trans "Мои DosCoins" %}</span>
+                    <p class="all-coins__text">{% trans "Ты заработал (количество) DosCoins. Не знаешь на что их потратить? Поищи интересные предложения на точках интереса :)" %}</p>
                     <img class="all-coins__icon" src="{% static 'image/coins.png' %}" width="112" height="112"
                          alt="icon"/>
                 </div>
@@ -145,7 +145,7 @@
                     </button>
                 </div>
                 <div class="friends__list-wrapper">
-                    <h5 class="friends__title">{% trans "Список друзей:" %} {{ friends|length }}</h5>
+                    <h5 class="friends__title">{% trans "Мои друзья:" %} {{ friends|length }}</h5>
                     <ul class="friends__list">
                         {% for friend in friends %}
                             <li class="friends__item">
@@ -320,11 +320,11 @@
             <div class="profile__info">
                 <button class="profile__item popup-button" data-index="5">
                     <span class="profile__friends">{{ friends|length }}</span>
-                    <span class="profile__item-name">{% trans "Список" %}<br/> {% trans "друзей" %}</span>
+                    <span class="profile__item-name">{% trans "Мои" %}<br/> {% trans "Друзья" %}</span>
                 </button>
                 <button class="profile__item popup-button" data-index="4">
                     <span class="profile__coins">{{ user.doscointbalance.balance|floatformat:"-1" }}</span>
-                    <span class="profile__item-name">Dos<br/>Coins</span>
+                    <span class="profile__item-name">{% trans "Мои" %}<br/>Dos_Coins</span>
                     <div class="profile__coins-icon">
                         <img class="profile__coins-iconglow" src="{% static 'image/coins.png' %}" width="112"
                              height="112" alt="icon"/>

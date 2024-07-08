@@ -1,4 +1,5 @@
 {% extends "base_moderator.html" %}
+{% load i18n %}
 {% load static %}
 {% block title %}Продавец{% endblock %}
 
@@ -19,7 +20,7 @@
         </header>
         <section class="seller">
             <div class="container seller__inner">
-                <h4 class="seller__title">Введите в поле значение:</h4>
+                <h4 class="seller__title">{% trans 'Введите стоимость' %}</h4>
                 <form class="seller__form" method="post" action="{% url 'seller_view' %}">
                     {% csrf_token %}
                     <div class="seller__item">

@@ -20,16 +20,16 @@
             </div>
 
             <p class="sign__text">
-                {% trans "Введите код, который мы отправили на номер" %} <span
+                {% trans "Мы отправили на твой номер SMS с кодом. Введи его, пожалуйста, в поле ниже:" %} <span
                     id="phoneNumberDisplay">+7 707 777-77-10</span>
             </p>
 
-            <button class="sign__new-number">{% trans "Другой номер" %}</button>
+            <button class="sign__new-number">{% trans "Я ввел/а неправильный номер" %}</button>
             <form class="sign__popup-form" id="verifyForm">
                 <input class="sign__popup-item login-sms" inputmode="numeric" name="sms_code" value="" maxlength="4"/>
             </form>
             <span class="error-message-popup"></span>
-            <button class="sign__send-code" disabled>{% trans "Выслать снова" %}, 0:59</button>
+            <button class="sign__send-code" disabled>{% trans "Повторить отправку SMS с кодом" %} 0:59</button>
         </div>
     </div>
 
@@ -44,7 +44,7 @@
                 <span class="top__title">{% trans "Вход в профиль" %}</span>
             </div>
             <p class="sign__text">
-                {% trans "Введите ваш номер телефона. На него мы отправим SMS - сообщения с кодом для входа в профиль" %}
+                {% trans "Введи свой номер телефона. Мы отправим тебе SMS с кодом для входа в профиль" %}
             </p>
             <form class="sign__form" id="loginForm">
                 <div class="sign__item">
@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="sign__bottom">
-                    <button class="button" type="submit">{% trans "Продолжить" %}</button>
+                    <button class="button" type="submit">{% trans "Отправить" %}</button>
                     {% if LANGUAGE_CODE  == 'kk' %}
                         <p class="sign__bottom-text">
                             Жалғастыра отырып, мен <a class="sign__text-link" href="{% url 'policy' %}">жеке деректерді
@@ -105,7 +105,7 @@
             const messages = {
                 invalidPhoneNumber: '{% trans "Пожалуйста, введите корректный номер телефона." %}',
                 serverConnectionError: '{% trans "Ошибка подключения к серверу." %}',
-                resendTimerText: '{% trans "Отправить снова через:" %} ',
+                resendTimerText: '{% trans "Повторить отправку SMS с кодом" %} ',
                 resendButtonText: '{% trans "Отправить SMS-код снова" %}',
                 sendSMSAction: 'send_sms',
                 verifyLoginAction: 'verify_login',

@@ -16,7 +16,8 @@ class StaticPage(models.Model):
 
     @staticmethod
     def create_static_pages():
-        StaticPage.objects.get_or_create(title='about-coins', defaults={
+        StaticPage.objects.get_or_create(id=1, defaults={
+            'title': 'about',
             'description': 'This is the about coins page.',
             'photo': None
         })
