@@ -180,6 +180,25 @@ body {
     background-color: #504A5F;
 }
 
+.button-s1 {
+    display: block;
+    text-align: center;
+    width: 100%;
+    border-radius: 100px;
+    /* margin-top: 113px; */
+    padding: 16px;
+    font-size: 24px;
+    font-weight: 700;
+    background-color: var(--purple);
+    color: var(--white);
+}
+
+.button-s1 {
+    width: 245px;
+    font-size: 23.19px;
+    background-color: #504A5F;
+}
+
 .header {
     border-radius: 0 0 10px 10px;
     height: 299px;
