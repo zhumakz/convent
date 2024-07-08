@@ -45,12 +45,9 @@
 
 .profile__person-img {
     width: 96px;
-    transform: rotate(90deg);
-    object-fit: cover;
     border-radius: 50%;
     height: 96px;
 }
-
 
 
 
@@ -86,6 +83,7 @@
 .profile__qr-image {
     width: 200px;
     height: 200px;
+	border-radius: 10px;
 }
 
 .profile__coins {
@@ -105,7 +103,7 @@
 }
 
 .profile__line::before {
-    border-color: #7E69AC4D;
+    border-color: #7c4de2;
 }
 
 
@@ -190,7 +188,9 @@
 .friends__person-img {
     width: 75px;
     height: 75px;
+	border-radius: 50%;
 }
+
 
 .friends__line,
 .friend__line {

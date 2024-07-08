@@ -1,3 +1,4 @@
+body{	touch-action: none;}
 .top__title_conf {
     display: block;
     color: #F8B16F;
