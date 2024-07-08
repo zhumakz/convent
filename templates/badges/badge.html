@@ -1,0 +1,15 @@
+<!-- badges/templates/badges/badge.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Badge</title>
+</head>
+<body>
+    <h1>{{ badge.user.name }}'s Badge</h1>
+    <img src="{{ badge.image.url }}" alt="User Badge">
+    <br>
+    <a href="?regenerate=true"><button>Regenerate Badge</button></a>
+</body>
+</html>

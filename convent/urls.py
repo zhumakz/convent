@@ -27,6 +27,7 @@ urlpatterns += i18n_patterns(
     path('static_pages/', include('static_pages.urls')),
     path('moderators/', include('moderators.urls')),
     path('points', include('points.urls')),
+    path('badges/', include('badges.urls')),
 )
 urlpatterns += [
     path("i18n/", include("django.conf.urls.i18n"))

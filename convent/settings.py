@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'static_pages',
     'moderators',
     'points',
+    'badges',
     # 'debug_toolbar',
 ]
 
@@ -124,11 +125,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTHENTICATION_BACKENDS = [
     'accounts.backends.PhoneBackend',
     'django.contrib.auth.backends.ModelBackend',
