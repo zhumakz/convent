@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'static_pages',
     'moderators',
     'points',
-    # 'debug_toolbar',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -64,7 +64,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'convent.middleware.BaseTemplateMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'main.middleware.LanguageMiddleware',
 ]
 
@@ -81,7 +81,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'coins.context_processors.add_balance_to_context',
                 'convent.context_processors.base_template',
             ],
         },
@@ -198,7 +197,7 @@ LOGGING = {
 DOSCAM_EVENT_REWARD = 50
 
 DEBUG_TOOLBAR_CONFIG = {}
-DEBUG_TOOLBAR_CONFIG['IS_RUNNING_TESTS'] = False
+DEBUG_TOOLBAR_CONFIG['IS_RUNNING_TESTS'] = True
 
 INTERNAL_IPS = [
     '127.0.0.1',

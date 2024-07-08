@@ -7,15 +7,15 @@ from accounts.models import User
 
 
 class Location(models.Model):
-    name = models.CharField(max_length=255, verbose_name=_("Name"))
-    address = models.CharField(max_length=255, verbose_name=_("Address"))
+    name = models.CharField(max_length=255, verbose_name=_("Название"))
+    address = models.CharField(max_length=255, verbose_name=_("Адрес"))
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name = _("Location")
-        verbose_name_plural = _("Locations")
+        verbose_name = _("Местоположение")
+        verbose_name_plural = _("Местоположения")
 
     @staticmethod
     def create_default_locations():
@@ -30,25 +30,29 @@ class Location(models.Model):
                 id=data['id'],
                 defaults={'name': data['name'], 'address': data['address']}
             )
+
+
 class Event(models.Model):
     participant1 = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='participant1_events',
-                                     on_delete=models.CASCADE, verbose_name=_("Participant 1"))
+                                     on_delete=models.CASCADE, verbose_name=_("Участник 1"))
     participant2 = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='participant2_events',
-                                     on_delete=models.CASCADE, verbose_name=_("Participant 2"))
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name=_("Location"))
-    start_time = models.DateTimeField(verbose_name=_("Start Time"))
-    end_time = models.DateTimeField(verbose_name=_("End Time"))
-    duration_minutes = models.IntegerField(verbose_name=_("Duration Minutes"))
-    is_completed = models.BooleanField(default=False, verbose_name=_("Is Completed"))
-    participant1_confirmed = models.BooleanField(default=False, verbose_name=_("Participant 1 Confirmed"))
-    participant2_confirmed = models.BooleanField(default=False, verbose_name=_("Participant 2 Confirmed"))
-    is_published = models.BooleanField(default=False, verbose_name=_("Is Published"))
-    is_draft = models.BooleanField(default=True, verbose_name=_("Is Draft"))
+                                     on_delete=models.CASCADE, verbose_name=_("Участник 2"))
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name=_("Местоположение"))
+    start_time = models.DateTimeField(verbose_name=_("Время начала"))
+    end_time = models.DateTimeField(verbose_name=_("Время окончания"))
+    duration_minutes = models.IntegerField(verbose_name=_("Продолжительность (минуты)"))
+    is_completed = models.BooleanField(default=False, verbose_name=_("Завершено"))
+    participant1_confirmed = models.BooleanField(default=False, verbose_name=_("Участник 1 подтвердил"))
+    participant2_confirmed = models.BooleanField(default=False, verbose_name=_("Участник 2 подтвердил"))
+    is_published = models.BooleanField(default=False, verbose_name=_("Опубликовано"))
+    is_draft = models.BooleanField(default=True, verbose_name=_("Черновик"))
 
     def __str__(self):
-        return _("Event between {participant1} and {participant2} at {location}").format(participant1=self.participant1,
-                                                                                         participant2=self.participant2,
-                                                                                         location=self.location)
+        return _("Событие между {participant1} и {participant2} в {location}").format(
+            participant1=self.participant1,
+            participant2=self.participant2,
+            location=self.location
+        )
 
     def save(self, *args, **kwargs):
         if not self.pk:
@@ -62,5 +66,5 @@ class Event(models.Model):
             self.save()
 
     class Meta:
-        verbose_name = _("Event")
-        verbose_name_plural = _("Events")
+        verbose_name = _("Событие")
+        verbose_name_plural = _("События")

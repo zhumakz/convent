@@ -3,16 +3,17 @@ from django.utils.translation import gettext_lazy as _
 
 
 class PointOfInterest(models.Model):
-    title = models.CharField(_("Title"), max_length=200)
-    description = models.TextField(_("Description"))
-    icon_id = models.TextField(_("Icon ID"))
+    title = models.CharField(_("Название"), max_length=200)
+    description = models.TextField(_("Описание"))
+    icon_id = models.TextField(_("ID иконки"))
 
     def __str__(self):
         return self.title
 
     class Meta:
-        verbose_name = _("Point of Interest")
-        verbose_name_plural = _("Points of Interest")
+        verbose_name = _("Точка интереса")
+        verbose_name_plural = _("Точки интереса")
+
 
     @staticmethod
     def create_default_points():

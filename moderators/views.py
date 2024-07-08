@@ -50,22 +50,22 @@ def handle_qr_data(request):
         qr_data = request.POST.get('qr_data')
 
         if not qr_data:
-            logger.error("No QR data received")
-            return JsonResponse({'status': 'error', 'message': 'No QR data received'}, status=400)
+            logger.error("Нет данных QR")
+            return JsonResponse({'status': 'error', 'message': 'Нет данных QR'}, status=400)
 
         try:
-            logger.info(f"Received QR data: {qr_data}")
+            logger.info(f"Получены данные QR: {qr_data}")
             data = json.loads(qr_data)
 
             if 'user_id' not in data:
-                return JsonResponse({'status': 'error', 'message': 'Invalid QR data'})
+                return JsonResponse({'status': 'error', 'message': 'Неверные данные QR'})
 
             user_id = data['user_id']
             user = get_object_or_404(User, id=user_id)
 
             if user.is_admin or user.is_moderator:
-                logger.warning("User is an admin or moderator")
-                return JsonResponse({'status': 'error', 'message': 'User is an admin or moderator'})
+                logger.warning("Пользователь является администратором или модератором")
+                return JsonResponse({'status': 'error', 'message': 'Пользователь является администратором или модератором'})
 
             # Сохранение user_id в сессии
             request.session['qr_user_id'] = user.id
@@ -73,13 +73,13 @@ def handle_qr_data(request):
             return JsonResponse({'status': 'ok', 'redirect_url': reverse('transfer_coins')})
 
         except json.JSONDecodeError:
-            logger.error("Invalid QR data: %s", qr_data)
-            return JsonResponse({'status': 'error', 'message': 'Invalid QR data'})
+            logger.error("Неверные данные QR: %s", qr_data)
+            return JsonResponse({'status': 'error', 'message': 'Неверные данные QR'})
         except Exception as e:
-            logger.error("Error handling QR data: %s", e, exc_info=True)
+            logger.error("Ошибка обработки данных QR: %s", e, exc_info=True)
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
-    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Неверный запрос'}, status=400)
 
 
 @login_required
@@ -89,7 +89,7 @@ def transfer_coins(request):
 
     if not user_id:
         request.session['positiveResponse'] = False
-        request.session['error_message'] = '2ID пользователя не найден в сессии.'
+        request.session['error_message'] = 'ID пользователя не найден в сессии.'
         request.session['redirect_url'] = 'operator'  # URL для перенаправления
         return redirect('m_response')
 
@@ -144,7 +144,7 @@ def confirmation_view(request):
 
     if not user_id:
         request.session['positiveResponse'] = False
-        request.session['error_message'] = '3ID пользователя не найден в сессии.'
+        request.session['error_message'] = 'ID пользователя не найден в сессии.'
         request.session['redirect_url'] = 'operator'  # URL для перенаправления
         return redirect('m_response')
 
@@ -233,10 +233,11 @@ def check_purchase_status(request, purchase_id):
         return JsonResponse({'status': 'cancelled'})
     else:
         return JsonResponse({'status': 'pending'})
+
 @login_required
 def m_response_view(request):
     positive_response = request.session.get('positiveResponse', False)
-    error_message = request.session.get('error_message', 'Unknown error')
+    error_message = request.session.get('error_message', 'Неизвестная ошибка')
     redirect_url = request.session.get('redirect_url', 'moderator_dashboard')
     context = {
         'positiveResponse': positive_response,

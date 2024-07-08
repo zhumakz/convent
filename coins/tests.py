@@ -18,10 +18,6 @@ class CoinServiceTests(TestCase):
         DoscointBalance.objects.create(user=self.user1, balance=100)
         DoscointBalance.objects.create(user=self.user2, balance=50)
 
-        # Создаем группы
-        self.add_moderators_group = Group.objects.create(name='AddModerators')
-        self.remove_moderators_group = Group.objects.create(name='RemoveModerators')
-
     def test_create_transaction(self):
         # Проверяем создание транзакции
         transaction = CoinService.create_transaction(

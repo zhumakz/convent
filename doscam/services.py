@@ -84,16 +84,16 @@ class EventService:
         elif event.participant2 == user:
             event.participant2_confirmed = True
         else:
-            logger.error(f"User {user} is not a participant of the event {event}.")
-            raise ValidationError(__("User is not a participant of the event."))
+            logger.error(f"Пользователь {user} не является участником события {event}.")
+            raise ValidationError(__("Пользователь не является участником события."))
 
         event.save()
 
         if event.participant1_confirmed and event.participant2_confirmed:
             EventService.complete_event(event)
-            return True, __("Event completed successfully!")
+            return True, __("Событие успешно завершено!")
         else:
-            return False, __("Waiting for the other participant to confirm.")
+            return False, __("Ожидание подтверждения от другого участника.")
 
     @staticmethod
     @db_transaction.atomic
@@ -106,15 +106,15 @@ class EventService:
             sender=event.participant1,
             recipient=event.participant1,
             amount=reward_amount,
-            description=__('Reward for completing Doscam event with {participant}').format(participant=event.participant2),
-            is_system_transaction=True
+            description=__('Награда за завершение события Doscam с {participant}').format(participant=event.participant2),
+            category_name='event_bonus'
         )
         CoinService.create_transaction(
             sender=event.participant2,
             recipient=event.participant2,
             amount=reward_amount,
-            description=__('Reward for completing Doscam event with {participant}').format(participant=event.participant1),
-            is_system_transaction=True
+            description=__('Награда за завершение события Doscam с {participant}').format(participant=event.participant1),
+            category_name='event_bonus'
         )
 
         if not FriendService.are_friends(event.participant1, event.participant2):

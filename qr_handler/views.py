@@ -62,16 +62,16 @@ def handle_qr_data(request):
                 elif lecture_end:
                     return redirect('qr_lecture_end')
                 else:
-                    request.session['error_message'] = 'Invalid QR data'
+                    request.session['error_message'] = 'Недействительные данные QR'
                     request.session['positiveResponse'] = False
                     return redirect('qr_response')
 
             except json.JSONDecodeError:
-                request.session['error_message'] = 'Invalid QR data'
+                request.session['error_message'] = 'Недействительные данные QR'
                 request.session['positiveResponse'] = False
                 return redirect('qr_response')
 
-    request.session['error_message'] = 'Invalid request'
+    request.session['error_message'] = 'Неверный запрос'
     request.session['positiveResponse'] = False
     return redirect('qr_response')
 
@@ -366,7 +366,7 @@ def qr_lecture_end(request):
 @login_required
 def qr_response_view(request):
     positive_response = request.session.get('positiveResponse', False)
-    error_message = request.session.get('error_message', 'Unknown error')
+    error_message = request.session.get('error_message', 'Неизвестная ошибка')
     context = {
         'positiveResponse': positive_response,
         'error_message': error_message,

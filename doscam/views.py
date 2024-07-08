@@ -26,7 +26,7 @@ def create_event(request):
         if form.is_valid():
             # Проверка на наличие активного события
             if EventService.check_active_event():
-                error_message = _("An active event is already in progress. Please wait until it is completed.")
+                error_message = _("Активное событие уже идет. Пожалуйста, подождите его завершения.")
             else:
                 try:
                     duration_minutes = form.cleaned_data['duration_minutes']
@@ -48,12 +48,12 @@ def create_event(request):
                     if not error_message:
                         return redirect('operator_view')
                 except User.DoesNotExist:
-                    error_message = _("One of the participants does not exist.")
+                    error_message = _("Один из участников не существует.")
                 except Location.DoesNotExist:
-                    error_message = _("The selected location does not exist.")
+                    error_message = _("Выбранное местоположение не существует.")
                 except Exception as e:
                     logger.error(str(e))
-                    error_message = _("An unexpected error occurred.")
+                    error_message = _("Произошла непредвиденная ошибка.")
     else:
         form = EventForm()
         participant1, participant2, location = EventService.get_random_participants_and_location()
@@ -106,7 +106,7 @@ def confirm_participation(request, user_id):
     ).select_related('participant1', 'participant2').first()
 
     if not event:
-        messages.error(request, __("No ongoing event for this user."))
+        messages.error(request, __("Нет текущего события для этого пользователя."))
         return redirect('operator_view')
 
     success, message = EventService.confirm_participation(user, event)
@@ -123,7 +123,7 @@ def randomize_participants(request):
     try:
         participant1, participant2, location = EventService.get_random_participants_and_location()
         if not participant1 or not participant2 or not location:
-            return JsonResponse({'error': "Not enough participants or no location available."}, status=400)
+            return JsonResponse({'error': "Недостаточно участников или нет доступных мест."}, status=400)
 
         return JsonResponse({
             'participant1_id': participant1.id,
@@ -141,7 +141,7 @@ def randomize_participants(request):
         })
     except Exception as e:
         logger.error(str(e))
-        return JsonResponse({'error': "An unexpected error occurred."}, status=500)
+        return JsonResponse({'error': "Произошла непредвиденная ошибка."}, status=500)
 
 
 @login_required
@@ -152,12 +152,12 @@ def publish_event(request, event_id):
             event.is_published = True
             event.is_draft = False
             event.save()
-            return JsonResponse({'message': "Event published successfully!"})
+            return JsonResponse({'message': "Событие успешно опубликовано!"})
         else:
-            return JsonResponse({'error': "Event is already published."}, status=400)
+            return JsonResponse({'error': "Событие уже опубликовано."}, status=400)
     except Exception as e:
         logger.error(str(e))
-        return JsonResponse({'error': "An unexpected error occurred."}, status=500)
+        return JsonResponse({'error': "Произошла непредвиденная ошибка."}, status=500)
 
 
 @login_required
@@ -167,10 +167,10 @@ def stop_event(request, event_id):
         event.is_completed = True
         event.is_published = False
         event.save()
-        messages.success(request, _("Event has been stopped successfully."))
+        messages.success(request, _("Событие успешно остановлено."))
     except Exception as e:
         logger.error(str(e))
-        messages.error(request, _("An unexpected error occurred while stopping the event."))
+        messages.error(request, _("Произошла непредвиденная ошибка при остановке события."))
     return redirect('operator_view')
 
 
