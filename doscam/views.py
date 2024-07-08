@@ -178,12 +178,16 @@ def stop_event(request, event_id):
 def find_view(request):
     user = request.user
     # Проверка текущего события
-
     current_event = EventService.check_active_event_by_user(user)
+
+    # Проверка, является ли пользователь участником события
+    if not current_event or (current_event.participant1 != user and current_event.participant2 != user):
+        request.session['error_message'] = 'Вы не являетесь участником текущего события.'
+        request.session['positiveResponse'] = False
+        return redirect('qr_response')
 
     return render(request, 'doscam/find.html', {
         'user': user,
         'current_event': current_event,
-        'is_event_participant': current_event and (
-                current_event.participant1 == user or current_event.participant2 == user)
+        'is_event_participant': True
     })

@@ -42,7 +42,9 @@
                                         <img
                                                 id="participant1_profile_photo"
                                                 class="dos__person-img"
-                                                src="{{ participants.participant1.profile_picture.url }}"
+                                                src="{% if participants.participant1.profile_picture %}
+                                                    {{ participants.participant1.profile_picture.url }}
+                                                    {% endif %}"
                                                 alt="photo"
                                         />
                                     </div>
@@ -74,7 +76,9 @@
                                         <img
                                                 id="participant2_profile_photo"
                                                 class="dos__person-img"
-                                                src="{{ participants.participant2.profile_picture.url }}"
+                                                src="{% if participants.participant2.profile_picture %}
+                                                    {{ participants.participant2.profile_picture.url }}
+                                                    {% endif %}"
                                                 alt="photo"
                                         />
                                     </div>
