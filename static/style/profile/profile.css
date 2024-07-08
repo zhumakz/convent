@@ -45,7 +45,7 @@
 
 .profile__person-img {
     width: 96px;
-    transform: rotate(90deg);
+
     object-fit: cover;
     border-radius: 50%;
     height: 96px;
