@@ -20,18 +20,21 @@ class Location(models.Model):
     @staticmethod
     def create_default_locations():
         locations_data = [
-            {"id": 1, "name": "DosCam «Креатив»", "address": "DosCam «Креатив»"},
-            {"id": 2, "name": "DosCam «Энергия»", "address": "DosCam «Қуат»"},
-            {"id": 3, "name": "DosCam «Мышление»", "address": "DosCam «Сана»"}
+            {"id": 1, "name_ru": "DosCam «Креатив»", "address_ru": "DosCam «Креатив»", "name_kk": "DosCam «Шығармашылық»", "address_kk": "DosCam «Шығармашылық»"},
+            {"id": 2, "name_ru": "DosCam «Энергия»", "address_ru": "DosCam «Қуат»", "name_kk": "DosCam «Қуат»", "address_kk": "DosCam «Қуат»"},
+            {"id": 3, "name_ru": "DosCam «Мышление»", "address_ru": "DosCam «Сана»", "name_kk": "DosCam «Ойлау»", "address_kk": "DosCam «Ойлау»"}
         ]
 
         for data in locations_data:
             Location.objects.update_or_create(
                 id=data['id'],
-                defaults={'name': data['name'], 'address': data['address']}
+                defaults={
+                    'name': data['name_ru'],
+                    'address': data['address_ru'],
+                    'name_kk': data['name_kk'],
+                    'address_kk': data['address_kk']
+                }
             )
-
-
 class Event(models.Model):
     participant1 = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='participant1_events',
                                      on_delete=models.CASCADE, verbose_name=_("Участник 1"))

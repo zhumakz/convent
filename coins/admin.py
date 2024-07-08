@@ -1,9 +1,11 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin
+
 from .models import DoscointBalance, Transaction, TransactionCategory
 
 
 @admin.register(TransactionCategory)
-class TransactionCategoryAdmin(admin.ModelAdmin):
+class TransactionCategoryAdmin(TranslationAdmin):
     list_display = ('name', 'price')
     readonly_fields = ('name',)
 

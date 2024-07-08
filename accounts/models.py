@@ -96,30 +96,30 @@ class City(models.Model):
     @staticmethod
     def create_default_city():
         cities_data = [
-            {"id": 1, "name": "Астана"},
-            {"id": 2, "name": "Алматы"},
-            {"id": 3, "name": "Актау"},
-            {"id": 4, "name": "Актобе"},
-            {"id": 5, "name": "Атырау"},
-            {"id": 6, "name": "Жезказган"},
-            {"id": 7, "name": "Караганда"},
-            {"id": 8, "name": "Кокшетау"},
-            {"id": 9, "name": "Конаев"},
-            {"id": 10, "name": "Костанай"},
-            {"id": 11, "name": "Кызылорда"},
-            {"id": 12, "name": "Павлодар"},
-            {"id": 13, "name": "Петропавловск"},
-            {"id": 14, "name": "Семей"},
-            {"id": 15, "name": "Талдыкорган"},
-            {"id": 16, "name": "Тараз"},
-            {"id": 17, "name": "Туркестан"},
-            {"id": 18, "name": "Уральск"},
-            {"id": 19, "name": "Усть-Каменогорск"},
-            {"id": 20, "name": "Шымкент"}
+            {"id": 1, "name_ru": "Астана", "name_kk": "Астана"},
+            {"id": 2, "name_ru": "Алматы", "name_kk": "Алматы"},
+            {"id": 3, "name_ru": "Актау", "name_kk": "Ақтау"},
+            {"id": 4, "name_ru": "Актобе", "name_kk": "Ақтөбе"},
+            {"id": 5, "name_ru": "Атырау", "name_kk": "Атырау"},
+            {"id": 6, "name_ru": "Жезказган", "name_kk": "Жезқазған"},
+            {"id": 7, "name_ru": "Караганда", "name_kk": "Қарағанды"},
+            {"id": 8, "name_ru": "Кокшетау", "name_kk": "Көкшетау"},
+            {"id": 9, "name_ru": "Конаев", "name_kk": "Қонаев"},
+            {"id": 10, "name_ru": "Костанай", "name_kk": "Қостанай"},
+            {"id": 11, "name_ru": "Кызылорда", "name_kk": "Қызылорда"},
+            {"id": 12, "name_ru": "Павлодар", "name_kk": "Павлодар"},
+            {"id": 13, "name_ru": "Петропавловск", "name_kk": "Петропавл"},
+            {"id": 14, "name_ru": "Семей", "name_kk": "Семей"},
+            {"id": 15, "name_ru": "Талдыкорган", "name_kk": "Талдықорған"},
+            {"id": 16, "name_ru": "Тараз", "name_kk": "Тараз"},
+            {"id": 17, "name_ru": "Туркестан", "name_kk": "Түркістан"},
+            {"id": 18, "name_ru": "Уральск", "name_kk": "Орал"},
+            {"id": 19, "name_ru": "Усть-Каменогорск", "name_kk": "Өскемен"},
+            {"id": 20, "name_ru": "Шымкент", "name_kk": "Шымкент"}
         ]
 
         for data in cities_data:
             City.objects.update_or_create(
                 id=data['id'],
-                defaults={'name': data['name']}
+                defaults={'name_ru': data['name_ru'], 'name_kk': data['name_kk']}
             )

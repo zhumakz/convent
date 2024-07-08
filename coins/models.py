@@ -58,18 +58,32 @@ class TransactionCategory(models.Model):
     @staticmethod
     def create_default_categories():
         categories = [
-            {'name': 'friend_bonus_same_city', 'price': 1, 'display_name': _("Бонус за друга (тот же город)")},
-            {'name': 'friend_bonus_different_city', 'price': 2, 'display_name': _("Бонус за друга (другой город)")},
-            {'name': 'lecture_bonus', 'price': 5, 'display_name': _("Бонус за лекцию")},
-            {'name': 'event_bonus', 'price': 3, 'display_name': _("Бонус за мероприятие")},
-            {'name': 'vote_bonus', 'price': 1, 'display_name': _("Бонус за голосование")},
-            {'name': 'moderator_transfer', 'price': 0, 'display_name': _("Перевод модератора")},
-            {'name': 'vendor_purchase', 'price': 0, 'display_name': _("Покупка у продавца")},
-            {'name': 'new_category', 'price': 0, 'display_name': _("Новая категория")},
+            {'name': 'friend_bonus_same_city', 'price': 1, 'display_name_ru': 'Бонус за друга (тот же город)',
+             'display_name_kk': 'Дос үшін бонус (сол қала)'},
+            {'name': 'friend_bonus_different_city', 'price': 2, 'display_name_ru': 'Бонус за друга (другой город)',
+             'display_name_kk': 'Дос үшін бонус (басқа қала)'},
+            {'name': 'lecture_bonus', 'price': 5, 'display_name_ru': 'Бонус за лекцию',
+             'display_name_kk': 'Дәріс үшін бонус'},
+            {'name': 'event_bonus', 'price': 3, 'display_name_ru': 'Бонус за мероприятие',
+             'display_name_kk': 'Іс-шара үшін бонус'},
+            {'name': 'vote_bonus', 'price': 1, 'display_name_ru': 'Бонус за голосование',
+             'display_name_kk': 'Дауыс беру үшін бонус'},
+            {'name': 'moderator_transfer', 'price': 0, 'display_name_ru': 'Перевод модератора',
+             'display_name_kk': 'Модератор аударымы'},
+            {'name': 'vendor_purchase', 'price': 0, 'display_name_ru': 'Покупка у продавца',
+             'display_name_kk': 'Сатушыдан сатып алу'},
+            {'name': 'new_category', 'price': 0, 'display_name_ru': 'Новая категория', 'display_name_kk': 'Жаңа санат'},
         ]
 
         for category in categories:
-            TransactionCategory.objects.get_or_create(name=category['name'], defaults={'price': category['price'], 'display_name': category['display_name']})
+            TransactionCategory.objects.update_or_create(
+                name=category['name'],
+                defaults={
+                    'price': category['price'],
+                    'display_name_ru': category['display_name_ru'],
+                    'display_name_kk': category['display_name_kk']
+                }
+            )
 
 
 class Transaction(models.Model):

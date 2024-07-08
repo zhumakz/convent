@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _, gettext as __
+from modeltranslation.admin import TranslationAdmin
+
 from .models import Campaign, Vote
 
-
-class CampaignAdmin(admin.ModelAdmin):
+@admin.register(Campaign)
+class CampaignAdmin(TranslationAdmin):
     list_display = ('name', 'leader_name', 'city')
     actions = ['generate_qr_codes']
 
@@ -14,10 +16,6 @@ class CampaignAdmin(admin.ModelAdmin):
         self.message_user(request, __("QR codes generated successfully."))
 
     generate_qr_codes.short_description = __("Generate QR codes for selected campaigns")
-
-
-admin.site.register(Campaign, CampaignAdmin)
-
 
 @admin.register(Vote)
 class VoteAdmin(admin.ModelAdmin):
