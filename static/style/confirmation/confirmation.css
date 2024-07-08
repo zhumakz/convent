@@ -1,3 +1,10 @@
+.top__title_conf {
+    display: block;
+    color: #F8B16F;
+    margin-right: 50%;
+    transform: translateX(25%);
+    text-wrap: nowrap;
+}
 .add-friend {
     display: flex;
     flex-direction: column;

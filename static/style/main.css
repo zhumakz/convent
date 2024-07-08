@@ -153,8 +153,8 @@ body {
 
 .top__title {
     display: block;
-    color: #F8B16F;
-    margin-right: 30%;
+    color: var(--pale-orange);
+    margin-right: 50%;
     transform: translateX(50%);
     text-wrap: nowrap;
 }
@@ -289,21 +289,18 @@ body {
 
 .person__location {
     margin-top: 16px;
-	color:#ffebd9;
-	font-weight: 500;
 }
 
 .person__name {
     font-size: 32px;
     text-align: center;
-	    font-weight: 750;
 }
 
 
 
 .qr__content {
     margin-top: 45px;
-    min-height: 571px;
+    min-height: 400px;
     border: none;
     position: relative;
     background-color: rgb(255, 255, 255, .2);
@@ -734,7 +731,7 @@ video {
 
     .bottom-gradient {
 
-        height: 40%;
+        height: 100px;
     }
 
     .final__coins {
@@ -746,12 +743,3 @@ video {
         margin: 0;
     }
 }
-
-
-
-
-
-
-
-
-

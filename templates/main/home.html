@@ -59,7 +59,10 @@
                     </li>
                 </ul>
             </nav>
-            <a class="button homepage__button" href="{% url 'login' %}">{% trans "Вход" %}</a>
+
+            <div class="homepage__bottom">
+                <a class="button homepage__button" href="{% url 'login' %}">{% trans "Вход" %}</a>
+            </div>
         </div>
     </section>
 {% endblock %}

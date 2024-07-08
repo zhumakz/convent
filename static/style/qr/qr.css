@@ -1,5 +1,5 @@
 .qr {
-    min-height: 100vh;
+    min-height: 90vh;
     background-color: #282B30;
     border-radius: 20px 20px 0 0;
     padding: 40px 24px;
@@ -8,16 +8,14 @@
 
 }
 
-
 .qr__dos-image {
     margin: auto 0;
 }
 
-
-
-.qr__seller-image,.qr__code-image {
+.qr__seller-image,
+.qr__code-image {
     align-self: center;
-    margin:  auto 0;
+    margin: auto 0;
 }
 
 .qr__seller-wrapper {
@@ -30,11 +28,10 @@
     font-weight: 900;
 }
 
-
 .qr__name {
     margin-top: 49px;
 }
 
-
-
-.qr__button {margin-top: auto;}
+.qr__button {
+    margin-top: auto;
+}
