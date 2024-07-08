@@ -12,7 +12,6 @@ from django.utils.translation import gettext_lazy as _, gettext as __
 
 from campaigns.services import CampaignService
 from coins.services import CoinService
-from doscam.models import Event
 from doscam.services import EventService
 from friends.services import FriendService
 from .forms import RegistrationForm, LoginForm, VerificationForm, ProfileEditForm, ModeratorLoginForm, \
@@ -145,20 +144,33 @@ def profile_view(request):
             request.session['profile_picture_checked'] = True
             return redirect('selfie')
 
-    # Получение списка друзей
-    friends = FriendService.get_friends(user)
+    # Использование кэша для списка друзей
+    cache_key_friends = f'user_friends_{user.id}'
+    friends = cache.get(cache_key_friends)
+    if not friends:
+        friends = FriendService.get_friends(user)
+        cache.set(cache_key_friends, friends, timeout=300)  # Кэширование на 5 минут
 
     # Использование кэша для транзакций
-    cache_key = f'user_transactions_{user.id}'
-    transactions = cache.get(cache_key)
+    cache_key_transactions = f'user_transactions_{user.id}'
+    transactions = cache.get(cache_key_transactions)
     if not transactions:
-        transactions = CoinService.get_transactions(user).select_related('sender', 'recipient').order_by('-timestamp')
-        cache.set(cache_key, transactions, timeout=300)  # Кэширование на 5 минут
+        transactions = CoinService.get_transactions(user).select_related('sender', 'recipient', 'category').order_by('-timestamp')
+        cache.set(cache_key_transactions, transactions, timeout=300)  # Кэширование на 5 минут
 
-    # Проверка текущего события
-    current_event = EventService.check_active_event_by_user(user)
+    # Добавление названий категорий к транзакциям
+    for transaction in transactions:
+        transaction.category_display_name = CoinService.get_display_name_by_category_id(transaction.category_id)
+
+    # Использование кэша для текущего события
+    cache_key_event = f'current_event_{user.id}'
+    current_event = cache.get(cache_key_event)
+    if current_event is None:
+        current_event = EventService.check_active_event_by_user(user)
+        cache.set(cache_key_event, current_event, timeout=300)  # Кэширование на 5 минут
 
     has_voted = CampaignService.has_voted(user)
+
     return render(request, 'accounts/profile.html', {
         'user': user,
         'friends': friends,
@@ -168,6 +180,7 @@ def profile_view(request):
         'is_event_participant': current_event and (
             current_event.participant1 == user or current_event.participant2 == user)
     })
+
 @login_required
 def selfie_view(request):
     if request.method == 'POST':

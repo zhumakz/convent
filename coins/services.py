@@ -106,3 +106,17 @@ class CoinService:
                 raise ValidationError(__("Категория не найдена"))
 
         return price
+    @staticmethod
+    def get_display_name_by_category_id(category_id):
+        cache_key = f'category_display_name_{category_id}'
+        display_name = cache.get(cache_key)
+
+        if display_name is None:
+            try:
+                display_name = TransactionCategory.objects.values_list('display_name', flat=True).get(id=category_id)
+                cache.set(cache_key, display_name, timeout=60 * 15)
+            except TransactionCategory.DoesNotExist:
+                logger.error(f'Категория не найдена: {category_id}')
+                raise ValidationError(__("Категория не найдена"))
+
+        return display_name
