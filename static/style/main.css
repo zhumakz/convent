@@ -628,6 +628,8 @@ video {
 }
 
 .blue-person-img {
+    transform: rotate(90deg);
+    object-fit: cover;
     width: 96px;
     border-radius: 50%;
     height: 96px;
