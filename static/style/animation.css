@@ -1,3 +1,5 @@
+/* Кручение монеты */
+
 @keyframes coinFlip {
   0% {
       transform: rotateY(0);
@@ -24,7 +26,7 @@
 }
 
 .final__coins {
-  animation: coinFlip 2s infinite, coinShine 3s infinite; /* Добавляем анимацию свечения */
+  animation: coinFlip 4s infinite, coinShine 3s infinite; /* Добавляем анимацию свечения */
   position: relative;
   z-index: 100;
   border-radius: 50%;
@@ -37,15 +39,16 @@
   display: block;
   border-radius: 50%;
 }
+/* Кручение монеты конец*/
 
-.profile__coins-iconglow{
-filter: drop-shadow(0 0 10px #FF8A1E);
-	
-}
 
+/* Профиль блинк аватара*/
 @keyframes blink {
-  100% {
+	  10% {
     opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
 .profile__line::before {
@@ -54,5 +57,258 @@ filter: drop-shadow(0 0 10px #FF8A1E);
   animation-duration: 2s;
   animation-iteration-count: infinite;
 }
+/* Профиль блинк аватара конец*/
 
 
+/* Блик кнопки профиля (скан) */
+.profile__button {
+	display: block;
+	text-align: center;
+	border-radius: 100px;
+	width: 100%;
+	position: relative;
+  	overflow: hidden;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Добавляем тень для трехмерного эффекта */
+}
+
+/* Стили для создания блика на кнопке */
+.profile__button::before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100%;
+  background-image: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 30%, /* Прозрачность начала блика */
+    rgba(255, 255, 255, 0.8), /* Цвет блика */
+    rgba(255, 255, 255, 0) 70% /* Прозрачность конца блика */
+  );
+  top: 0;
+  left: -100px;
+  animation: shine 4s infinite linear; /* Анимация блика */
+}
+
+/* Ключевые кадры для анимации блика */
+@keyframes shine {
+  0% {
+    left: -100px; /* Начальная позиция блика (левая сторона кнопки) */
+  }
+  20% {
+    left: 100%; /* Позиция блика в конце (правая сторона кнопки) */
+  }
+  100% {
+    left: 100%; /* Завершение анимации */
+  }
+}
+/* Блик кнопки профиля (скан)  конец*/
+
+/* Блик кнопки профиля (монета) */
+.profile__coins-icon {
+	display: block;
+	text-align: center;
+	border-radius: 100px;
+
+
+  	overflow: hidden;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Добавляем тень для трехмерного эффекта */
+}
+.profile__coins-icon::before{
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100%;
+  background-image: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 30%, /* Прозрачность начала блика */
+    rgba(255, 255, 255, 0.8), /* Цвет блика */
+    rgba(255, 255, 255, 0) 70% /* Прозрачность конца блика */
+  );
+  top: 0;
+  left: -100px;
+  animation: coinglow 4s infinite linear; /* Анимация блика */
+	
+}
+
+@keyframes coinglow {
+  0% {
+    left: -10px; /* Начальная позиция блика (левая сторона кнопки) */
+  }
+  20% {
+    left: 100%; /* Позиция блика в конце (правая сторона кнопки) */
+  }
+  100% {
+    left: 100%; /* Завершение анимации */
+  }
+}
+
+/* Блик кнопки профиля (монета) конец*/
+
+/* Блик кнопки профиля (вход главная стр) */
+.homepage__button {
+	display: block;
+	text-align: center;
+	border-radius: 100px;
+	width: 100%;
+	position: relative;
+  	overflow: hidden;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Добавляем тень для трехмерного эффекта */
+}
+
+/* Стили для создания блика на кнопке */
+.homepage__button::before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100%;
+  background-image: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 30%, /* Прозрачность начала блика */
+    rgba(255, 255, 255, 0.8), /* Цвет блика */
+    rgba(255, 255, 255, 0) 70% /* Прозрачность конца блика */
+  );
+  top: 0;
+  left: -100px;
+  animation: shine 4s infinite linear; /* Анимация блика */
+}
+
+/* Ключевые кадры для анимации блика */
+@keyframes shine {
+  0% {
+    left: -100px; /* Начальная позиция блика (левая сторона кнопки) */
+  }
+  20% {
+    left: 100%; /* Позиция блика в конце (правая сторона кнопки) */
+  }
+  100% {
+    left: 100%; /* Завершение анимации */
+  }
+}
+/* Блик кнопки профиля (вход главная стр)  конец*/
+
+/* Блик кнопки профиля (продолжить) */
+.button {
+	display: block;
+	text-align: center;
+	border-radius: 100px;
+	width: 100%;
+	position: relative;
+  	overflow: hidden;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Добавляем тень для трехмерного эффекта */
+}
+
+/* Стили для создания блика на кнопке */
+.button::before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100%;
+  background-image: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 30%, /* Прозрачность начала блика */
+    rgba(255, 255, 255, 0.8), /* Цвет блика */
+    rgba(255, 255, 255, 0) 70% /* Прозрачность конца блика */
+  );
+  top: 0;
+  left: -100px;
+  animation: shine 4s infinite linear; /* Анимация блика */
+}
+
+/* Ключевые кадры для анимации блика */
+@keyframes shine {
+  0% {
+    left: -100px; /* Начальная позиция блика (левая сторона кнопки) */
+  }
+  20% {
+    left: 100%; /* Позиция блика в конце (правая сторона кнопки) */
+  }
+  100% {
+    left: 100%; /* Завершение анимации */
+  }
+}
+/* Блик кнопки профиля (продолжить)  конец*/
+
+
+/* Блик кнопки профиля (селфи) */
+.selfie__label button {
+	display: block;
+	text-align: center;
+	border-radius: 100px;
+	width: 100%;
+	position: relative;
+  	overflow: hidden;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Добавляем тень для трехмерного эффекта */
+}
+
+/* Стили для создания блика на кнопке */
+.selfie__label button::before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100%;
+  background-image: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 30%, /* Прозрачность начала блика */
+    rgba(255, 255, 255, 0.8), /* Цвет блика */
+    rgba(255, 255, 255, 0) 70% /* Прозрачность конца блика */
+  );
+  top: 0;
+  left: -100px;
+  animation: shine 4s infinite linear; /* Анимация блика */
+}
+
+/* Ключевые кадры для анимации блика */
+@keyframes shine {
+  0% {
+    left: -100px; /* Начальная позиция блика (левая сторона кнопки) */
+  }
+  20% {
+    left: 100%; /* Позиция блика в конце (правая сторона кнопки) */
+  }
+  100% {
+    left: 100%; /* Завершение анимации */
+  }
+}
+/* Блик кнопки профиля (селфи)  конец*/
+
+
+/* Блик кнопки профиля (языки) */
+.button-s {
+	display: block;
+	text-align: center;
+	border-radius: 100px;
+	width: 100%;
+	position: relative;
+  	overflow: hidden;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Добавляем тень для трехмерного эффекта */
+}
+
+/* Стили для создания блика на кнопке */
+.button-s::before {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100%;
+  background-image: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 30%, /* Прозрачность начала блика */
+    rgba(255, 255, 255, 0.8), /* Цвет блика */
+    rgba(255, 255, 255, 0) 70% /* Прозрачность конца блика */
+  );
+  top: 0;
+  left: -100px;
+  animation: shine 4s infinite linear; /* Анимация блика */
+}
+
+/* Ключевые кадры для анимации блика */
+@keyframes shine {
+  0% {
+    left: -100px; /* Начальная позиция блика (левая сторона кнопки) */
+  }
+  20% {
+    left: 100%; /* Позиция блика в конце (правая сторона кнопки) */
+  }
+  100% {
+    left: 100%; /* Завершение анимации */
+  }
+}
+/* Блик кнопки профиля (языки)  конец*/

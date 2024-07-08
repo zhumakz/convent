@@ -14,5 +14,5 @@ class Attraction(models.Model):
         return self.title
 
     class Meta:
-        verbose_name = _("Аттракцион")
-        verbose_name_plural = _("Аттракционы")
+        verbose_name = _("Расписание")
+        verbose_name_plural = _("Расписание")

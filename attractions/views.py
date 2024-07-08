@@ -6,7 +6,7 @@ from .forms import AttractionForm
 
 
 def attraction_list(request):
-    attractions = Attraction.objects.all()
+    attractions = Attraction.objects.all().order_by('id')
     return render(request, 'attractions/attraction_list.html', {'attractions': attractions})
 
 
