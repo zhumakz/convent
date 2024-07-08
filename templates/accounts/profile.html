@@ -248,7 +248,7 @@
                         </div>
 
                         <label class="edit__label" for="id_profile_picture">{% trans "Изменить фото" %}</label>
-                        <input type="file" class="edit__file-input" id="id_profile_picture" name="profile_picture"
+                        <input type="file" accept="image/*" class="edit__file-input" id="id_profile_picture" name="profile_picture"
                                onchange="previewImage()"/>
                     </div>
                     <span class="edit__location">{{ user.city.name }}</span>

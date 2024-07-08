@@ -23,7 +23,7 @@
                 {% csrf_token %}
                 <div class="photo-line selfie__line">
                     <label class="selfie__label">
-                        <input class="selfie__file" type="file" name="profile_picture" id="id_profile_picture"/>
+                        <input class="selfie__file" type="file" accept="image/*" name="profile_picture" id="id_profile_picture"/>
                         <img class="selfie__image" id="selfie_image_preview" src="{% static 'image/photo.png' %}"
                              alt="photo"/>
                     </label>

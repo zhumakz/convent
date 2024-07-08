@@ -13,7 +13,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['dev.convention.kz', '185.129.51.158','dos.convention.kz','localhost']
 
 INSTALLED_APPS = [
     'modeltranslation',
@@ -136,15 +136,12 @@ AUTHENTICATION_BACKENDS = [
 
 AUTH_USER_MODEL = 'accounts.User'
 
-
-
-
 # Настройки для SMSC.kz
 SMSC_LOGIN = env('SMSC_LOGIN')
 SMSC_PASSWORD = env('SMSC_PASSWORD')
 SMSC_TEST_MODE = env.bool('SMSC_TEST_MODE', default=True)  # False для боевого режима
 SMSC_URL = 'https://smsc.kz/sys/send.php'
-SMS_VERIFICATION_MESSAGE = "Код для авторизации Жаңа адамдар:"
+SMS_VERIFICATION_MESSAGE = "Код для авторизации в приложении Конвента (dos.convention.kz):"
 
 QR_CODE_KEY = env.bytes('QR_CODE_KEY')
 ID_MULTIPLIER = env.int('ID_MULTIPLIER', default=37)
@@ -178,8 +175,6 @@ LOGGING = {
         },
     },
 }
-
-
 
 DEBUG_TOOLBAR_CONFIG = {}
 DEBUG_TOOLBAR_CONFIG['IS_RUNNING_TESTS'] = False
