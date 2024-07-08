@@ -8,16 +8,13 @@
                 <use href="{% static 'image/icons.svg' %}#back"></use>
             </svg>
         </button>
-        <span class="top__title">{% trans "Меню" %}</span>
+        {#        <span class="top__title">{% trans "Меню" %}</span>#}
     </div>
     <div class="menu__languages">
-        <button class="menu__languages-button{% if LANGUAGE_CODE  == 'kk' %} menu__languages-button--active{% endif %}"
-                href="{% url 'switch_language' 'kk' %}">ҚАЗ
-        </button>
-        <button class="menu__languages-button{% if LANGUAGE_CODE  == 'ru' %} menu__languages-button--active{% endif %}"
-                href="{% url 'switch_language' 'ru' %}">РУС
-        </button>
-
+        <a class="menu__languages-button{% if LANGUAGE_CODE == 'kk' %} menu__languages-button--active{% endif %}"
+           href="{% url 'switch_language' 'kk' %}?next={{ request.path }}">ҚАЗ</a>
+        <a class="menu__languages-button{% if LANGUAGE_CODE == 'ru' %} menu__languages-button--active{% endif %}"
+           href="{% url 'switch_language' 'ru' %}?next={{ request.path }}">РУС</a>
     </div>
     <nav class="menu__nav">
         <ul class="menu__list">

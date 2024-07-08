@@ -2,31 +2,18 @@ import os
 from pathlib import Path
 import environ
 
-# Инициализация библиотеки environ
 env = environ.Env(
-    # задать casting, default value
     DEBUG=(bool, False)
 )
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ['*']
-
-CSRF_TRUSTED_ORIGINS = ["https://ab78-178-89-174-224.ngrok-free.app"]
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -52,6 +39,7 @@ INSTALLED_APPS = [
     'moderators',
     'points',
     'debug_toolbar',
+    'modeltranslation',
 ]
 
 MIDDLEWARE = [
@@ -89,9 +77,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'convent.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -102,9 +87,6 @@ DATABASES = {
         'PORT': env('DATABASE_PORT'),
     }
 }
-
-# Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -120,10 +102,15 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+LANGUAGES = [
+    ('ru', 'Russian'),
+    ('kk', 'Kazakh'),
+]
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.0/topics/i18n/
-
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'Etc/GMT-5'
@@ -132,16 +119,10 @@ USE_I18N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -154,6 +135,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
+
+
+
 
 # Настройки для SMSC.kz
 SMSC_LOGIN = env('SMSC_LOGIN')
@@ -174,6 +158,7 @@ SAME_CITY_FRIEND_REWARD = env.int('SAME_CITY_FRIEND_REWARD', default=1)
 DIFFERENT_CITY_FRIEND_REWARD = env.int('DIFFERENT_CITY_FRIEND_REWARD', default=2)
 LECTURE_REWARD_COINS = env.int('LECTURE_REWARD_COINS', default=5)
 VOTE_REWARD_COINS = env.int('VOTE_REWARD_COINS', default=5)
+DOSCAM_EVENT_REWARD = 50
 
 LOGGING = {
     'version': 1,
@@ -194,7 +179,7 @@ LOGGING = {
     },
 }
 
-DOSCAM_EVENT_REWARD = 50
+
 
 DEBUG_TOOLBAR_CONFIG = {}
 DEBUG_TOOLBAR_CONFIG['IS_RUNNING_TESTS'] = False

@@ -4,8 +4,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls.i18n import i18n_patterns
 
+from main.views import switch_language
+
 urlpatterns = [
-    # остальные маршруты
+    path('switch-language/<str:lang_code>/', switch_language, name='switch_language'),
 ]
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
@@ -26,6 +28,9 @@ urlpatterns += i18n_patterns(
     path('moderators/', include('moderators.urls')),
     path('points', include('points.urls')),
 )
+urlpatterns += [
+    path("i18n/", include("django.conf.urls.i18n"))
+]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     import debug_toolbar

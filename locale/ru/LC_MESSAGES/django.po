@@ -1,0 +1,1069 @@
+# ОПИСАНИЕ
+# Copyright (C) ГОД ВЛАДЕЛЕЦ ПРАВ НА ПАКЕТ
+# Этот файл распространяется на тех же условиях, что и пакет PACKAGE.
+# ПЕРВЫЙ АВТОР <EMAIL@ADDRESS>, ГОД.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: ВЕРСИЯ ПАКЕТА\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-07-08 12:26+0500\n"
+"PO-Revision-Date: ГОД-МЕС-ДЕН ВРЕМЯ+ЧАСОВОЙПОЯС\n"
+"Last-Translator: ПОЛНОЕ ИМЯ <EMAIL@ADDRESS>\n"
+"Language-Team: ЯЗЫК <LL@li.org>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: .\accounts\forms.py:25 .\accounts\models.py:29
+#: .\templates\accounts\login.html:51 .\templates\accounts\registration.html:38
+msgid "Номер телефона"
+msgstr "Номер телефона"
+
+#: .\accounts\forms.py:26 .\accounts\models.py:30
+#: .\templates\accounts\registration.html:52
+msgid "Имя"
+msgstr "Имя"
+
+#: .\accounts\forms.py:27 .\accounts\models.py:31
+#: .\templates\accounts\registration.html:66
+msgid "Фамилия"
+msgstr "Фамилия"
+
+#: .\accounts\forms.py:28 .\accounts\models.py:32
+msgid "Возраст"
+msgstr "Возраст"
+
+#: .\accounts\forms.py:29 .\accounts\models.py:33 .\accounts\models.py:93
+#: .\campaigns\models.py:16 .\templates\accounts\registration.html:80
+msgid "Город"
+msgstr "Город"
+
+#: .\accounts\forms.py:36 .\accounts\forms.py:67
+msgid "Введите правильный номер телефона в формате +77475000795."
+msgstr "Введите правильный номер телефона в формате +77475000795."
+
+#: .\accounts\forms.py:38
+msgid "Пользователь с таким номером телефона уже зарегистрирован."
+msgstr "Пользователь с таким номером телефона уже зарегистрирован."
+
+#: .\accounts\forms.py:44
+msgid "Возраст должен быть не менее 18 лет"
+msgstr "Возраст должен быть не менее 18 лет"
+
+#: .\accounts\forms.py:50
+msgid "Имя должно содержать только буквы"
+msgstr "Имя должно содержать только буквы"
+
+#: .\accounts\forms.py:56
+msgid "Фамилия должна содержать только буквы"
+msgstr "Фамилия должна содержать только буквы"
+
+#: .\accounts\forms.py:61 .\accounts\forms.py:137
+msgid "Phone Number"
+msgstr "Телефонный номер"
+
+#: .\accounts\forms.py:69
+msgid "Пользователь с таким номером телефона не найден."
+msgstr "Пользователь с таким номером телефона не найден."
+
+#: .\accounts\forms.py:74
+msgid "SMS Code"
+msgstr "SMS код"
+
+#: .\accounts\forms.py:79
+msgid "SMS код должен содержать только цифры."
+msgstr "SMS код должен содержать только цифры."
+
+#: .\accounts\forms.py:138
+msgid "Password"
+msgstr "Пароль"
+
+#: .\accounts\forms.py:145
+msgid "Invalid login or not a moderator."
+msgstr "Неверный логин или не модератор."
+
+#: .\accounts\models.py:34
+msgid "Instagram"
+msgstr "Instagram"
+
+#: .\accounts\models.py:35
+msgid "TikTok"
+msgstr "TikTok"
+
+#: .\accounts\models.py:37
+msgid "Фотография профиля"
+msgstr "Фотография профиля"
+
+#: .\accounts\models.py:38 .\campaigns\models.py:18 .\shop\models.py:44
+msgid "QR-код"
+msgstr "QR-код"
+
+#: .\accounts\models.py:39
+msgid "Активен"
+msgstr "Активен"
+
+#: .\accounts\models.py:40
+msgid "Администратор"
+msgstr "Администратор"
+
+#: .\accounts\models.py:41
+msgid "Модератор"
+msgstr "Модератор"
+
+#: .\accounts\models.py:87 .\attractions\models.py:6 .\campaigns\models.py:8
+#: .\doscam\models.py:10 .\lectures\models.py:8 .\points\models.py:6
+#: .\shop\models.py:9 .\shop\models.py:23
+msgid "Название"
+msgstr "Название"
+
+#: .\accounts\models.py:94
+msgid "Города"
+msgstr "Города"
+
+#: .\attractions\models.py:7 .\campaigns\models.py:17 .\points\models.py:7
+#: .\shop\models.py:24
+msgid "Описание"
+msgstr "Описание"
+
+#: .\attractions\models.py:8
+msgid "Фото"
+msgstr "Фото"
+
+#: .\attractions\models.py:9 .\doscam\models.py:41 .\lectures\models.py:45
+msgid "Время начала"
+msgstr "Время начала"
+
+#: .\attractions\models.py:10 .\doscam\models.py:42 .\lectures\models.py:46
+msgid "Время окончания"
+msgstr "Время окончания"
+
+#: .\attractions\models.py:11 .\doscam\models.py:17 .\doscam\models.py:40
+msgid "Местоположение"
+msgstr "Местоположение"
+
+#: .\attractions\models.py:17
+msgid "Аттракцион"
+msgstr "Аттракцион"
+
+#: .\attractions\models.py:18
+msgid "Аттракционы"
+msgstr "Аттракционы"
+
+#: .\campaigns\models.py:9
+msgid "Логотип"
+msgstr "Логотип"
+
+#: .\campaigns\models.py:11
+msgid "Основное фото"
+msgstr "Основное фото"
+
+#: .\campaigns\models.py:12
+msgid "Имя лидера"
+msgstr "Имя лидера"
+
+#: .\campaigns\models.py:14
+msgid "Фото лидера"
+msgstr "Фото лидера"
+
+#: .\campaigns\models.py:15
+msgid "Телефон"
+msgstr "Телефон"
+
+#: .\campaigns\models.py:30 .\campaigns\models.py:61
+msgid "Кампания"
+msgstr "Кампания"
+
+#: .\campaigns\models.py:31
+msgid "Кампании"
+msgstr "Кампании"
+
+#: .\campaigns\models.py:63 .\lectures\models.py:41
+msgid "Пользователь"
+msgstr "Пользователь"
+
+#: .\campaigns\models.py:64
+msgid "Проголосовал"
+msgstr "Проголосовал"
+
+#: .\campaigns\models.py:70
+msgid "Голос"
+msgstr "Голос"
+
+#: .\campaigns\models.py:71
+msgid "Голоса"
+msgstr "Голоса"
+
+#: .\coins\forms.py:22
+msgid "Amount must be positive"
+msgstr "Сумма должна быть положительной"
+
+#: .\coins\forms.py:25
+msgid "AddModerators cannot send more than 10 coins per transaction"
+msgstr "AddModerators не может отправлять более 10 монет за транзакцию"
+
+#: .\coins\forms.py:28
+msgid "RemoveModerators cannot reduce balance below 0"
+msgstr "RemoveModerators не может снизить баланс ниже 0"
+
+#: .\coins\forms.py:31
+msgid "Insufficient balance"
+msgstr "Недостаточно средств"
+
+#: .\coins\models.py:10
+msgid "User"
+msgstr "Пользователь"
+
+#: .\coins\models.py:11
+msgid "Balance"
+msgstr "Баланс"
+
+#: .\coins\models.py:12
+msgid "Total Earned"
+msgstr "Всего заработано"
+
+#: .\coins\models.py:13
+msgid "Total Spent"
+msgstr "Всего потрачено"
+
+#: .\coins\models.py:31
+msgid "Doscoint Balance"
+msgstr "Баланс Doscoint"
+
+#: .\coins\models.py:32
+msgid "Doscoint Balances"
+msgstr "Балансы Doscoint"
+
+#: .\coins\models.py:37
+msgid "Friend Bonus (Same City)"
+msgstr "Бонус за друга (тот же город)"
+
+#: .\coins\models.py:38
+msgid "Friend Bonus (Different City)"
+msgstr "Бонус за друга (другой город)"
+
+#: .\coins\models.py:39
+msgid "Lecture Bonus"
+msgstr "Бонус за лекцию"
+
+#: .\coins\models.py:40
+msgid "Event Bonus"
+msgstr "Бонус за мероприятие"
+
+#: .\coins\models.py:41
+msgid "Vote Bonus"
+msgstr "Бонус за голосование"
+
+#: .\coins\models.py:42
+msgid "Moderator Transfer"
+msgstr "Перевод модератора"
+
+#: .\coins\models.py:43
+msgid "Vendor Purchase"
+msgstr "Покупка у продавца"
+
+#: .\coins\models.py:44
+msgid "New Category"
+msgstr "Новая категория"
+
+#: .\coins\models.py:47
+msgid "Name"
+msgstr "Имя"
+
+#: .\coins\models.py:48
+msgid "Price"
+msgstr "Цена"
+
+#: .\coins\models.py:49
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#: .\coins\models.py:55
+msgid "Transaction Category"
+msgstr "Категория транзакции"
+
+#: .\coins\models.py:56
+msgid "Transaction Categories"
+msgstr "Категории транзакций"
+
+#: .\coins\models.py:61
+msgid "Бонус за друга (тот же город)"
+msgstr "Бонус за друга (тот же город)"
+
+#: .\coins\models.py:62
+msgid "Бонус за друга (другой город)"
+msgstr "Бонус за друга (другой город)"
+
+#: .\coins\models.py:63
+msgid "Бонус за лекцию"
+msgstr "Бонус за лекцию"
+
+#: .\coins\models.py:64
+msgid "Бонус за мероприятие"
+msgstr "Бонус за мероприятие"
+
+#: .\coins\models.py:65
+msgid "Бонус за голосование"
+msgstr "Бонус за голосование"
+
+#: .\coins\models.py:66
+msgid "Перевод модератора"
+msgstr "Перевод модератора"
+
+#: .\coins\models.py:67
+msgid "Покупка у продавца"
+msgstr "Покупка у продавца"
+
+#: .\coins\models.py:68
+msgid "Новая категория"
+msgstr "Новая категория"
+
+#: .\coins\models.py:76
+msgid "Sender"
+msgstr "Отправитель"
+
+#: .\coins\models.py:77
+msgid "Recipient"
+msgstr "Получатель"
+
+#: .\coins\models.py:78
+msgid "Amount"
+msgstr "Сумма"
+
+#: .\coins\models.py:79
+msgid "Timestamp"
+msgstr "Временная метка"
+
+#: .\coins\models.py:80 .\static_pages\models.py:7
+msgid "Description"
+msgstr "Описание"
+
+#: .\coins\models.py:81
+msgid "Category"
+msgstr "Категория"
+
+#: .\coins\models.py:82
+msgid "Is Positive"
+msgstr "Положительный?"
+
+#: .\coins\models.py:88
+msgid "Transaction"
+msgstr "Транзакция"
+
+#: .\coins\models.py:89
+msgid "Transactions"
+msgstr "Транзакции"
+
+#: .\doscam\models.py:11 .\shop\models.py:11
+msgid "Адрес"
+msgstr "Адрес"
+
+#: .\doscam\models.py:18
+msgid "Местоположения"
+msgstr "Местоположения"
+
+#: .\doscam\models.py:37
+msgid "Участник 1"
+msgstr "Участник 1"
+
+#: .\doscam\models.py:39
+msgid "Участник 2"
+msgstr "Участник 2"
+
+#: .\doscam\models.py:43
+msgid "Продолжительность (минуты)"
+msgstr "Продолжительность (минуты)"
+
+#: .\doscam\models.py:44 .\shop\models.py:42
+msgid "Завершено"
+msgstr "Завершено"
+
+#: .\doscam\models.py:45
+msgid "Участник 1 подтвердил"
+msgstr "Участник 1 подтвердил"
+
+#: .\doscam\models.py:46
+msgid "Участник 2 подтвердил"
+msgstr "Участник 2 подтвердил"
+
+#: .\doscam\models.py:47
+msgid "Опубликовано"
+msgstr "Опубликовано"
+
+#: .\doscam\models.py:48
+msgid "Черновик"
+msgstr "Черновик"
+
+#: .\doscam\models.py:51
+#, python-brace-format
+msgid "Событие между {participant1} и {participant2} в {location}"
+msgstr "Событие между {participant1} и {participant2} в {location}"
+
+#: .\doscam\models.py:69
+msgid "Событие"
+msgstr "Событие"
+
+#: .\doscam\models.py:70
+msgid "События"
+msgstr "События"
+
+#: .\doscam\views.py:29
+msgid "Активное событие уже идет. Пожалуйста, подождите его завершения."
+msgstr "Активное событие уже идет. Пожалуйста, подождите его завершения."
+
+#: .\doscam\views.py:51
+msgid "Один из участников не существует."
+msgstr "Один из участников не существует."
+
+#: .\doscam\views.py:53
+msgid "Выбранное местоположение не существует."
+msgstr "Выбранное местоположение не существует."
+
+#: .\doscam\views.py:56
+msgid "Произошла непредвиденная ошибка."
+msgstr "Произошла непредвиденная ошибка."
+
+#: .\doscam\views.py:170
+msgid "Событие успешно остановлено."
+msgstr "Событие успешно остановлено."
+
+#: .\doscam\views.py:173
+msgid "Произошла непредвиденная ошибка при остановке события."
+msgstr "Произошла непредвиденная ошибка при остановке события."
+
+#: .\friends\models.py:6
+msgid "От пользователя"
+msgstr "От пользователя"
+
+#: .\friends\models.py:7
+msgid "К пользователю"
+msgstr "К пользователю"
+
+#: .\friends\models.py:8 .\friends\models.py:25 .\shop\models.py:41
+msgid "Создано"
+msgstr "Создано"
+
+#: .\friends\models.py:15
+#, python-brace-format
+msgid "Запрос в друзья от {from_user} к {to_user}"
+msgstr "Запрос в друзья от {from_user} к {to_user}"
+
+#: .\friends\models.py:18
+msgid "Запрос в друзья"
+msgstr "Запрос в друзья"
+
+#: .\friends\models.py:19
+msgid "Запросы в друзья"
+msgstr "Запросы в друзья"
+
+#: .\friends\models.py:23
+msgid "Пользователь 1"
+msgstr "Пользователь 1"
+
+#: .\friends\models.py:24
+msgid "Пользователь 2"
+msgstr "Пользователь 2"
+
+#: .\friends\models.py:28
+#, python-brace-format
+msgid "{user1} дружит с {user2}"
+msgstr "{user1} дружит с {user2}"
+
+#: .\friends\models.py:31
+msgid "Дружба"
+msgstr "Дружба"
+
+#: .\friends\models.py:32
+msgid "Дружбы"
+msgstr "Дружбы"
+
+#: .\lectures\models.py:9
+msgid "Спикеры"
+msgstr "Спикеры"
+
+#: .\lectures\models.py:10
+msgid "Дата"
+msgstr "Дата"
+
+#: .\lectures\models.py:11
+msgid "Место проведения"
+msgstr "Место проведения"
+
+#: .\lectures\models.py:12
+msgid "QR-код начала"
+msgstr "QR-код начала"
+
+#: .\lectures\models.py:13
+msgid "QR-код окончания"
+msgstr "QR-код окончания"
+
+#: .\lectures\models.py:36 .\lectures\models.py:42
+msgid "Лекция"
+msgstr "Лекция"
+
+#: .\lectures\models.py:37
+msgid "Лекции"
+msgstr "Лекции"
+
+#: .\lectures\models.py:43
+msgid "Начало отсканировано"
+msgstr "Начало отсканировано"
+
+#: .\lectures\models.py:44
+msgid "Окончание отсканировано"
+msgstr "Окончание отсканировано"
+
+#: .\lectures\models.py:49
+#, python-brace-format
+msgid "{user} посетил {lecture}"
+msgstr "{user} посетил {lecture}"
+
+#: .\lectures\models.py:52
+msgid "Посещение лекции"
+msgstr "Посещение лекции"
+
+#: .\lectures\models.py:53
+msgid "Посещения лекций"
+msgstr "Посещения лекций"
+
+#: .\points\models.py:8
+msgid "ID иконки"
+msgstr "ID иконки"
+
+#: .\points\models.py:14
+msgid "Точка интереса"
+msgstr "Точка интереса"
+
+#: .\points\models.py:15 .\templates\includes\menu.html:28
+#: .\templates\main\home.html:32 .\templates\points\point_list.html:4
+#: .\templates\points\point_list.html:19
+msgid "Точки интереса"
+msgstr "Точки интереса"
+
+#: .\shop\models.py:10
+msgid "Владелец"
+msgstr "Владелец"
+
+#: .\shop\models.py:17 .\shop\models.py:22
+msgid "Магазин"
+msgstr "Магазин"
+
+#: .\shop\models.py:18
+msgid "Магазины"
+msgstr "Магазины"
+
+#: .\shop\models.py:25
+msgid "Цена"
+msgstr "Цена"
+
+#: .\shop\models.py:31
+msgid "Продукт"
+msgstr "Продукт"
+
+#: .\shop\models.py:32
+msgid "Продукты"
+msgstr "Продукты"
+
+#: .\shop\models.py:37
+msgid "Покупатель"
+msgstr "Покупатель"
+
+#: .\shop\models.py:39 .\templates\includes\menu-moderators.html:31
+msgid "Продавец"
+msgstr "Продавец"
+
+#: .\shop\models.py:40
+msgid "Сумма"
+msgstr "Сумма"
+
+#: .\shop\models.py:43
+msgid "Отменено"
+msgstr "Отменено"
+
+#: .\shop\models.py:47
+#, python-brace-format
+msgid "Покупка {id} от {buyer} у {seller}"
+msgstr "Покупка {id} от {buyer} у {seller}"
+
+#: .\shop\models.py:62
+msgid "Покупка"
+msgstr "Покупка"
+
+#: .\shop\models.py:63
+msgid "Покупки"
+msgstr "Покупки"
+
+#: .\static_pages\models.py:6
+msgid "Title"
+msgstr "Название"
+
+#: .\static_pages\models.py:8
+msgid "Photo"
+msgstr "Фото"
+
+#: .\static_pages\models.py:14
+msgid "Static Page"
+msgstr "Статическая страница"
+
+#: .\static_pages\models.py:15 .\templates\static_pages\static_page_list.html:4
+msgid "Static Pages"
+msgstr "Статические страницы"
+
+#: .\templates\accounts\login.html:5 .\templates\includes\menu.html:45
+#: .\templates\main\home.html:64
+msgid "Вход"
+msgstr "Вход"
+
+#: .\templates\accounts\login.html:19 .\templates\accounts\login.html:44
+msgid "Вход в профиль"
+msgstr "Вход в профиль"
+
+#: .\templates\accounts\login.html:23
+msgid "Введите код, который мы отправили на номер"
+msgstr "Введите код, который мы отправили на номер"
+
+#: .\templates\accounts\login.html:27
+msgid "Другой номер"
+msgstr "Другой номер"
+
+#: .\templates\accounts\login.html:32
+msgid "Выслать снова"
+msgstr "Выслать снова"
+
+#: .\templates\accounts\login.html:47
+msgid ""
+"Введите ваш номер телефона. На него мы отправим SMS - сообщения с кодом для "
+"входа в профиль"
+msgstr ""
+"Введите ваш номер телефона. На него мы отправим SMS - сообщения с кодом для "
+"входа в профиль"
+
+#: .\templates\accounts\login.html:58
+msgid "Продолжить"
+msgstr "Продолжить"
+
+#: .\templates\accounts\login.html:106
+msgid "Пожалуйста, введите корректный номер телефона."
+msgstr "Пожалуйста, введите корректный номер телефона."
+
+#: .\templates\accounts\login.html:107 .\templates\accounts\login.html:113
+msgid "Ошибка подключения к серверу."
+msgstr "Ошибка подключения к серверу."
+
+#: .\templates\accounts\login.html:108
+msgid "Отправить снова через:"
+msgstr "Отправить снова через:"
+
+#: .\templates\accounts\login.html:109
+msgid "Отправить SMS-код снова"
+msgstr "Отправить SMS-код снова"
+
+#: .\templates\accounts\profile.html:5 .\templates\accounts\profile.html:236
+#: .\templates\includes\menu.html:35
+msgid "Профиль"
+msgstr "Профиль"
+
+#: .\templates\accounts\profile.html:115
+msgid "Краткое описание DOS Coins. Где можно получить и где можно потратить."
+msgstr "Краткое описание DOS Coins. Где можно получить и где можно потратить."
+
+#: .\templates\accounts\profile.html:120
+msgid "История транзакций:"
+msgstr "История транзакций:"
+
+#: .\templates\accounts\profile.html:135 .\templates\accounts\profile.html:181
+#: .\templates\accounts\profile.html:224
+#: .\templates\qr_handler\purchase_confirmation.html:50
+msgid "Закрыть"
+msgstr "Закрыть"
+
+#: .\templates\accounts\profile.html:148
+msgid "Список друзей:"
+msgstr "Список друзей:"
+
+#: .\templates\accounts\profile.html:193
+msgid "Профиль друга"
+msgstr "Профиль друга"
+
+#: .\templates\accounts\profile.html:250
+msgid "Изменить фото"
+msgstr "Изменить фото"
+
+#: .\templates\accounts\profile.html:263
+msgid "Instagram профиль"
+msgstr "Instagram профиль"
+
+#: .\templates\accounts\profile.html:270
+msgid "Tiktok профиль"
+msgstr "Tiktok профиль"
+
+#: .\templates\accounts\profile.html:273 .\templates\accounts\selfie.html:45
+msgid "Сохранить"
+msgstr "Сохранить"
+
+#: .\templates\accounts\profile.html:323
+msgid "Список"
+msgstr "Список"
+
+#: .\templates\accounts\profile.html:323
+msgid "друзей"
+msgstr "друзей"
+
+#: .\templates\accounts\profile.html:334
+msgid "Отсканировать QR"
+msgstr "Отсканировать QR"
+
+#: .\templates\accounts\registration-success.html:5
+#: .\templates\accounts\registration-success.html:13
+msgid "Регистрация успешна!"
+msgstr "Регистрация успешна!"
+
+#: .\templates\accounts\registration-success.html:15
+msgid "Вы успешно зарегистрированы!"
+msgstr "Вы успешно зарегистрированы!"
+
+#: .\templates\accounts\registration-success.html:16
+msgid "Войти"
+msgstr "Войти"
+
+#: .\templates\accounts\registration.html:5
+#: .\templates\accounts\registration.html:20
+msgid "Страница регистрации"
+msgstr "Страница регистрации"
+
+#: .\templates\accounts\registration.html:23
+msgid "Введите ваш номер телефона."
+msgstr "Введите ваш номер телефона."
+
+#: .\templates\accounts\registration.html:94
+msgid "Впиши возраст (количество лет)"
+msgstr "Введите возраст (количество лет)"
+
+#: .\templates\accounts\registration.html:108
+msgid "Зарегистрироваться"
+msgstr "Зарегистрироваться"
+
+#: .\templates\accounts\selfie.html:5 .\templates\accounts\selfie.html:20
+#: .\templates\accounts\selfie.html:43
+msgid "Добавить селфи"
+msgstr "Добавить селфи"
+
+#: .\templates\accounts\selfie.html:35
+msgid ""
+"Добавьте селфи аватар, он понадобиться для прохождения уникальных квестов и "
+"получения призов!"
+msgstr ""
+"Добавьте селфи аватар, он понадобится для прохождения уникальных квестов и "
+"получения призов!"
+
+#: .\templates\accounts\selfie.html:38
+msgid ""
+"Ты не сможешь участвовать в Квестах если не сделаешь фото, Изменить можно "
+"будет в профиле."
+msgstr ""
+"Вы не сможете участвовать в квестах если не сделаете фото, Изменить можно "
+"будет в профиле."
+
+#: .\templates\accounts\selfie.html:46
+msgid "Пропустить"
+msgstr "Пропустить"
+
+#: .\templates\attractions\attraction_list.html:4
+#: .\templates\attractions\attraction_list.html:19
+#: .\templates\includes\menu.html:31 .\templates\main\home.html:48
+msgid "Расписание"
+msgstr "Расписание"
+
+#: .\templates\campaigns\voted_campaign.html:5
+#: .\templates\campaigns\voted_campaign.html:25
+msgid "Гражданская кампания"
+msgstr "Гражданская кампания"
+
+#: .\templates\campaigns\voted_campaign.html:41
+#: .\templates\qr_handler\qr_campaign_vote.html:41
+msgid "(лидер гражданской компании)"
+msgstr "(лидер гражданской компании)"
+
+#: .\templates\campaigns\voted_campaign.html:45
+#: .\templates\qr_handler\qr_campaign_vote.html:45
+msgid "Города где работает проект"
+msgstr "Города где работает проект"
+
+#: .\templates\campaigns\voted_campaign.html:51
+msgid "Теперь ты член этого движения!"
+msgstr "Теперь вы член этого движения!"
+
+#: .\templates\campaigns\voted_campaign.html:52 .\templates\doscam\find.html:62
+#: .\templates\qr_handler\campaign_vote_confirmation.html:62
+#: .\templates\qr_handler\friend_confirmation.html:63
+#: .\templates\qr_handler\qr_campaign_vote.html:66
+#: .\templates\qr_handler\qr_lecture_detail.html:62
+msgid "Свернуть"
+msgstr "Свернуть"
+
+#: .\templates\campaigns\voted_campaign.html:55
+msgid "Вы ещё не голосовали за кампанию."
+msgstr "Вы ещё не голосовали за кампанию."
+
+#: .\templates\doscam\create_event.html:5
+msgid "Создать Doscam"
+msgstr "Создать Doscam"
+
+#: .\templates\doscam\create_event.html:31
+msgid "человек готовы участвовать"
+msgstr "человек готовы участвовать"
+
+#: .\templates\doscam\create_event.html:98
+msgid "Сгенерировать"
+msgstr "Сгенерировать"
+
+#: .\templates\doscam\create_event.html:108
+msgid "Старт"
+msgstr "Старт"
+
+#: .\templates\doscam\dos_desktop.html:98
+#: .\templates\doscam\operator_view.html:106
+msgid "Нет текущего события."
+msgstr "Нет текущего события."
+
+#: .\templates\doscam\dos_desktop.html:130 .\templates\doscam\find.html:94
+#: .\templates\doscam\operator_view.html:141
+msgid "Событие завершено!"
+msgstr "Событие завершено!"
+
+#: .\templates\doscam\find.html:26
+msgid ""
+"Найдите этого человека в установленное время и предоставьте оператору на "
+"месте отсканировать ваши QR-коды!"
+msgstr ""
+"Найдите этого человека в установленное время и предоставьте оператору на "
+"месте отсканировать ваши QR-коды!"
+
+#: .\templates\doscam\operator_view.html:103
+msgid "Остановить"
+msgstr "Остановить"
+
+#: .\templates\doscam\operator_view.html:107
+msgid "Создать"
+msgstr "Создать"
+
+#: .\templates\includes\menu-moderators.html:11
+#: .\templates\includes\menu.html:11
+msgid "Меню"
+msgstr "Меню"
+
+#: .\templates\includes\menu-moderators.html:25
+msgid "Панель"
+msgstr "Панель"
+
+#: .\templates\includes\menu-moderators.html:28
+msgid "Оператор"
+msgstr "Оператор"
+
+#: .\templates\includes\menu-moderators.html:34
+msgid "Оператор DosCam"
+msgstr "Оператор DosCam"
+
+#: .\templates\includes\menu-moderators.html:37
+msgid "DosCam Экран"
+msgstr "Экран DosCam"
+
+#: .\templates\includes\menu-moderators.html:40
+msgid "ТОП Участники Экран"
+msgstr "Экран ТОП участников"
+
+#: .\templates\includes\menu-moderators.html:43
+msgid "ТОП Кампании Экран"
+msgstr "Экран ТОП кампаний"
+
+#: .\templates\includes\menu-moderators.html:48
+#: .\templates\includes\menu.html:38
+msgid "Выйти"
+msgstr "Выйти"
+
+#: .\templates\includes\menu.html:25
+msgid "Главная"
+msgstr "Главная"
+
+#: .\templates\includes\menu.html:42
+msgid "Регистация"
+msgstr "Регистрация"
+
+#: .\templates\lectures\lecture_detail.html:5
+msgid "Lecture Detail"
+msgstr "Детали лекции"
+
+#: .\templates\lectures\lecture_list.html:5
+msgid "Lectures"
+msgstr "Лекции"
+
+#: .\templates\lectures\show_qr_end.html:5
+msgid "End QR Code"
+msgstr "QR-код окончания"
+
+#: .\templates\lectures\show_qr_end.html:41
+#: .\templates\lectures\show_qr_start.html:41
+msgid "No end QR code available."
+msgstr "Нет QR-кода окончания."
+
+#: .\templates\lectures\show_qr_end.html:43
+#: .\templates\lectures\show_qr_start.html:43
+#: .\templates\qr_handler\qr_response.html:25
+msgid "Назад"
+msgstr "Назад"
+
+#: .\templates\lectures\show_qr_start.html:5
+msgid "Start QR Code"
+msgstr "QR-код начала"
+
+#: .\templates\main\home.html:5
+msgid "Homepage"
+msgstr "Главная страница"
+
+#: .\templates\main\home.html:17
+msgid "menu-button"
+msgstr "кнопка меню"
+
+#: .\templates\main\home.html:20
+msgid "Казахстан — это на всю жизнь!"
+msgstr "Казахстан — это на всю жизнь!"
+
+#: .\templates\main\home.html:26
+msgid ""
+"Описание проекта, Идейные соображения высшего порядка, а также рамки и место "
+"обучения кадров требуют определения и уточнения форм развития."
+msgstr ""
+"Описание проекта, идейные соображения высшего порядка, а также рамки и место "
+"обучения кадров требуют определения и уточнения форм развития."
+
+#: .\templates\main\home.html:40
+msgid "Что такое DOS COINS"
+msgstr "Что такое DOS COINS"
+
+#: .\templates\main\home.html:56 .\templates\static_pages\map.html:5
+msgid "Карта"
+msgstr "Карта"
+
+#: .\templates\main\home.html:58
+msgid "maps"
+msgstr "карты"
+
+#: .\templates\main\select_language.html:3
+msgid "Выбор языка"
+msgstr "Выбор языка"
+
+#: .\templates\qr_handler\campaign_vote_confirmation.html:5
+#: .\templates\qr_handler\campaign_vote_confirmation.html:21
+#: .\templates\qr_handler\qr_campaign_vote.html:5
+#: .\templates\qr_handler\qr_campaign_vote.html:25
+msgid "Голосование"
+msgstr "Голосование"
+
+#: .\templates\qr_handler\campaign_vote_confirmation.html:60
+#: .\templates\qr_handler\friend_confirmation.html:61
+#: .\templates\qr_handler\qr_lecture_detail.html:53
+msgid "Поздравляем!"
+msgstr "Поздравляем!"
+
+#: .\templates\qr_handler\campaign_vote_confirmation.html:60
+#: .\templates\qr_handler\friend_confirmation.html:61
+#: .\templates\qr_handler\purchase_confirmation.html:45
+#: .\templates\qr_handler\qr_lecture_detail.html:53
+msgid "Dos Coins переведены"
+msgstr "Dos Coins переведены"
+
+#: .\templates\qr_handler\friend_confirmation.html:5
+msgid "Друзья"
+msgstr "Друзья"
+
+#: .\templates\qr_handler\friend_confirmation.html:21
+msgid "Вы теперь друзья"
+msgstr "Вы теперь друзья"
+
+#: .\templates\qr_handler\purchase_confirmation.html:5
+#: .\templates\qr_handler\purchase_confirmation.html:21
+#: .\templates\qr_handler\qr_purchase_detail.html:5
+#: .\templates\qr_handler\qr_purchase_detail.html:21
+msgid "Подтверждение оплаты"
+msgstr "Подтверждение оплаты"
+
+#: .\templates\qr_handler\purchase_confirmation.html:45
+msgid "Поздравляем с покупкой!"
+msgstr "Поздравляем с покупкой!"
+
+#: .\templates\qr_handler\purchase_confirmation.html:47
+msgid "Ошибка"
+msgstr "Ошибка"
+
+#: .\templates\qr_handler\qr.html:5 .\templates\qr_handler\qr.html:21
+msgid "Отсканировать QR-код"
+msgstr "Отсканировать QR-код"
+
+#: .\templates\qr_handler\qr_campaign_vote.html:59
+msgid "Внимание: ты можешь проголосовать только 1 раз"
+msgstr "Внимание: ты можешь проголосовать только 1 раз"
+
+#: .\templates\qr_handler\qr_campaign_vote.html:62
+msgid "Подтвердить голосование"
+msgstr "Подтвердить голосование"
+
+#: .\templates\qr_handler\qr_friend_request.html:5
+#: .\templates\qr_handler\qr_friend_request.html:22
+msgid "Добавление друга"
+msgstr "Добавление друга"
+
+#: .\templates\qr_handler\qr_friend_request.html:35
+msgid ""
+"Дай отсканировать QR code новому другу, чтобы он добавился к тебе в друзья и "
+"вы получите Dos Сoins"
+msgstr ""
+"Дай отсканировать QR код новому другу, чтобы он добавился к тебе в друзья и "
+"вы получите Dos Сoins"
+
+#: .\templates\qr_handler\qr_friend_request.html:42
+#: .\templates\qr_handler\qr_purchase_detail.html:53
+msgid "Отмена"
+msgstr "Отмена"
+
+#: .\templates\qr_handler\qr_lecture_detail.html:5
+#: .\templates\qr_handler\qr_lecture_detail.html:21
+msgid "Лекция пройдена"
+msgstr "Лекция пройдена"
+
+#: .\templates\qr_handler\qr_purchase_detail.html:37
+msgid "Потвердите списание Dos Coins за товар"
+msgstr "Потвердите списание Dos Coins за товар"
+
+#: .\templates\qr_handler\qr_purchase_detail.html:42
+msgid "Недостаточно средств для завершения покупки."
+msgstr "Недостаточно средств для завершения покупки."
+
+#: .\templates\qr_handler\qr_purchase_detail.html:48
+msgid "Подтвердить"
+msgstr "Подтвердить"
+
+#: .\templates\qr_handler\qr_response.html:5
+#: .\templates\qr_handler\qr_response.html:18
+msgid "Внимание!"
+msgstr "Внимание!"
+
+#: .\templates\static_pages\about_coins.html:5
+msgid "Что такое DOS COINS!"
+msgstr "Что такое DOS COINS!"
+
+#: .\templates\static_pages\policy.html:5
+msgid "Политика конфиденциальности и обработки персональных данных"
+msgstr "Политика конфиденциальности и обработки персональных данных"
+
+#: .\templates\static_pages\static_page_detail.html:9
+msgid "Back to Static Pages"
+msgstr "Назад к статическим страницам"
+
+#: .\templates\static_pages\useragreement.html:5
+msgid "Пользовательское соглашение"
+msgstr "Пользовательское соглашение"
