@@ -156,7 +156,7 @@ body {
     display: block;
     color: var(--pale-orange);
     margin-right: 50%;
-    transform: translateX(10%);
+    transform: translateX(50%);
     text-wrap: nowrap;
 }
 
@@ -612,8 +612,7 @@ video {
 .blue-person-img {
     width: 96px;
     border-radius: 50%;
-    height: 96px;    
-object-fit: cover;
+    height: 96px;
 }
 
 
