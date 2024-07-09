@@ -165,7 +165,6 @@ body {
     display: block;
     color: var(--pale-orange);
     margin: 0 auto;
-
     text-wrap: nowrap;
 }
 
