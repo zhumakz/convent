@@ -30,7 +30,7 @@
                 <div id="video-container">
                     <video id="qr-video"></video>
                 </div>
-                <div>
+                <div class="display_none_qr">
                     <label>
                         Highlight Style
                         <select id="scan-region-highlight-style-select">
@@ -44,7 +44,7 @@
                         Show scan region canvas
                     </label>
                 </div>
-                <div>
+                <div class="display_none_qr">
                     <select id="inversion-mode-select">
                         <option value="original">Scan original (dark QR code on bright background)</option>
                         <option value="invert">Scan with inverted colors (bright QR code on dark background)</option>
@@ -52,21 +52,29 @@
                     </select>
                     <br>
                 </div>
-                <b>Device has camera: </b>
+				
+			<input class="hide" id="hd-1" type="checkbox">
+<label for="hd-1">Дополнительно &dArr;</label>
+<div>
+<b>Выбор камеры: </b>
                 <span id="cam-has-camera"></span>
                 <br>
                 <div>
-                    <b>Preferred camera:</b>
+                    <b>Ваша камера:</b><br />
                     <select id="cam-list">
                         <option value="environment" selected>Environment Facing (default)</option>
-                        <option value="user">User Facing</option>
+                        <option value="user">Лицо пользователя</option>
                     </select>
                 </div>
-                <b>Camera has flash: </b>
+                <b>Фонарик: </b>
                 <span id="cam-has-flash"></span>
                 <div>
-                    <button id="flash-toggle">📸 Flash: <span id="flash-state">off</span></button>
+                    <button id="flash-toggle">📸 Фонарик: <span id="flash-state">откл</span></button>
                 </div>
+</div>
+<input class="hide" id="hd-2" type="checkbox">
+       
+				<div class="display_none_qr">
                 <br>
                 <b>Detected QR code: </b>
                 <span id="cam-qr-result">None</span>
@@ -77,6 +85,7 @@
                 <button id="start-button">Start</button>
                 <button id="stop-button">Stop</button>
                 <hr>
+				</div>
             </div>
         </div>
     </section>
