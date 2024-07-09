@@ -70,5 +70,5 @@
 
 .hide:checked + label + div {
     display: block;
-    padding: 10px;
+    padding: 1px;
 }
