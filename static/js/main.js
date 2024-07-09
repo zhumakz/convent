@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
   [...files].forEach((file, i) => {
-    console.log(file.complete);
+   // console.log(file.complete);
     if (file.complete) {
       count++;
       progressLine.style.width = `${(count / files.length) * 100}%`;
