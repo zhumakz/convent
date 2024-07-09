@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _, gettext as __
 from .models import User, City
-from PIL import Image
+from PIL import Image, ExifTags
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import re
@@ -101,38 +101,26 @@ def process_profile_picture(profile_picture):
         if profile_picture.size > 10 * 1024 * 1024:
             raise forms.ValidationError('Размер файла не должен превышать 10MB.')
 
-        # Обрезка изображения
-        if img.width > 512:
-            # Сохранение пропорций
-            aspect_ratio = img.height / img.width
-            new_height = int(512 * aspect_ratio)
-            img = img.resize((512, new_height), Image.LANCZOS)  # Использование Image.LANCZOS вместо Image.ANTIALIAS
-
-            # Сохранение обрезанного изображения в BytesIO
-            output = BytesIO()
-            img.save(output, format='JPEG')
-            output.seek(0)
-
-            # Создание нового InMemoryUploadedFile для обновления profile_picture
-            profile_picture = InMemoryUploadedFile(output, 'ImageField', profile_picture.name, 'image/jpeg',
-                                                   output.getbuffer().nbytes, None)
-
-    return profile_picture
-
-
-def process_profile_pictureSelfie(profile_picture):
-    if profile_picture:
-        # Открываем изображение и проверяем его формат
+        # Исправление ориентации изображения на основе EXIF данных
         try:
-            img = Image.open(profile_picture)
-            img.verify()  # Проверяем, является ли файл изображением
-            img = Image.open(profile_picture)  # Открываем заново, так как verify() закрывает файл
-        except (IOError, SyntaxError):
-            raise forms.ValidationError('Файл должен быть изображением.')
+            for orientation in ExifTags.TAGS.keys():
+                if ExifTags.TAGS[orientation] == 'Orientation':
+                    break
 
-        # Проверка размера файла
-        if profile_picture.size > 10 * 1024 * 1024:
-            raise forms.ValidationError('Размер файла не должен превышать 10MB.')
+            exif = img._getexif()
+
+            if exif is not None:
+                orientation = exif.get(orientation)
+
+                if orientation == 3:
+                    img = img.rotate(180, expand=True)
+                elif orientation == 6:
+                    img = img.rotate(270, expand=True)
+                elif orientation == 8:
+                    img = img.rotate(90, expand=True)
+        except (AttributeError, KeyError, IndexError):
+            # случаи, когда изображение не имеет EXIF данных
+            pass
 
         # Обрезка изображения
         if img.width > 512:
@@ -141,14 +129,14 @@ def process_profile_pictureSelfie(profile_picture):
             new_height = int(512 * aspect_ratio)
             img = img.resize((512, new_height), Image.LANCZOS)  # Использование Image.LANCZOS вместо Image.ANTIALIAS
 
-            # Сохранение обрезанного изображения в BytesIO
-            output = BytesIO()
-            img.save(output, format='JPEG')
-            output.seek(0)
+        # Сохранение обработанного изображения в BytesIO
+        output = BytesIO()
+        img.save(output, format='JPEG')
+        output.seek(0)
 
-            # Создание нового InMemoryUploadedFile для обновления profile_picture
-            profile_picture = InMemoryUploadedFile(output, 'ImageField', profile_picture.name, 'image/jpeg',
-                                                   output.getbuffer().nbytes, None)
+        # Создание нового InMemoryUploadedFile для обновления profile_picture
+        profile_picture = InMemoryUploadedFile(output, 'ImageField', profile_picture.name, 'image/jpeg',
+                                               output.getbuffer().nbytes, None)
 
     return profile_picture
 
@@ -168,7 +156,7 @@ class ProfilePictureForm(forms.ModelForm):
         model = User
         fields = ['profile_picture']
 
-    def process_profile_pictureSelfie(self):
+    def process_profile_picture(self):
         profile_picture = self.cleaned_data.get('profile_picture')
         return process_profile_picture(profile_picture)
 
