@@ -1,3 +1,11 @@
+// "Назад" не существует!
+window.location.hash = 'no-back';
+
+// Если хэш изменяется — вновь обновляем его
+window.onhashchange = function() {
+  window.location.hash = 'no-back';
+};
+
 // PRELOADER
 const preloader = document.querySelector(".preloader");
 const preloaderIcon = document.querySelector(".preloader__icon");
