@@ -25,6 +25,9 @@
                 <a class="menu__link" href="{% url 'moderator_dashboard' %}">{% trans "Панель" %}</a>
             </li>
             <li class="menu__item">
+                <a class="menu__link" href="{% url 'lecture_list' %}">{% trans "Лекции" %}</a>
+            </li>
+            <li class="menu__item">
                 <a class="menu__link" href="{% url 'operator' %}">{% trans "Оператор" %}</a>
             </li>
             <li class="menu__item">
@@ -42,7 +45,6 @@
             <li class="menu__item">
                 <a class="menu__link" href="{% url 'top_campaigns' %}">{% trans "ТОП Кампании Экран" %}</a>
             </li>
-
             {% if user.is_authenticated %}
                 <li class="menu__item">
                     <a class="menu__link" href="{% url 'logout' %}">{% trans "Выйти" %}</a>
