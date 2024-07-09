@@ -623,6 +623,7 @@ video {
     width: 96px;
     border-radius: 50%;
     height: 96px;
+    object-fit: cover;
 }
 
 
