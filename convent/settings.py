@@ -13,7 +13,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['dev.convention.kz', '185.129.51.158','dos.convention.kz','localhost']
+ALLOWED_HOSTS = ['dev.convention.kz', '185.129.51.158', 'dos.convention.kz', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     'modeltranslation',
