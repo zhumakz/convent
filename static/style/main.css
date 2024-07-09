@@ -53,8 +53,17 @@ body {
     flex-direction: column;
     padding-bottom: 113px;
     min-height: 100vh;
+}
 
-
+.bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 115px 24px 48px;
+    background: linear-gradient(0.00deg, rgb(0, 0, 0) 60%,  rgba(0, 0, 0, 0) 100%);
 }
 
 
@@ -155,8 +164,8 @@ body {
 .top__title {
     display: block;
     color: var(--pale-orange);
-    margin-right: 50%;
-    transform: translateX(50%);
+    margin: 0 auto;
+
     text-wrap: nowrap;
 }
 
@@ -166,6 +175,7 @@ body {
     display: block;
     text-align: center;
     width: 100%;
+	flex-shrink:0;
     border-radius: 100px;
     /* margin-top: 113px; */
     padding: 16px;
@@ -226,7 +236,7 @@ body {
 }
 
 .popup--black {
-    border-radius: none;
+    border-radius: 0;
     background-color: var(--page-background);
 
 }
@@ -330,7 +340,7 @@ body {
 .final__person-img {
     width: 73.24px;
     height: 73.24px;
-object-fit: cover;
+
     position: relative;
 }
 
@@ -443,6 +453,7 @@ object-fit: cover;
 }
 
 .all-size {
+	height:100%;
     min-height: calc(var(--vh, 1vh) * 100)
 }
 
@@ -730,10 +741,7 @@ video {
 
 @media (max-height:790px) {
 
-    .bottom-gradient {
 
-        height: 100px;
-    }
 
     .final__coins {
         width: 100px;
