@@ -103,21 +103,19 @@ def process_profile_picture(profile_picture):
 
         # Исправление ориентации изображения на основе EXIF данных
         try:
-            for orientation in ExifTags.TAGS.keys():
-                if ExifTags.TAGS[orientation] == 'Orientation':
-                    break
-
             exif = img._getexif()
+            orientation_key = 274  # cf ExifTags
+            if exif and orientation_key in exif:
+                orientation = exif[orientation_key]
 
-            if exif is not None:
-                orientation = exif.get(orientation)
+                rotate_values = {
+                    3: Image.ROTATE_180,
+                    6: Image.ROTATE_270,
+                    8: Image.ROTATE_90
+                }
 
-                if orientation == 3:
-                    img = img.rotate(180, expand=True)
-                elif orientation == 6:
-                    img = img.rotate(270, expand=True)
-                elif orientation == 8:
-                    img = img.rotate(90, expand=True)
+                if orientation in rotate_values:
+                    img = img.transpose(rotate_values[orientation])
         except (AttributeError, KeyError, IndexError):
             # случаи, когда изображение не имеет EXIF данных
             pass
