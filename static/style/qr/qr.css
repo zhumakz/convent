@@ -37,36 +37,38 @@
 }
 
 /* скрыть в скане ненужное */
-.display_none_qr {display:none;}
+.display_none_qr {
+    display: none;
+}
 
 .hide,
-.hide+label~div {
-  display: none;
+.hide + label ~ div {
+    display: none;
 }
 
 
 /* вид текста label */
 
-.hide+label,
-.hide:checked+label {
-  padding: 0;
-  color: green;
-  cursor: pointer;
-  border-bottom: 1px dotted green;
+.hide + label,
+.hide:checked + label {
+    padding: 0;
+    color: green;
+    cursor: pointer;
+    border-bottom: 1px dotted green;
 }
 
 
 /* вид текста label при активном переключателе */
 
-.hide:checked+label {
-  color: green;
-  border-bottom: 0;
+.hide:checked + label {
+    color: green;
+    border-bottom: 0;
 }
 
 
 /* когда чекбокс активен показываем блоки с содержанием  */
 
-.hide:checked+label+div {
- 
-  padding: 10px;
+.hide:checked + label + div {
+    display: block;
+    padding: 10px;
 }
