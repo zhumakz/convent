@@ -20,7 +20,7 @@
             <img class="qr__seller-image" src="{{ qr_code_url }}" alt="qr"/>
             <div class="qr__seller-wrapper">
                 <span>Цена</span>
-                <span class="count">{{ purchase.amount }}</span>
+                <span class="count">{{ purchase.amount|floatformat:"-1" }}</span>
                 <span>Dos Coins</span>
             </div>
 
