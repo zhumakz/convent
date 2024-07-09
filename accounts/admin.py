@@ -13,7 +13,7 @@ def generate_qr_codes(modeladmin, request, queryset):
 
 
 class UserAdmin(BaseUserAdmin):
-    list_display = ('phone_number', 'name', 'surname', 'age', 'city', 'is_admin', 'is_superuser', 'is_moderator', 'profile_picture')
+    list_display = ('phone_number', 'name', 'surname', 'age', 'city', 'is_admin', 'is_superuser', 'is_moderator', 'profile_picture','is_active')
     search_fields = ('phone_number', 'name', 'surname')
     readonly_fields = ('last_login',)
     actions = [generate_qr_codes]
@@ -22,7 +22,7 @@ class UserAdmin(BaseUserAdmin):
     list_filter = ()
     fieldsets = (
         (None, {'fields': ('phone_number', 'password')}),
-        ('Personal info', {'fields': ('name', 'surname', 'age', 'city', 'profile_picture')}),
+        ('Personal info', {'fields': ('name', 'surname', 'age', 'city', 'profile_picture','is_active')}),
         ('Important dates', {'fields': ('last_login',)}),
         ('Permissions', {'fields': ('is_admin', 'is_superuser', 'groups', 'user_permissions', 'is_moderator')}),
     )
@@ -30,7 +30,7 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('phone_number', 'name', 'surname', 'age', 'city', 'profile_picture', 'password1', 'password2', 'is_moderator'),
+            'fields': ('phone_number', 'name', 'surname', 'age', 'city', 'profile_picture', 'password1', 'password2', 'is_moderator','is_active'),
         }),
     )
     ordering = ('phone_number',)

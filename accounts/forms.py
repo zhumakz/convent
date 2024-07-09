@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import authenticate
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _, gettext as __
 from .models import User, City
 from PIL import Image
@@ -40,8 +41,8 @@ class RegistrationForm(forms.ModelForm):
 
     def clean_age(self):
         age = self.cleaned_data.get('age')
-        if age < 18:
-            raise forms.ValidationError(_("Возраст должен быть не менее 18 лет"))
+        if age < 16:
+            raise forms.ValidationError(_("Возраст должен быть не менее 16 лет"))
         return age
 
     def clean_name(self):
@@ -65,8 +66,14 @@ class LoginForm(forms.Form):
         phone_regex = re.compile(r'^\+7\d{10}$')
         if not phone_regex.match(phone_number):
             raise forms.ValidationError(_('Введите правильный номер телефона в формате +77475000795.'))
-        if not User.objects.filter(phone_number=phone_number).exists():
+        try:
+            user = User.objects.get(phone_number=phone_number)
+        except User.DoesNotExist:
             raise forms.ValidationError(_('Пользователь с таким номером телефона не найден.'))
+
+        if not user.is_active:
+            raise forms.ValidationError(_('Этот пользователь не активирован.'))
+
         return phone_number
 
 

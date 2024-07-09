@@ -12,6 +12,7 @@ class UserManager(BaseUserManager):
             raise ValueError(__("Поле 'Номер телефона' обязательно для заполнения"))
         user = self.model(phone_number=phone_number, name=name, surname=surname, age=age, city=city)
         user.set_password(password)
+        user.is_active = False
         user.save(using=self._db)
         DoscointBalance.objects.create(user=user, balance=0, total_earned=0)
         return user
@@ -36,7 +37,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True,
                                         verbose_name=_("Фотография профиля"))
     qr_code = models.ImageField(upload_to='profile_pictures/qr_codes/', null=True, blank=True, verbose_name=_("QR-код"))
-    is_active = models.BooleanField(default=True, verbose_name=_("Активен"))
+    is_active = models.BooleanField(default=False, verbose_name=_("Активен"))
     is_admin = models.BooleanField(default=False, verbose_name=_("Администратор"))
     is_moderator = models.BooleanField(default=False, verbose_name=_("Модератор"))
 

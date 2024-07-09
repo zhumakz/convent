@@ -26,6 +26,7 @@ def registration_view(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(None)
+            user.is_active = False
             user.save()
             return redirect('registration_success')
     else:
@@ -55,6 +56,9 @@ def login_and_verify_view(request):
             if action == 'send_sms':
                 user = UserService.get_user_by_phone_number(phone_number)
                 if user:
+                    if not user.is_active:
+                        return JsonResponse({'status': 'error', 'message': __('Этот пользователь не активирован.')},
+                                            status=400)
                     UserService.handle_sms_verification(request, phone_number)
                     request.session['phone_number'] = phone_number
                     request.session['sms_sent'] = True
