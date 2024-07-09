@@ -52,7 +52,8 @@
                 </div>
 
                 <input class="hide" id="hd-1" type="checkbox">
-               <label for="hd-1"> <img class="final__coins" src="{%  static 'image/mechanism.png' %}"  alt="scan" width="40" height="40" /></label>
+                <label for="hd-1"> <img class="qr_settings" src="{% static 'image/mechanism.png' %}" alt="scan" width="40"
+                                        height="40"/></label>
                 <div>
                     <b>Выбор камеры: </b>
                     <span id="cam-has-camera"></span>
@@ -142,7 +143,7 @@
         QrScanner.hasCamera().then(hasCamera => camHasCamera.textContent = hasCamera);
 
         window.scanner = scanner;
-        
+
 
         function updateFlashAvailability() {
             scanner.hasFlash().then(hasFlash => {
@@ -248,29 +249,4 @@
             margin-bottom: 16px;
         }
     </style>
-{% endblock %}
-
-{% block extra_js %}
-    {#    <script src="{% static 'js/html5-qrcode.min.js' %}"></script>#}
-    {#    <script>#}
-    {#        let isProcessing = false;#}
-    {#        const html5QrCodeScanner = new Html5QrcodeScanner("my-qr-reader", {fps: 10, qrbox: 250});#}
-    {##}
-    {#        html5QrCodeScanner.render(onScanSuccess);#}
-    {##}
-    {#        function onScanSuccess(decodedText, decodedResult) {#}
-    {#            if (isProcessing) {#}
-    {#                return;#}
-    {#            }#}
-    {##}
-    {#            isProcessing = true;#}
-    {#            console.log(`Scanned QR Code: ${decodedText}`);#}
-    {##}
-    {#            // Заполните поле формы данными QR-кода#}
-    {#            document.getElementById('qr_data').value = decodedText;#}
-    {##}
-    {#            // Отправьте форму автоматически#}
-    {#            document.getElementById('qr-form').submit();#}
-    {#        }#}
-    {#    </script>#}
 {% endblock %}

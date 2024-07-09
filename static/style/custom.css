@@ -125,6 +125,10 @@ select option {
 .mt15 {
     margin-top: 15px;
 }
+.qr_settings{
+    max-width: 20px;
+    max-height: 20px;
+}
 
 
 .add-friend__form-top {
