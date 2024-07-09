@@ -330,7 +330,7 @@ body {
 .final__person-img {
     width: 73.24px;
     height: 73.24px;
-
+object-fit: cover;
     position: relative;
 }
 
