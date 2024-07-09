@@ -34,6 +34,12 @@ body {
     margin: 0 auto;
 
 }
+.popup-container1 {
+    max-width: 100%;
+    padding: 48px 24px;
+    margin: 0 auto;
+
+}
 
 .flex {
     flex-grow: 1;
