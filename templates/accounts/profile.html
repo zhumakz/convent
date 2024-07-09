@@ -41,7 +41,7 @@
                 saveButton.style.display = formChanged ? 'block' : 'none';
             }
 
-            form.addEventListener('change', checkForChanges);
+            form.addEventListener('input', checkForChanges);
             document.getElementById('id_profile_picture').addEventListener('change', previewImage);
 
             saveButton.style.display = 'none';
@@ -111,8 +111,8 @@
                 </div>
                 <div class="all-coins__wrapper">
                     <span class="all-coins__count">{{ user.doscointbalance.balance|floatformat:"-1" }}</span>
-                    <span class="all-coins__value">{% trans "Мои DosCoins" %}</span>
-                    <p class="all-coins__text">{% trans "Ты заработал (количество) DosCoins. Не знаешь на что их потратить? Поищи интересные предложения на точках интереса :)" %}</p>
+                    <span class="all-coins__value">{% trans "Мои Dos Coins" %}</span>
+                    <p class="all-coins__text">{% trans "Ты заработал (количество) Dos Coins. Не знаешь на что их потратить? Поищи интересные предложения на точках интереса :)" %}</p>
                     <img class="all-coins__icon" src="{% static 'image/coins.png' %}" width="112" height="112"
                          alt="icon"/>
                 </div>
@@ -242,13 +242,15 @@
                         <div class="person">
                             <div class="photo-line blue-line">
                                 <img id="profile_picture_preview" src="
+                                        
                                         {% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'image/photo.png' %}{% endif %}"
                                      alt="Profile Picture" class="blue-person-img" width="300"/>
                             </div>
                         </div>
 
                         <label class="edit__label" for="id_profile_picture">{% trans "Изменить фото" %}</label>
-                        <input type="file" accept="image/*" class="edit__file-input" id="id_profile_picture" name="profile_picture"
+                        <input type="file" accept="image/*" class="edit__file-input" id="id_profile_picture"
+                               name="profile_picture"
                                onchange="previewImage()"/>
                     </div>
                     <span class="edit__location">{{ user.city.name }}</span>
@@ -259,17 +261,18 @@
                             <svg width="40" height="40">
                                 <use href="{% static 'image/icons.svg' %}#inst"></use>
                             </svg>
-                            <input class="edit__contacts-input" type="text" name="instagram"
+                            <input id="instagram-input" class="edit__contacts-input" type="text" name="instagram"
                                    value="{{ user.instagram }}" placeholder="{% trans "Instagram профиль" %}"/>
                         </div>
                         <div class="edit__contacts-item">
                             <svg width="40" height="40">
                                 <use href="{% static 'image/icons.svg' %}#tiktok"></use>
                             </svg>
-                            <input class="edit__contacts-input" type="text" name="tiktok" value="{{ user.tiktok }}"
-                                   placeholder="{% trans "Tiktok профиль" %}"/>
+                            <input id="tiktok-input" class="edit__contacts-input" type="text" name="tiktok"
+                                   value="{{ user.tiktok }}" placeholder="{% trans "Tiktok профиль" %}"/>
                         </div>
                     </div>
+
                     <button type="submit" class="button edit_save-button">{% trans "Сохранить" %}</button>
                 </form>
             </div>
@@ -292,7 +295,7 @@
 
                     {% if has_voted %}
                         <a class="profile__find-link" href="{% url 'voted_campaign' %}">
-                     <img class="art" src="{% static 'image/art.png' %}" width="46" height="46" alt="icon"/>
+                            <img class="art" src="{% static 'image/art.png' %}" width="46" height="46" alt="icon"/>
                         </a>
                     {% endif %}
 
@@ -324,7 +327,7 @@
                 </button>
                 <button class="profile__item popup-button" data-index="4">
                     <span class="profile__coins">{{ user.doscointbalance.balance|floatformat:"-1" }}</span>
-                    <span class="profile__item-name">{% trans "Мои" %}<br/>Dos_Coins</span>
+                    <span class="profile__item-name">{% trans "Мои" %}<br/>Dos Coins</span>
                     <div class="profile__coins-icon">
                         <img class="profile__coins-iconglow" src="{% static 'image/coins.png' %}" width="112"
                              height="112" alt="icon"/>
@@ -338,7 +341,23 @@
 
 
 {% block extra_js %}
-    <script src="{% static 'js/html5-qrcode.min.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var instagramInput = document.getElementById("instagram-input");
+            var tiktokInput = document.getElementById("tiktok-input");
+
+            if (instagramInput.value === "None") {
+                instagramInput.value = "";
+            }
+
+            if (tiktokInput.value === "@") {
+                tiktokInput.value = "";
+            }
+            if (tiktokInput.value === "None") {
+                tiktokInput.value = "";
+            }
+        });
+    </script>
     {% if is_event_participant %}
         <script>
             const timer = new Timer(document.querySelector('.timer'))

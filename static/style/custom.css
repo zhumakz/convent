@@ -122,6 +122,11 @@ select option {
     margin-top: 20px;
 }
 
+.mt15 {
+    margin-top: 15px;
+}
+
+
 .add-friend__form-top {
     margin-top: 35px;
 }
