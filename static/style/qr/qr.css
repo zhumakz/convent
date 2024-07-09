@@ -35,3 +35,42 @@
 .qr__button {
     margin-top: auto;
 }
+
+/* скрыть в скане ненужное */
+.display_none_qr {display:none;}
+
+.hide,
+.hide+label~div {
+  display: none;
+}
+
+
+/* вид текста label */
+
+.hide+label,
+.hide:checked+label {
+  padding: 0;
+  color: green;
+  cursor: pointer;
+  border-bottom: 1px dotted green;
+}
+
+
+/* вид текста label при активном переключателе */
+
+.hide:checked+label {
+  color: green;
+  border-bottom: 0;
+}
+
+
+/* когда чекбокс активен показываем блоки с содержанием  */
+
+.hide:checked+label+div {
+  display: block;
+  background: #efefef;
+  -moz-box-shadow: inset 3px 3px 10px #7d8e8f;
+  -webkit-box-shadow: inset 3px 3px 10px #7d8e8f;
+  box-shadow: inset 3px 3px 10px #7d8e8f;
+  padding: 10px;
+}
