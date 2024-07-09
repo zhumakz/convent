@@ -4,27 +4,38 @@ const preloaderIcon = document.querySelector(".preloader__icon");
 const progressLine = document.querySelector(".preloader__progress-line");
 
 document.addEventListener("DOMContentLoaded", () => {
+  if(navigator.appCodeName == "Mozilla") {
+    preloader.classList.add("preloader--remove");
+    document.body.classList.remove("body--overflow");
+  }
   if (!preloader) return;
-  const files = document.querySelectorAll("svg, video");
 
-  preloaderIcon.style.width = 400;
-  preloaderIcon.style.height = 400;
-  let count = 1;
+  const files = document.querySelectorAll("svg, video, img");
+
+  preloaderIcon.classList.add("preloader__icon--active");
+
+  let count = 0;
   if (!files.length) {
     preloader.classList.add("preloader--remove");
     document.body.classList.remove("body--overflow");
     return;
   }
   [...files].forEach((file, i) => {
-    file.onload = () => {
-      progressLine.style.width = `${(count / files.length) * 100}%`;
-
-      if (count == files.length) {
-        preloader.classList.add("preloader--remove");
-        document.body.classList.remove("body--overflow");
-      }
+    console.log(file.complete);
+    if (file.complete) {
       count++;
-    };
+      progressLine.style.width = `${(count / files.length) * 100}%`;
+    } else {
+      file.addEventListener("load", () => {
+        progressLine.style.width = `${(count / files.length) * 100}%`;
+
+        if (i == files.length - 1) {
+          preloader.classList.add("preloader--remove");
+          document.body.classList.remove("body--overflow");
+        }
+        count++;
+      });
+    }
   });
 });
 
