@@ -13,14 +13,14 @@
         <div class="bottom-gradient"></div>
         <div class="container add-friend__inner flex">
             <div class="top">
-               <a href="{% url 'profile' %}" class="top__button popup-close">
+                <a href="{% url 'profile' %}" class="top__button popup-close">
                     <svg width="46" height="46">
                         <use href="{% static 'image/icons.svg' %}#back"></use>
                     </svg>
                 </a>
                 <span class="top__title">{% trans 'Начисление Dos_Coins' %}</span>
             </div>
-                    <div class="person">
+            <div class="person">
                 <div class="photo-line blue-line">
                     <img class="blue-person-img" src="
                     {% if recipient.profile_picture %}
@@ -50,15 +50,18 @@
                             alt="layers"
                     />
                 </div>
-                <svg class="final__coins" width="150" height="150">
-                    <use href="{% static 'image/icons.svg' %}#coins"></use>
-                </svg>
-                <div class="final__coins-add">
-                    <span class="count">-{{ amount }}</span>
-                    <span>{% trans 'Участнику (такому-то) было успешно переведено (количество) Dos_Coins' %}</span>
-                </div>
+                <img class=" final__coins"
+                    src="{% static 'image/coins.png' %}"
+                    width="150"
+                    height="150"
+                    alt="icon"
+                    />
+                    <div class="final__coins-add">
+                        <span class="count">-{{ amount|floatformat:"-1" }}</span>
+                        <span>{% trans 'Участнику (такому-то) было успешно переведено (количество) Dos_Coins' %}</span>
+                    </div>
             </div>
-            <a href="{% url 'operator' %}" class="button-s popups-close"> {% trans 'Закрыть'%}</a>
+            <a href="{% url 'operator' %}" class="button-s popups-close"> {% trans 'Закрыть' %}</a>
         </div>
     </section>
 {% endblock %}
