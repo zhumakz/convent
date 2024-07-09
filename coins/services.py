@@ -67,6 +67,8 @@ class CoinService:
             CoinService.clear_cache(sender)
             CoinService.clear_cache(recipient)
             logger.debug(f'Транзакция создана: {transaction}')
+            cache_key_transactions = f'user_transactions_{sender.id}'
+            cache_key_transactions = f'user_transactions_{recipient.id}'
             return transaction
 
     @staticmethod

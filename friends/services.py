@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import transaction as db_transaction, models
 from coins.services import CoinService
 from django.utils.translation import gettext_lazy as _, gettext as __
+from django.core.cache import cache
 
 class FriendService:
 
@@ -73,7 +74,10 @@ class FriendService:
 
             FriendRequest.objects.filter(from_user=user1, to_user=user2).delete()
             FriendRequest.objects.filter(from_user=user2, to_user=user1).delete()
-
+            cache_key_friends1 = f'user_friends_{user1.id}'
+            cache.delete(cache_key_friends1)
+            cache_key_friends2 = f'user_friends_{user2.id}'
+            cache.delete(cache_key_friends2)
             return transaction1.amount
 
     @staticmethod

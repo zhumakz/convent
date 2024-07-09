@@ -171,7 +171,7 @@ def profile_view(request):
     current_event = cache.get(cache_key_event)
     if current_event is None:
         current_event = EventService.check_active_event_by_user(user)
-        cache.set(cache_key_event, current_event, timeout=300)  # Кэширование на 5 минут
+        cache.set(cache_key_event, current_event, timeout=30)  # Кэширование на 5 минут
 
     has_voted = CampaignService.has_voted(user)
 
