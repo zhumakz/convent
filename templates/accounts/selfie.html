@@ -7,7 +7,6 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'style/selfie/selfie.css' %}">
 {% endblock %}
-
 {% block content %}
     <section class="selfie">
         <div class="container selfie__inner">
@@ -24,15 +23,17 @@
                 <div class="photo-line selfie__line">
                     <label class="selfie__label">
                         <input class="selfie__file" type="file" accept="image/*" name="profile_picture" id="id_profile_picture"/>
-                        <img class="selfie__image" id="selfie_image_preview" src="{% static 'image/photo.png' %}"
-                             alt="photo"/>
+                        <img class="selfie__image" id="selfie_image_preview" src="{% static 'image/photo.png' %}" alt="photo"/>
                     </label>
                 </div>
                 {% if form.profile_picture.errors %}
                     <div class="error">{{ form.profile_picture.errors }}</div>
                 {% endif %}
+                {% if form.non_field_errors %}
+                    <div class="error">{{ form.non_field_errors }}</div>
+                {% endif %}
                 <p class="selfie__text">
-                   {% trans "Для участия в призовом конкурсе Конвента  потребуется твое селфи." %}
+                    {% trans "Для участия в призовом конкурсе Конвента потребуется твое селфи." %}
                 </p>
                 <p class="selfie__bottom-text">
                     {% trans "Кстати, ты всегда можешь изменить его в профиле." %}
@@ -40,7 +41,7 @@
                 <div class="selfie__buttons">
                     <label class="selfie__label button" id="upload_label">
                         <input class="selfie__file" type="file" name="profile_picture" id="id_profile_picture_2"/>
-                        {% trans "Добавить селфи" %}
+                         <span>{% trans "Добавить селфи" %} </span>
                     </label>
                     <button type="submit" class="button" id="save_button">{% trans "Сохранить" %}</button>
                     <a class="button-s selfie__link" href="{% url 'profile' %}">{% trans "Пропустить" %}</a>
@@ -48,58 +49,105 @@
             </form>
         </div>
     </section>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById('selfieForm');
+        const saveButton = document.getElementById('save_button');
+        const uploadLabel = document.getElementById('upload_label');
+        const fileInput1 = document.getElementById('id_profile_picture');
+        const fileInput2 = document.getElementById('id_profile_picture_2');
+        const imagePreview = document.getElementById('selfie_image_preview');
+        let initialFormState = new FormData(form);
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const form = document.getElementById('selfieForm');
-            const saveButton = document.getElementById('save_button');
-            const uploadLabel = document.getElementById('upload_label');
-            const fileInput1 = document.getElementById('id_profile_picture');
-            const fileInput2 = document.getElementById('id_profile_picture_2');
-            const imagePreview = document.getElementById('selfie_image_preview');
-            let initialFormState = new FormData(form);
+        function previewImage(input) {
+            const file = input.files[0];
+            const reader = new FileReader();
 
-            function previewImage(input) {
-                const file = input.files[0];
-                const reader = new FileReader();
+            reader.onloadend = function () {
+                imagePreview.src = reader.result;
+            }
 
-                reader.onloadend = function () {
-                    imagePreview.src = reader.result;
-                }
+            if (file) {
+                reader.readAsDataURL(file);
+                console.log(`previewImage: файл выбран ${file.name}, размер: ${file.size} байт`);
+            }
+        }
 
-                if (file) {
-                    reader.readAsDataURL(file);
+        function checkForChanges() {
+            const currentFormState = new FormData(form);
+            let formChanged = false;
+
+            for (let key of initialFormState.keys()) {
+                if (initialFormState.get(key) !== currentFormState.get(key)) {
+                    formChanged = true;
+                    break;
                 }
             }
 
-            function checkForChanges() {
-                const currentFormState = new FormData(form);
-                let formChanged = false;
+            saveButton.style.display = formChanged ? 'block' : 'none';
+            uploadLabel.classList.add('selfie-edit-button');
+            uploadLabel.classList.remove('button');
 
-                for (let key of initialFormState.keys()) {
-                    if (initialFormState.get(key) !== currentFormState.get(key)) {
-                        formChanged = true;
-                        break;
-                    }
-                }
+            // Обновление текста кнопки без использования innerHTML
+            const buttonText = formChanged ? '{% trans "Выбрать другое" %}' : '{% trans "Добавить селфи" %}';
+            uploadLabel.querySelector('span').textContent = buttonText;
+        }
 
-                saveButton.style.display = formChanged ? 'block' : 'none';
-                uploadLabel.classList.add('selfie-edit-button');
-                uploadLabel.classList.remove('button');
-                uploadLabel.innerHTML = formChanged ? '<input class="selfie__file" type="file" name="profile_picture" id="id_profile_picture_2" onchange="previewImage(this)" />Выбрать другое' : '<input class="selfie__file" type="file" name="profile_picture" id="id_profile_picture_2" onchange="previewImage(this)" />Добавить селфи';
-            }
-
-            fileInput1.addEventListener('change', function () {
-                previewImage(fileInput1);
-                checkForChanges();
-            });
-
-            fileInput2.addEventListener('change', function () {
-                previewImage(fileInput2);
-                checkForChanges();
-            });
-
-            saveButton.style.display = 'none';
+        fileInput1.addEventListener('change', function () {
+            previewImage(fileInput1);
+            checkForChanges();
         });
-    </script>
+
+        fileInput2.addEventListener('change', function () {
+            previewImage(fileInput2);
+            checkForChanges();
+        });
+
+        saveButton.style.display = 'none';
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const fileInput1 = document.getElementById('id_profile_picture');
+        const fileInput2 = document.getElementById('id_profile_picture_2');
+        const imagePreview = document.getElementById('selfie_image_preview');
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+        function validateFileType(fileInput) {
+            const file = fileInput.files[0];
+            if (file && !allowedTypes.includes(file.type)) {
+                alert('Пожалуйста, загрузите изображение в формате JPG, PNG или GIF.');
+                console.log(`validateFileType: недопустимый тип файла ${file.type}`);
+                fileInput.value = '';
+                imagePreview.src = '{% static "image/photo.png" %}'; // Сбросить изображение к исходному
+            } else if (file) {
+                console.log(`validateFileType: допустимый файл ${file.name}, размер: ${file.size} байт`);
+                previewImage(fileInput);
+            }
+        }
+
+        function previewImage(input) {
+            const file = input.files[0];
+            const reader = new FileReader();
+
+            reader.onloadend = function () {
+                imagePreview.src = reader.result;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+                console.log(`previewImage: файл выбран ${file.name}, размер: ${file.size} байт`);
+            }
+        }
+
+        fileInput1.addEventListener('change', function () {
+            validateFileType(fileInput1);
+        });
+
+        fileInput2.addEventListener('change', function () {
+            validateFileType(fileInput2);
+        });
+    });
+</script>
+
+
 {% endblock %}

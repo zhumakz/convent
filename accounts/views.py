@@ -187,11 +187,15 @@ def selfie_view(request):
         form = ProfilePictureForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            request.session['profile_picture_checked'] = False  # Сбросить флаг проверки
+            # Проверка сохранения в базе данных
+            if request.user.profile_picture:
+                request.session['profile_picture_checked'] = False  # Сбросить флаг проверки
             return redirect('profile')
-
-    return render(request, 'accounts/selfie.html', {'form': ProfilePictureForm()})
-
+        else:
+            return render(request, 'accounts/selfie.html', {'form': form})
+    else:
+        form = ProfilePictureForm(instance=request.user)
+    return render(request, 'accounts/selfie.html', {'form': form})
 
 @login_required
 def profile_edit_view(request):

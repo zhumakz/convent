@@ -113,6 +113,39 @@ def process_profile_picture(profile_picture):
     return profile_picture
 
 
+def process_profile_pictureSelfie(profile_picture):
+    if profile_picture:
+        # Открываем изображение и проверяем его формат
+        try:
+            img = Image.open(profile_picture)
+            img.verify()  # Проверяем, является ли файл изображением
+            img = Image.open(profile_picture)  # Открываем заново, так как verify() закрывает файл
+        except (IOError, SyntaxError):
+            raise forms.ValidationError('Файл должен быть изображением.')
+
+        # Проверка размера файла
+        if profile_picture.size > 10 * 1024 * 1024:
+            raise forms.ValidationError('Размер файла не должен превышать 10MB.')
+
+        # Обрезка изображения
+        if img.width > 512:
+            # Сохранение пропорций
+            aspect_ratio = img.height / img.width
+            new_height = int(512 * aspect_ratio)
+            img = img.resize((512, new_height), Image.LANCZOS)  # Использование Image.LANCZOS вместо Image.ANTIALIAS
+
+            # Сохранение обрезанного изображения в BytesIO
+            output = BytesIO()
+            img.save(output, format='JPEG')
+            output.seek(0)
+
+            # Создание нового InMemoryUploadedFile для обновления profile_picture
+            profile_picture = InMemoryUploadedFile(output, 'ImageField', profile_picture.name, 'image/jpeg',
+                                                   output.getbuffer().nbytes, None)
+
+    return profile_picture
+
+
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = User
@@ -128,7 +161,7 @@ class ProfilePictureForm(forms.ModelForm):
         model = User
         fields = ['profile_picture']
 
-    def clean_profile_picture(self):
+    def process_profile_pictureSelfie(self):
         profile_picture = self.cleaned_data.get('profile_picture')
         return process_profile_picture(profile_picture)
 
