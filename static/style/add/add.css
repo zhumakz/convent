@@ -1,7 +1,7 @@
 .add {
     display: flex;
     flex-direction: column;
-    background: #282B30;
+    background: rgb(222, 88, 155);
 	position:relative;
 }
 .add-person__name{
