@@ -151,21 +151,10 @@ def profile_view(request):
             request.session['profile_picture_checked'] = True
             return redirect('selfie')
 
-        # Использование кэша для списка друзей
-        # cache_key_friends = f'user_friends_{user.id}'
-        # friends = cache.get(cache_key_friends)
-        # if not friends:
-        #     friends = FriendService.get_friends(user)
-        #     cache.set(cache_key_friends, friends, timeout=300)  # Кэширование на 5 минут
+    # Получение списка друзей без кэширования
+    friends = FriendService.get_friends(user)
 
-        friends = FriendService.get_friends(user)
-
-    # Использование кэша для транзакций
-    # cache_key_transactions = f'user_transactions_{user.id}'
-    # transactions = cache.get(cache_key_transactions)
-    # if not transactions:
-    #     transactions = CoinService.get_transactions(user).select_related('sender', 'recipient', 'category').order_by('-timestamp')
-    #     cache.set(cache_key_transactions, transactions, timeout=300)  # Кэширование на 5 минут
+    # Получение транзакций без кэширования
     transactions = CoinService.get_transactions(user).select_related('sender', 'recipient', 'category').order_by(
         '-timestamp')
 
@@ -173,14 +162,8 @@ def profile_view(request):
     for transaction in transactions:
         transaction.category_display_name = CoinService.get_display_name_by_category_id(transaction.category_id)
 
-        # Использование кэша для текущего события
-        # cache_key_event = f'current_event_{user.id}'
-        # current_event = cache.get(cache_key_event)
-        # if current_event is None:
-        #     current_event = EventService.check_active_event_by_user(user)
-        #     cache.set(cache_key_event, current_event, timeout=30)  # Кэширование на 5 минут
-
-        current_event = EventService.check_active_event_by_user(user)
+    # Получение текущего события без кэширования
+    current_event = EventService.check_active_event_by_user(user)
 
     has_voted = CampaignService.has_voted(user)
 
