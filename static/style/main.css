@@ -156,7 +156,7 @@ body {
     display: block;
     color: var(--pale-orange);
     margin-right: 50%;
-    transform: translateX(50%);
+    transform: translateX(10%);
     text-wrap: nowrap;
 }
 
