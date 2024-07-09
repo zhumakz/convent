@@ -216,7 +216,7 @@ body {
 .header__title {
     max-width: 244px;
     margin-top: auto;
-    font-size: 38px;
+    font-size: 26px;
     font-weight: 900;
     color: var(--white);
 }
@@ -224,7 +224,7 @@ body {
 .header__icon {
     position: absolute;
     top: 54px;
-    right: 63px;
+    right: 7px;
 }
 
 
