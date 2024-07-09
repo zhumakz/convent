@@ -63,7 +63,8 @@ def login_and_verify_view(request):
                     request.session['phone_number'] = phone_number
                     request.session['sms_sent'] = True
                     return JsonResponse({'status': 'ok'})
-                return JsonResponse({'status': 'error', 'message': __('Пользователь с таким номером телефона не найден.')}, status=400)
+                return JsonResponse(
+                    {'status': 'error', 'message': __('Пользователь с таким номером телефона не найден.')}, status=400)
 
             return JsonResponse({'status': 'error', 'message': __('Invalid action')}, status=400)
 
@@ -93,7 +94,8 @@ def handle_resend_sms(request, phone_number):
 
     user = UserService.get_user_by_phone_number(phone_number)
     if not user:
-        return JsonResponse({'status': 'error', 'message': __('Пользователь с таким номером телефона не найден.')}, status=400)
+        return JsonResponse({'status': 'error', 'message': __('Пользователь с таким номером телефона не найден.')},
+                            status=400)
 
     UserService.handle_sms_verification(request, phone_number)
     return JsonResponse({'status': 'ok'})
@@ -110,7 +112,8 @@ def handle_verify_login(request):
             request.session['sms_sent'] = False  # Сброс состояния отправки SMS
             return JsonResponse({'status': 'ok', 'redirect_url': reverse('profile')})
         else:
-            return JsonResponse({'status': 'error', 'message': __('Пользователь с таким номером телефона не найден.')}, status=400)
+            return JsonResponse({'status': 'error', 'message': __('Пользователь с таким номером телефона не найден.')},
+                                status=400)
     else:
         return JsonResponse({'status': 'error', 'message': __('Неверный SMS код.')}, status=400)
 
@@ -148,30 +151,36 @@ def profile_view(request):
             request.session['profile_picture_checked'] = True
             return redirect('selfie')
 
-    # Использование кэша для списка друзей
-    cache_key_friends = f'user_friends_{user.id}'
-    friends = cache.get(cache_key_friends)
-    if not friends:
+        # Использование кэша для списка друзей
+        # cache_key_friends = f'user_friends_{user.id}'
+        # friends = cache.get(cache_key_friends)
+        # if not friends:
+        #     friends = FriendService.get_friends(user)
+        #     cache.set(cache_key_friends, friends, timeout=300)  # Кэширование на 5 минут
+
         friends = FriendService.get_friends(user)
-        cache.set(cache_key_friends, friends, timeout=300)  # Кэширование на 5 минут
 
     # Использование кэша для транзакций
-    cache_key_transactions = f'user_transactions_{user.id}'
-    transactions = cache.get(cache_key_transactions)
-    if not transactions:
-        transactions = CoinService.get_transactions(user).select_related('sender', 'recipient', 'category').order_by('-timestamp')
-        cache.set(cache_key_transactions, transactions, timeout=300)  # Кэширование на 5 минут
+    # cache_key_transactions = f'user_transactions_{user.id}'
+    # transactions = cache.get(cache_key_transactions)
+    # if not transactions:
+    #     transactions = CoinService.get_transactions(user).select_related('sender', 'recipient', 'category').order_by('-timestamp')
+    #     cache.set(cache_key_transactions, transactions, timeout=300)  # Кэширование на 5 минут
+    transactions = CoinService.get_transactions(user).select_related('sender', 'recipient', 'category').order_by(
+        '-timestamp')
 
     # Добавление названий категорий к транзакциям
     for transaction in transactions:
         transaction.category_display_name = CoinService.get_display_name_by_category_id(transaction.category_id)
 
-    # Использование кэша для текущего события
-    cache_key_event = f'current_event_{user.id}'
-    current_event = cache.get(cache_key_event)
-    if current_event is None:
+        # Использование кэша для текущего события
+        # cache_key_event = f'current_event_{user.id}'
+        # current_event = cache.get(cache_key_event)
+        # if current_event is None:
+        #     current_event = EventService.check_active_event_by_user(user)
+        #     cache.set(cache_key_event, current_event, timeout=30)  # Кэширование на 5 минут
+
         current_event = EventService.check_active_event_by_user(user)
-        cache.set(cache_key_event, current_event, timeout=30)  # Кэширование на 5 минут
 
     has_voted = CampaignService.has_voted(user)
 
@@ -182,8 +191,9 @@ def profile_view(request):
         'has_voted': has_voted,
         'current_event': current_event,
         'is_event_participant': current_event and (
-            current_event.participant1 == user or current_event.participant2 == user)
+                current_event.participant1 == user or current_event.participant2 == user)
     })
+
 
 @login_required
 def selfie_view(request):
@@ -200,6 +210,7 @@ def selfie_view(request):
     else:
         form = ProfilePictureForm(instance=request.user)
     return render(request, 'accounts/selfie.html', {'form': form})
+
 
 @login_required
 def profile_edit_view(request):
