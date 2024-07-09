@@ -93,7 +93,7 @@ class EventService:
             EventService.complete_event(event)
             return True, __("Событие успешно завершено!")
         else:
-            return False, __("Ожидание подтверждения от другого участника.")
+            return False, __("Успешно! Для завершение отсанируйте другого участника.")
 
     @staticmethod
     @db_transaction.atomic

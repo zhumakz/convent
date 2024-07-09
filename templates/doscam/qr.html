@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Отсканировать QR-код" %}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'style/qr/qr.css' %}">
+    <link rel="stylesheet" href="{% static 'style/404/error.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="qr">
+        <div class="popup-container">
+            <div class="top">
+                <a class="top__button popup-close" href="{% url 'operator_view' %}">
+                    <svg width="46" height="46">
+                        <use href="{% static 'image/icons.svg' %}#back "></use>
+                    </svg>
+                </a>
+                <span class="top__title">{% trans "Отсканировать QR-код" %}</span>
+            </div>
+            <form id="qr-form" action="{% url 'handle_qr_doscam' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" id="qr_data" name="qr_data" required>
+            </form>
+            <div id="my-qr-reader" class="qr__content">
+                <img class="qr__image" src="{% static 'image/qr.png' %}" alt="qr"/>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/html5-qrcode.min.js' %}"></script>
+    <script>
+        let isProcessing = false;
+        const html5QrCodeScanner = new Html5QrcodeScanner("my-qr-reader", {fps: 10, qrbox: 250});
+
+        html5QrCodeScanner.render(onScanSuccess);
+
+        function onScanSuccess(decodedText, decodedResult) {
+            if (isProcessing) {
+                return;
+            }
+
+            isProcessing = true;
+            console.log(`Scanned QR Code: ${decodedText}`);
+
+            // Заполните поле формы данными QR-кода
+            document.getElementById('qr_data').value = decodedText;
+
+            // Отправьте форму автоматически
+            document.getElementById('qr-form').submit();
+        }
+    </script>
+{% endblock %}

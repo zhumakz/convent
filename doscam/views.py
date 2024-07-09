@@ -1,7 +1,10 @@
+import json
+
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _, gettext as __
 from django.http import JsonResponse
 from django.utils import timezone
@@ -78,6 +81,7 @@ def operator_view(request):
         'server_time': timezone.now().isoformat() if active_event else None
     })
 
+
 @login_required
 def dos_desktop_view(request):
     active_event = EventService.check_active_event()
@@ -85,6 +89,7 @@ def dos_desktop_view(request):
         'event': active_event,
         'server_time': timezone.now().isoformat() if active_event else None
     })
+
 
 @login_required
 def event_detail(request, event_id):
@@ -106,16 +111,17 @@ def confirm_participation(request, user_id):
     ).select_related('participant1', 'participant2').first()
 
     if not event:
-        messages.error(request, __("Нет текущего события для этого пользователя."))
-        return redirect('operator_view')
+        request.session['positiveResponse'] = False
+        request.session['error_message'] = __("Нет текущего события для этого пользователя.")
+        request.session['redirect_url'] = 'operator_view'
+        return redirect('m_response')
 
     success, message = EventService.confirm_participation(user, event)
-    if success:
-        messages.success(request, message)
-    else:
-        messages.info(request, message)
+    request.session['positiveResponse'] = True
+    request.session['error_message'] = message
+    request.session['redirect_url'] = 'operator_view'
 
-    return redirect('operator_view')
+    return redirect('m_response')
 
 
 @login_required
@@ -191,3 +197,35 @@ def find_view(request):
         'current_event': current_event,
         'is_event_participant': True
     })
+
+@login_required
+def handle_qr_data(request):
+    if request.method == 'POST':
+        qr_data = request.POST.get('qr_data')
+        if qr_data:
+            try:
+                data = json.loads(qr_data)
+                user_id = data.get('user_id')
+                # Сохранение данных в сессии
+                request.session['qr_data'] = data
+
+                # Логика перенаправления в зависимости от данных QR-кода
+                if user_id:
+                    return redirect(reverse('confirm_participation', args=[user_id]))
+                else:
+                    request.session['error_message'] = 'Недействительные данные QR'
+                    request.session['positiveResponse'] = False
+                    return redirect('qr_response')
+
+            except json.JSONDecodeError:
+                request.session['error_message'] = 'Недействительные данные QR'
+                request.session['positiveResponse'] = False
+                return redirect('qr_response')
+
+    request.session['error_message'] = 'Неверный запрос'
+    request.session['positiveResponse'] = False
+    return redirect('qr_response')
+@login_required
+def qr_scan_view(request):
+    # Отображение страницы с формой для сканирования QR-кода
+    return render(request, 'doscam/qr.html')

@@ -98,13 +98,18 @@
                     <p class="display-none">Start Time: {{ event.start_time }}</p>
                     <p class="display-none">End Time: <span id="end_time">{{ event.end_time|date:"c" }}</span></p>
 
-                    <form class="mt30" method="post" action="{% url 'stop_event' event.id %}">
+                    <form class="mt30" method="post" action="{% url 'stop_event' event.id %}"
+                          onsubmit="return confirmStopEvent();">
                         {% csrf_token %}
                         <button type="submit" class="button dos__button-start ">{% trans "Остановить" %}</button>
                     </form>
+                    <a id="qr-Button" href="{% url 'qr_doscam' %}"
+                            class="button entertainment__button popup-button"
+                            data-index="1">{% trans 'Отсканировать QR' %}
+                    </a>
                 {% else %}
                     <p>{% trans "Нет текущего события." %}</p>
-                      <a href="{% url 'create_event' %}" class="button dos__button-start "> {% trans "Создать" %} </a>
+                    <a href="{% url 'create_event' %}" class="button dos__button-start "> {% trans "Создать" %} </a>
                 {% endif %}
             </div>
         </section>
@@ -113,39 +118,44 @@
 {% endblock %}
 
 {% block extra_js %}
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var endTimeElement = document.getElementById("end_time");
-        if (!endTimeElement) {
-            return;
+    <script>
+        function confirmStopEvent() {
+            return confirm("{% trans 'Вы уверены, что хотите остановить событие?' %}");
         }
-
-        var endTime = new Date(endTimeElement.textContent);
-        var now = new Date();
-        var totalDuration = (endTime - now) / 1000;
-        var timeRemaining = endTime - now;
-
-        function updateTimer() {
-            now = new Date();
-            timeRemaining = endTime - now;
-
-            if (timeRemaining > 0) {
-                var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-
-                document.getElementById("time_remaining").textContent = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-
-                var progressPercent = ((totalDuration - timeRemaining / 1000) / totalDuration) * 100;
-                document.getElementById("timer_progress").style.width = progressPercent + "%";
-            } else {
-                document.getElementById("time_remaining").textContent = "{% trans "Событие завершено!" %}";
-                document.getElementById("timer_progress").style.width = "100%";
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var endTimeElement = document.getElementById("end_time");
+            if (!endTimeElement) {
+                return;
             }
-        }
 
-        setInterval(updateTimer, 1000);
-        updateTimer();  // Initial call to display time immediately
-    });
-  </script>
+            var endTime = new Date(endTimeElement.textContent);
+            var now = new Date();
+            var totalDuration = (endTime - now) / 1000;
+            var timeRemaining = endTime - now;
+
+            function updateTimer() {
+                now = new Date();
+                timeRemaining = endTime - now;
+
+                if (timeRemaining > 0) {
+                    var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                    document.getElementById("time_remaining").textContent = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+
+                    var progressPercent = ((totalDuration - timeRemaining / 1000) / totalDuration) * 100;
+                    document.getElementById("timer_progress").style.width = progressPercent + "%";
+                } else {
+                    document.getElementById("time_remaining").textContent = "{% trans "Событие завершено!" %}";
+                    document.getElementById("timer_progress").style.width = "100%";
+                }
+            }
+
+            setInterval(updateTimer, 1000);
+            updateTimer();  // Initial call to display time immediately
+        });
+    </script>
 {% endblock %}
 
