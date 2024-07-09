@@ -1,7 +1,8 @@
 .add-friend {
     display: flex;
     flex-direction: column;
-    background-color: #282B30;
+    background: #282B30;
+	position:relative;
 }
 
 .add-friend__inner {
