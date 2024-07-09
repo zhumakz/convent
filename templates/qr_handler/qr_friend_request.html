@@ -44,6 +44,7 @@
     </section>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            console.log("0");
             var interval = 3000; // 3 seconds
             var duration = 120000; // 2 minutes
             var elapsed = 0;
@@ -63,6 +64,7 @@
             }
 
             function startPolling() {
+                console.log("1");
                 var intervalId = setInterval(function () {
                     elapsed += interval;
                     if (elapsed >= duration) {

@@ -97,8 +97,16 @@ def qr_friend_request(request):
             return redirect('qr_response')
 
         # Попытка отправить запрос дружбы
-        state, message, coins_transferred = FriendService.send_friend_requestQR(request.user, to_user)
+        state, message,coins_transferredq  = FriendService.send_friend_requestQR(request.user, to_user)
 
+        category_name = 'friend_bonus_same_city' if request.user.city == to_user.city else 'friend_bonus_different_city'
+        coins_transferred = CoinService.get_price_by_category_name(category_name)
+        if not coins_transferred:
+            request.session['error_message'] = 'Количество коинов не найдено!'
+            request.session['positiveResponse'] = False
+            return redirect('qr_response')
+
+        request.session['coins_transferred'] = str(coins_transferred)
         if state == 'new_request' or state == 'already_sent':
             # В любом случае показываем qr_friend_request
             context = {
@@ -141,7 +149,9 @@ def friend_confirmation(request):
     coins_transferred_str = request.session.get('coins_transferred')
 
     if not coins_transferred_str:
-        return redirect('profile')
+        request.session['error_message'] = 'Количество коинов не найдено'
+        request.session['positiveResponse'] = False
+        return redirect('qr_response')
 
     try:
         to_user = User.objects.get(id=user_id)

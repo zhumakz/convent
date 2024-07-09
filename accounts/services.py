@@ -27,7 +27,7 @@ class UserService:
         user = cache.get(f'user_{phone_number}')
         if not user:
             user = User.objects.filter(phone_number=phone_number).first()
-            cache.set(f'user_{phone_number}', user, timeout=300)
+            cache.set(f'user_{phone_number}', user, timeout=30)
         return user
 
     @staticmethod
