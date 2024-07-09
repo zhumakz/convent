@@ -50,40 +50,40 @@
                     </select>
                     <br>
                 </div>
-				
-			<input class="hide" id="hd-1" type="checkbox">
-<label for="hd-1">Дополнительно &dArr;</label>
-<div>
-<b>Выбор камеры: </b>
-                <span id="cam-has-camera"></span>
-                <br>
+
+                <input class="hide" id="hd-1" type="checkbox">
+                <label for="hd-1">Дополнительно &dArr;</label>
                 <div>
-                    <b>Ваша камера:</b><br />
-                    <select id="cam-list">
-                        <option value="environment" selected>Environment Facing (default)</option>
-                        <option value="user">Лицо пользователя</option>
-                    </select>
+                    <b>Выбор камеры: </b>
+                    <span id="cam-has-camera"></span>
+                    <br>
+                    <div>
+                        <b>Ваша камера:</b><br/>
+                        <select id="cam-list">
+                            <option value="environment" selected>Environment Facing (default)</option>
+                            <option value="user">Лицо пользователя</option>
+                        </select>
+                    </div>
+                    <b>Фонарик: </b>
+                    <span id="cam-has-flash"></span>
+                    <div>
+                        <button id="flash-toggle">📸 Фонарик: <span id="flash-state">откл</span></button>
+                    </div>
                 </div>
-                <b>Фонарик: </b>
-                <span id="cam-has-flash"></span>
-                <div>
-                    <button id="flash-toggle">📸 Фонарик: <span id="flash-state">откл</span></button>
+                <input class="hide" id="hd-2" type="checkbox">
+
+                <div class="display_none_qr">
+                    <br>
+                    <b>Detected QR code: </b>
+                    <span id="cam-qr-result">None</span>
+                    <br>
+                    <b>Last detected at: </b>
+                    <span id="cam-qr-result-timestamp"></span>
+                    <br>
+                    <button id="start-button">Start</button>
+                    <button id="stop-button">Stop</button>
+                    <hr>
                 </div>
-</div>
-<input class="hide" id="hd-2" type="checkbox">
-       
-				<div class="display_none_qr">
-                <br>
-                <b>Detected QR code: </b>
-                <span id="cam-qr-result">None</span>
-                <br>
-                <b>Last detected at: </b>
-                <span id="cam-qr-result-timestamp"></span>
-                <br>
-                <button id="start-button">Start</button>
-                <button id="stop-button">Stop</button>
-                <hr>
-				</div>
             </div>
         </div>
     </section>
@@ -119,30 +119,30 @@
             console.log(result.data);
         }
 
-        function initializeScanner() {
-            scanner = new QrScanner(video, result => setResult(camQrResult, result), {
-                onDecodeError: error => {
-                    camQrResult.textContent = error;
-                    camQrResult.style.color = 'inherit';
-                },
-                highlightScanRegion: true,
-                highlightCodeOutline: true,
-            });
 
-            scanner.start().then(() => {
-                updateFlashAvailability();
-                QrScanner.listCameras(true).then(cameras => cameras.forEach(camera => {
-                    const option = document.createElement('option');
-                    option.value = camera.id;
-                    option.text = camera.label;
-                    camList.add(option);
-                }));
-            });
+        scanner = new QrScanner(video, result => setResult(camQrResult, result), {
+            onDecodeError: error => {
+                camQrResult.textContent = error;
+                camQrResult.style.color = 'inherit';
+            },
+            highlightScanRegion: true,
+            highlightCodeOutline: true,
+        });
 
-            QrScanner.hasCamera().then(hasCamera => camHasCamera.textContent = hasCamera);
+        scanner.start().then(() => {
+            updateFlashAvailability();
+            QrScanner.listCameras(true).then(cameras => cameras.forEach(camera => {
+                const option = document.createElement('option');
+                option.value = camera.id;
+                option.text = camera.label;
+                camList.add(option);
+            }));
+        });
 
-            window.scanner = scanner;
-        }
+        QrScanner.hasCamera().then(hasCamera => camHasCamera.textContent = hasCamera);
+
+        window.scanner = scanner;
+        
 
         function updateFlashAvailability() {
             scanner.hasFlash().then(hasFlash => {
@@ -152,11 +152,7 @@
         }
 
         document.getElementById('start-button').addEventListener('click', () => {
-            if (!scanner) {
-                initializeScanner();
-            } else {
-                scanner.start();
-            }
+            scanner.start();
         });
 
         document.getElementById('stop-button').addEventListener('click', () => {
@@ -191,18 +187,19 @@
     </script>
 
     <style>
-       #video-container {
-        max-width: 350px; 
-        max-height: 400px; 
-        overflow: hidden; 
-        position: relative;
-    }
+        #video-container {
+            max-width: 350px;
+            max-height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
 
-    #qr-video {
-        width: 100%; /* Масштабирование по ширине контейнера */
-        height: auto; /* Автоматическая высота для сохранения соотношения сторон */
-        display: block;
-    }
+        #qr-video {
+            width: 100%; /* Масштабирование по ширине контейнера */
+            height: auto; /* Автоматическая высота для сохранения соотношения сторон */
+            display: block;
+        }
+
         div {
             margin-bottom: 16px;
         }
